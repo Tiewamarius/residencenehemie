@@ -1,0 +1,798 @@
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    background-color: #f7f7f7; /* Light background for the overall page */
+    color: #333;
+    overflow-x: hidden; /* Empêche le défilement horizontal causé par la sidebar cachée */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Removes extra space below images */
+}
+
+/* --- Header --- */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    background-color: transparent; /* Header transparent */
+    z-index: 1000; /* Ensures header stays on top */
+    transition: background-color 0.3s ease;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* Max width for your content */
+    margin: 0 auto;
+    height: 100%;
+    padding: 0 20px;
+}
+
+/* Icône burger - visible seulement sur mobile */
+.menu_toggle_btn {
+    font-size: 28px;
+    color: #fff; /* Couleur de l'icône sur fond transparent */
+    cursor: pointer;
+    display: none; /* Caché par défaut sur les grands écrans */
+    z-index: 1001; /* S'assure qu'il est au-dessus du logo */
+}
+
+.nav_logo img {
+    height: 50px; /* Adjust based on your logo size */
+    width: auto;
+    /* filter: brightness(0) invert(1); Rend le logo blanc pour un fond sombre */
+}
+
+.nav_item {
+    display: flex;
+    list-style: none;
+    gap: 25px; /* Spacing between nav items */
+}
+
+.nav_link {
+    font-weight: 500;
+    color: #fff; /* Texte blanc pour les liens */
+    transition: color 0.3s ease;
+}
+
+.nav_link:hover {
+    color: #ff385c; /* Accent color */
+}
+
+.nav_link i {
+    font-size: 1.1em;
+}
+
+.button {
+    background-color: #ff385c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #e0002f;
+}
+
+/* Cache le bouton "Assistant" du header principal sur tous les écrans par défaut */
+#form-open {
+    display: none;
+}
+
+/* --- Sidebar Menu --- */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Caché par défaut (largeur de 250px + un petit décalage) */
+    width: 250px; /* Largeur de votre sidebar */
+    height: 100vh;
+    background-color: #fff; /* Couleur de fond de la sidebar */
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    z-index: 999; /* Moins que le header principal, il "glisse derrière" */
+    transition: left 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+/* Lorsque la sidebar est active (ouverte) */
+.sidebar.active {
+    left: 0; /* Fait glisser la sidebar en vue */
+}
+
+.sidebar_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.sidebar_logo {
+    height: 45px; /* Taille du logo dans la sidebar */
+    filter: none; /* Le logo redevient normal sur fond blanc */
+}
+
+.sidebar_close_btn {
+    font-size: 24px;
+    color: #555;
+    cursor: pointer;
+}
+
+.sidebar_nav_items {
+    list-style: none;
+    flex-grow: 1; /* Permet à la liste de prendre l'espace disponible */
+}
+
+.sidebar_nav_items li {
+    margin-bottom: 10px;
+}
+
+.sidebar_nav_link {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar_nav_link:hover {
+    background-color: #f0f0f0;
+    color: #ff385c;
+}
+
+.sidebar_nav_link i {
+    margin-right: 10px;
+}
+
+.sidebar_assistant_btn {
+    width: calc(100% - 40px); /* Largeur du bouton dans la sidebar */
+    margin: 20px auto 0; /* Centrer le bouton */
+}
+
+/* Overlay quand la sidebar est ouverte */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+    z-index: 998; /* Entre le contenu et la sidebar */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* --- Home Section (Hero Banner with Slider and Search Card) --- */
+.home {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    align-items: center; /* Aligns content vertically in the middle */
+    overflow: hidden;
+}
+
+.image-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    opacity: 0; /* Hidden by default for slider effect */
+    transition: opacity 1.5s ease-in-out;
+}
+
+.slider-image.active {
+    opacity: 1; /* Show active image */
+}
+
+/* Overlay for hero text readability */
+.home::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dark overlay for contrast */
+    z-index: 2;
+}
+
+.hero-content-wrapper {
+    position: relative;
+    z-index: 3; /* Above the overlay */
+    color: #fff;
+    width: 100%; /* Take full width to control inner elements */
+    max-width: 1200px; /* Match nav max-width */
+    margin: 0 auto; /* Center the wrapper itself */
+    padding: 0 20px; /* Add padding for smaller screens */
+    display: flex; /* Use flexbox to align card to left */
+    justify-content: flex-start; /* Align card to the start (left) */
+}
+
+/* Formulaire de recherche détaillé (pour PC) */
+.hero-card-container {
+    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white background for the card */
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    max-width: 450px; /* Max width for the search card */
+    color: #333; /* Dark text inside the card */
+    text-align: left; /* Align text within card to left */
+    /* Visible par défaut sur PC */
+    display: block;
+}
+
+.hero-card-container h2 {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.hero-card-description {
+    font-size: 1.1em;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.hero-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.hero-search-form .form-group {
+    text-align: left;
+}
+
+.hero-search-form label {
+    display: block;
+    font-size: 0.8em;
+    color: #777;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.hero-search-form input[type="text"],
+.hero-search-form input[type="date"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    color: #333;
+}
+
+.hero-search-form .date-group {
+    display: flex;
+    gap: 10px;
+}
+
+.hero-search-form .date-input {
+    flex: 1;
+}
+
+.search-button-hero {
+    width: 100%;
+    background-color: #ff385c;
+    color: #fff;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-button-hero:hover {
+    background-color: #e0002f;
+}
+
+/* --- Nouvelle Barre de Recherche Mobile (design spécifique) --- */
+.mobile-search-bar {
+    position: relative; /* Nécessaire pour le z-index et le positionnement du bouton */
+    background-color: #fff;
+    border-radius: 40px; /* Bords très arrondis */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* Masqué par défaut sur PC */
+    display: none;
+    /* margin: 0 auto; /* Pour centrer horizontalement quand visible - sera géré par flex du parent */
+}
+
+.mobile-search-field {
+    flex: 1; /* Permet aux champs de prendre l'espace disponible */
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    cursor: pointer; /* Indique qu'ils sont cliquables */
+    min-width: 0; /* Permet la réduction des flex items */
+}
+
+.mobile-search-field .label {
+    font-size: 0.75em; /* Petite taille pour le label */
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+    white-space: nowrap; /* Empêche le retour à la ligne */
+}
+
+.mobile-search-field input {
+    border: none; /* Pas de bordure */
+    outline: none; /* Pas de contour au focus */
+    width: 100%;
+    font-size: 0.9em;
+    color: #555;
+    background-color: transparent; /* Fond transparent */
+    padding: 0; /* Pas de padding interne */
+}
+
+.mobile-search-field input::placeholder {
+    color: #888;
+}
+
+.mobile-search-separator {
+    width: 1px; /* Ligne de séparation fine */
+    height: 30px; /* Hauteur de la ligne */
+    background-color: #ddd;
+    margin: 0 5px; /* Espacement autour du séparateur */
+}
+
+.mobile-search-button {
+    background-color: #ff385c;
+    color: #fff;
+    border: none;
+    border-radius: 50%; /* Bouton rond */
+    width: 50px; /* Taille du bouton */
+    height: 50px; /* Taille du bouton */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Empêche le bouton de rétrécir */
+}
+
+.mobile-search-button:hover {
+    background-color: #e0002f;
+}
+
+/* --- Chat Assistant Modal --- */
+.chat_container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    height: 450px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1001; /* Above all other content */
+    transform: scale(0); /* Hidden by default */
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-in-out;
+}
+
+.chat_container.active {
+    transform: scale(1); /* Show the modal */
+}
+
+.chat_close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #555;
+    z-index: 10;
+}
+
+.chat_header {
+    background-color: #ff385c;
+    color: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.chat_messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.message {
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    max-width: 80%;
+}
+
+.bot-message {
+    background-color: #e0e0e0;
+    align-self: flex-start;
+    margin-right: auto;
+    border-bottom-left-radius: 2px;
+}
+
+.user-message {
+    background-color: #ff385c;
+    color: #fff;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 2px;
+}
+
+.chat_input_area {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    background-color: #fff;
+}
+
+#chat_input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+#send_chat_btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+
+/* --- Featured Properties Section --- */
+.featured-properties {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.5em;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.section-description {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.properties-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+.property-card {
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.property-image {
+    position: relative;
+    height: 220px; /* Fixed height for card images */
+    overflow: hidden;
+}
+
+.property-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.wishlist-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    color: #ff385c;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.wishlist-icon:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.visit-tag {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.property-details {
+    padding: 20px;
+    text-align: left;
+}
+
+.property-details h3 {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.property-location {
+    font-size: 0.95em;
+    color: #777;
+    margin-bottom: 8px;
+}
+
+.property-price {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #ff385c;
+}
+
+
+/* --- Footer --- */
+.footer {
+    text-align: center;
+    padding: 30px 20px;
+    background-color: #222;
+    color: #fff;
+    font-size: 0.9em;
+    margin-top: 50px;
+}
+
+
+/* --- Responsive Styles --- */
+@media (max-width: 992px) {
+    .nav_item {
+        gap: 15px;
+    }
+    .hero-card-container {
+        max-width: 500px;
+        padding: 25px;
+    }
+    .hero-card-container h2 {
+        font-size: 1.8em;
+    }
+    .hero-card-description {
+        font-size: 1em;
+    }
+    .properties-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+    .section-title {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        height: auto;
+        padding: 10px 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        display: flex;
+        /* Sur mobile, on veut une colonne virtuelle pour aligner burger, logo et search bar */
+        flex-direction: column; /* Changed to column to stack elements */
+        align-items: center; /* Center horizontally */
+    }
+
+    .nav {
+        /* Le nav est maintenant un conteneur pour les éléments du header mobile */
+        display: flex;
+        flex-direction: row; /* Burger, logo, et le bouton assistant sur la même ligne */
+        justify-content: space-between; /* Espacement équitable */
+        align-items: center;
+        width: 100%; /* Occupe toute la largeur */
+        padding: 0; /* Pas de padding interne, géré par le header */
+    }
+
+    .nav_logo img {
+        filter: none; /* Logo redevient normal sur fond blanc */
+        height: 45px;
+    }
+
+    /* Cache les éléments de navigation traditionnels du header sur mobile */
+    .nav_item {
+        display: none;
+    }
+
+    /* Rend l'icône burger visible */
+    .menu_toggle_btn {
+        display: block;
+        color: #333; /* Couleur sombre sur fond blanc */
+        order: 0; /* Place le burger au début */
+    }
+    
+    /* Le logo nav_logo doit être au centre du header mobile */
+    .nav_logo {
+        order: 1; /* Place le logo après le burger */
+        flex-grow: 0;
+        text-align: center;
+        margin: 0 10px; /* Ajoute un peu de marge autour du logo */
+    }
+
+    /* Le bouton assistant du header est toujours masqué */
+    .button#form-open {
+        display: none;
+        order: 2; /* S'il était visible, il serait après le logo */
+    }
+
+    /* La barre de recherche mobile est visible et prend toute la largeur */
+    .mobile-search-bar {
+        display: flex; /* Active la flexbox pour le layout mobile */
+        order: 2; /* Place la barre de recherche après le logo sur une nouvelle ligne */
+        width: 100%; /* Prend toute la largeur disponible */
+        margin-top: 15px; /* Marge pour la séparer du header */
+        padding: 10px 15px;
+        height: 70px; /* Hauteur fixe pour un look compact */
+    }
+
+    .home {
+        height: auto; /* Allow section to adapt to content */
+        padding-top: 150px; /* Espace pour le header et la barre de recherche */
+        padding-bottom: 50px;
+    }
+    .hero-content-wrapper {
+        padding: 0 20px;
+        justify-content: center; /* Centrer le contenu à nouveau */
+    }
+
+    /* Masque le formulaire détaillé de la carte sur mobile */
+    .hero-card-container {
+        display: none;
+    }
+
+    /* Ajustements pour les champs de date du formulaire original (s'il était visible) */
+    .hero-search-form .date-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .chat_container {
+        width: 90%;
+        max-width: 320px;
+        height: 400px;
+        bottom: 20px;
+        right: 20px;
+    }
+    .featured-properties {
+        padding: 40px 15px;
+    }
+    .section-title {
+        font-size: 1.8em;
+    }
+    .section-description {
+        font-size: 0.95em;
+    }
+    .property-details h3 {
+        font-size: 1.2em;
+    }
+    .property-price {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        height: auto;
+    }
+    .nav_logo img {
+        height: 40px;
+    }
+    .menu_toggle_btn {
+        font-size: 26px;
+    }
+
+    /* La barre de recherche mobile s'ajuste davantage sur très petit écran */
+    .mobile-search-bar {
+        padding: 8px 10px; /* Réduire le padding */
+        height: 60px; /* Réduire la hauteur */
+    }
+    .mobile-search-field {
+        padding: 0 5px; /* Réduire le padding des champs */
+    }
+    .mobile-search-field .label {
+        font-size: 0.7em;
+    }
+    .mobile-search-field input {
+        font-size: 0.8em;
+    }
+    .mobile-search-separator {
+        height: 25px; /* Réduire la hauteur du séparateur */
+    }
+    .mobile-search-button {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1em;
+    }
+
+    .hero-card-container { /* Just in case it's still somehow visible */
+        display: none;
+    }
+    
+    .chat_container {
+        width: 95%;
+        right: 2.5%;
+        bottom: 15px;
+    }
+    .section-title {
+        font-size: 1.5em;
+    }
+    .properties-grid {
+        grid-template-columns: 1fr; /* Single column on very small screens */
+    }
+}

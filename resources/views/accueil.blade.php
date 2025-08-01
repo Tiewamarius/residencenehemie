@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream Home</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ asset('css/Accueil.css')}}"/>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Google Fonts for "Poppins" and "Inter" -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Import Google fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+
+/* --- CSS Variables --- */
+:root {
+    --primary-blue: #2196F3; /* A shade of blue for main elements */
+    --dark-blue: #1976D2; /* Darker blue for hover states */
+    --light-blue: #E3F2FD; /* Lighter blue for backgrounds */
+    --text-dark: #333333;
+    --text-light: #f5f5f5;
+    --white: #ffffff;
+    --grey-text: #757575;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 2px 5px rgba(0,0,0,0.1);
+    --shadow-medium: 0 5px 15px rgba(0,0,0,0.2);
+    --border-radius-small: 5px;
+    --border-radius-medium: 8px;
+    --border-radius-large: 25px; /* For search bar elements */
+}
+
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif; /* Primary font */
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--background-light);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif; /* Heading font */
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+/* --- Header --- */
+.header {
+    position: absolute; /* Position over the hero section */
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    z-index: 100;
+    color: var(--white); /* White text for header elements */
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.submit-property-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--border-radius-small);
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.submit-property-btn:hover {
+    background-color: var(--dark-blue);
+}
+
+.sign-in-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sign-in-link:hover {
+    color: var(--light-blue);
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.main-nav a {
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: var(--light-blue);
+}
+
+.main-nav .fa-chevron-down {
+    font-size: 0.7em;
+}
+
+.header-right .logo {
+    height: 30px; /* Adjust logo size */
+    width: auto;
+}
+
+.header-right .logo-text {
+    font-size: 0.8em;
+    color: var(--grey-text); /* Lighter text for tagline */
+}
+
+/* --- Hero Section --- */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--light-blue); /* Fallback background */
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the entire area */
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Dark overlay */
+    z-index: 2;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: var(--white);
+    padding: 20px;
+    max-width: 900px; /* Max width for content */
+}
+
+.hero-title {
+    font-size: 4.5em; /* Large title */
+    margin-bottom: 10px;
+    color: var(--white);
+    line-height: 1.1;
+}
+
+.hero-description {
+    font-size: 1.1em;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.toggle-buttons {
+    display: inline-flex; /* Use inline-flex for horizontal layout */
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background */
+    border-radius: var(--border-radius-large); /* Fully rounded capsule */
+    padding: 5px;
+    margin-bottom: 30px;
+}
+
+.toggle-btn {
+    background-color: transparent;
+    color: var(--white);
+    padding: 8px 25px;
+    border-radius: var(--border-radius-large);
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.toggle-btn.active {
+    background-color: var(--white);
+    color: var(--primary-blue);
+}
+
+.toggle-btn:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-bar {
+    background-color: var(--white);
+    border-radius: var(--border-radius-large); /* Fully rounded search bar */
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: var(--shadow-medium);
+    max-width: 900px; /* Max width for search bar */
+    margin: 0 auto;
+}
+
+.search-icon-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 12px 25px;
+    border-radius: var(--border-radius-large); /* Fully rounded button */
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0; /* Prevent shrinking */
+    transition: background-color 0.3s ease;
+}
+
+.search-icon-btn:hover {
+    background-color: var(--dark-blue);
+}
+
+.search-advanced-btn {
+    background-color: transparent;
+    color: var(--grey-text);
+    padding: 12px 15px;
+    border-radius: var(--border-radius-large);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.search-advanced-btn:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.search-input-group {
+    flex-grow: 1; /* Allow inputs to take available space */
+    text-align: left;
+    position: relative; /* For icon positioning */
+    padding-right: 25px; /* Space for icon */
+}
+
+.search-input-group + .search-input-group {
+    border-left: 1px solid var(--border-color); /* Divider between inputs */
+    padding-left: 15px;
+}
+
+.search-input-group label {
+    display: block;
+    font-size: 0.75em;
+    color: var(--grey-text);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.search-input-group input,
+.search-input-group select {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 1em;
+    color: var(--text-dark);
+    outline: none;
+    padding: 0;
+    -webkit-appearance: none; /* Remove default dropdown arrow */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.search-input-group select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23757575" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0px center; /* Position arrow */
+    background-size: 16px; /* Size arrow */
+    padding-right: 20px; /* Make space for the arrow */
+}
+
+.search-input-group .input-icon {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--grey-text);
+    font-size: 0.9em;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 1024px) {
+    .header {
+        padding: 15px 30px;
+    }
+    .main-nav ul {
+        gap: 20px;
+    }
+    .hero-title {
+        font-size: 3.5em;
+    }
+    .search-bar {
+        flex-wrap: wrap; /* Allow items to wrap */
+        justify-content: center;
+        padding: 15px;
+    }
+    .search-icon-btn, .search-advanced-btn {
+        width: 100%; /* Full width for buttons */
+        margin-bottom: 10px;
+    }
+    .search-input-group {
+        width: calc(50% - 10px); /* Two columns */
+        margin-bottom: 10px;
+    }
+    .search-input-group + .search-input-group {
+        border-left: none; /* Remove vertical divider when wrapped */
+        padding-left: 0;
+    }
+    .search-input-group:nth-child(even) { /* Apply border to first item in second column */
+        border-left: 1px solid var(--border-color);
+        padding-left: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+        position: relative; /* Make header static for mobile */
+        background-color: var(--primary-blue); /* Solid background for visibility */
+    }
+    .header-left, .header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    .main-nav {
+        display: none; /* Hide main nav on small screens, could be a hamburger menu */
+    }
+    .hero-section {
+        height: auto; /* Auto height for content */
+        padding-top: 80px; /* Space for header */
+    }
+    .hero-title {
+        font-size: 2.5em;
+    }
+    .hero-description {
+        font-size: 1em;
+    }
+    .toggle-buttons {
+        flex-direction: column; /* Stack toggle buttons */
+        width: 80%;
+        max-width: 200px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .toggle-btn {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    .search-bar {
+        flex-direction: column; /* Stack search bar elements */
+        padding: 15px;
+        width: 90%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .search-icon-btn, .search-advanced-btn {
+        width: 100%;
+    }
+    .search-input-group {
+        width: 100%; /* Full width for inputs */
+        padding-right: 0; /* Remove icon padding */
+    }
+    .search-input-group + .search-input-group {
+        border-left: none;
+        padding-left: 0;
+        border-top: 1px solid var(--border-color); /* Add top border for stacking */
+        padding-top: 15px;
+    }
+    .search-input-group .input-icon {
+        display: none; /* Hide icons on mobile for cleaner look */
+    }
+    .search-input-group select {
+        background-position: right 8px center; /* Adjust arrow position */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2em;
+    }
+    .hero-description {
+        font-size: 0.9em;
+    }
+}
+
+</style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <button class="submit-property-btn">
+                <i class="fas fa-plus"></i> Submit Property
+            </button>
+            <a href="#" class="sign-in-link">
+                Sign in <i class="fas fa-user"></i>
+            </a>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#">Dashboard <i class="fas fa-chevron-down"></i></a></li>
+                <li><a href="#">Blog <i class="fas fa-chevron-down"></i></a></li>
+                <li><a href="#">Pages <i class="fas fa-chevron-down"></i></a></li>
+                <li><a href="#">Properties <i class="fas fa-chevron-down"></i></a></li>
+                <li><a href="#">Listing <i class="fas fa-chevron-down"></i></a></li>
+                <li><a href="#">Home <i class="fas fa-chevron-down"></i></a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <img src="https://placehold.co/100x30/FFFFFF/000000?text=Home+Lengo" alt="Home Lengo Logo" class="logo">
+            <span class="logo-text">Searching homes</span>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-background">
+            <!-- Placeholder image for the background -->
+            <img src="https://placehold.co/1920x800/E0E0E0/333333?text=Dream+Home+Background" alt="Dream Home Background">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Dream Home Find Your</h1>
+            <p class="hero-description">We are a real estate agency that will help you find the best residence you dream of, let's discuss for your dream house</p>
+
+            <div class="toggle-buttons">
+                <button class="toggle-btn active">For Sale</button>
+                <button class="toggle-btn">For Rent</button>
+            </div>
+
+            <div class="search-bar">
+                <button class="search-icon-btn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <button class="search-advanced-btn">
+                    <i class="fas fa-sliders-h"></i> Search advanced
+                </button>
+                <div class="search-input-group">
+                    <label for="keyword">Keyword</label>
+                    <input type="text" id="keyword" placeholder="Search Keyword">
+                    <i class="fas fa-map-marker-alt input-icon"></i>
+                </div>
+                <div class="search-input-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="Search Location">
+                    <i class="fas fa-globe input-icon"></i>
+                </div>
+                <div class="search-input-group">
+                    <label for="type">Type</label>
+                    <select id="type">
+                        <option value="all">All</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="house">House</option>
+                        <option value="villa">Villa</option>
+                    </select>
+                    <i class="fas fa-chevron-down input-icon"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- You can add more sections here as needed -->
+
+</body>
+</html>

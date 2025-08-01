@@ -15,7 +15,7 @@
 <body>
     {{-- Sidebar (Menu Mobile) - Identique à HomePage --}}
     <div class="sidebar" id="sidebar">
-        <div class="sidebar_header">
+        <div class="sidebar_header"> 
             <img src="{{ asset('images/logo.png') }}" alt="Logo Résidences Nehemie" class="sidebar_logo" onerror="this.onerror=null;this.src='https://placehold.co/150x50/FFFFFF/000000?text=LOGO';">
             <i class="fas fa-times sidebar_close_btn" id="sidebar-close-btn"></i>
         </div>

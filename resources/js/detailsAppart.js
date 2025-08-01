@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // header.classList.remove('scrolled'); // Décommenter si vous avez des styles .header.scrolled spécifiques
             }
         });
-    }
+    } 
 
     // --- Sidebar (Mobile Menu) Toggle (Unified with HomePage) ---
     const sidebar = document.getElementById('sidebar');

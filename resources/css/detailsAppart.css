@@ -83,10 +83,10 @@ button {
 
 /* Style ajouté quand le header a une classe "scrolled" (ajoutée par JS) */
 /* Ce style est moins pertinent ici car le header est déjà blanc et a une ombre */
-/* .header.scrolled {
+ .header.scrolled {
     background-color: var(--white);
     box-shadow: var(--shadow-light);
-} */
+} 
 
 .nav {
     max-width: 1200px; /* Adaptez à votre mise en page */

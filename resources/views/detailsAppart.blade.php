@@ -170,7 +170,7 @@
                     <hr>
 
                     <div class="location-map-section">
-                        <h3>Faite votre choix</h3>
+                        <!-- <h3>Laisser nous vous guider</h3> -->
                         <p>{{ $residence->quartier ?? 'Quartier' }}, {{ $residence->ville ?? 'Ville' }}, {{ $residence->pays ?? 'Pays' }}</p>
                         <div class="map-placeholder">
                             <img src="https://placehold.co/600x400/F0F0F0/333333?text=Carte+de+la+localisation" alt="Carte de la localisation">

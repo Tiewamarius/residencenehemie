@@ -6,14 +6,14 @@
         </a>
         <ul class="nav_item">
             <li><a href="{{ url('/') }}" class="nav_link">Accueil</a></li>
-            <li><a href="#" class="nav_link">Appartements</a></li>
+            <li><a href="#appartements" class="nav_link">Appartements</a></li>
             <li><a href="#" class="nav_link" id="contact_open_btn">Contact</a></li>
             <li><a href="#" class="nav_link" id="search-toggle-btn-desktop"><i class="fas fa-search"></i></a></li>
             
             @guest
-                <li><a href="#" class="nav_link" id="open-login-modal"><i class="fas fa-heart"></i></a></li>
+                <!-- <li><a href="#" class="nav_link" id="open-login-modal"><i class="fas fa-heart"></i></a></li> -->
             @else
-                <li><a href="{{ route('favorites.index') }}" class="nav_link"><i class="fas fa-heart"></i></a></li>
+                <!-- <li><a href="{{ route('favorites.index') }}" class="nav_link"><i class="fas fa-heart"></i></a></li> -->
                 <li><a href="{{ route('profile.homeUser') }}" class="nav_link"><i class="fas fa-user-circle"></i></a></li>
                 <li><a href="#" class="nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-header').submit();">
                     <i class="fas fa-sign-out-alt"></i>

@@ -3,44 +3,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('overlay');
 
     // --- Références à toutes les modales/sidebars pour la gestion de l'overlay ---
-    // const sidebar = document.getElementById('sidebar');
-    // const contactSidebar = document.getElementById('contactsidebar');
+    const sidebar = document.getElementById('sidebar');
+    const contactSidebar = document.getElementById('contactsidebar');
     const chatContainer = document.getElementById('chat-container');
     const loginModalOverlay = document.getElementById('login-modal-overlay');
     const equipmentModalOverlay = document.getElementById('Equipment-modal-overlay');
-    const reviewsModalOverlay = document.getElementById('reviews-modal-overlay'); // Assuming you might add this for reviews
+    const reviewsModalOverlay = document.getElementById('reviews-modal-overlay');
+
+    // Tableau de toutes les modales/sidebars pour une gestion simplifiée
+    const allModalsAndSidebars = [
+        sidebar,
+        contactSidebar,
+        chatContainer,
+        loginModalOverlay,
+        equipmentModalOverlay,
+        reviewsModalOverlay
+    ].filter(el => el !== null); // Filtre les éléments non trouvés dans le DOM
 
 
-    
     // Fonction utilitaire pour vérifier si une modale/sidebar est active
     function isAnyModalOrSidebarActive() {
-        return (sidebar && sidebar.classList.contains('active')) ||
-               (contactSidebar && contactSidebar.classList.contains('active')) ||
-               (chatContainer && chatContainer.classList.contains('active')) ||
-               (loginModalOverlay && loginModalOverlay.classList.contains('active')) ||
-               (equipmentModalOverlay && equipmentModalOverlay.classList.contains('active')) ||
-               (reviewsModalOverlay && reviewsModalOverlay.classList.contains('active'));
+        return allModalsAndSidebars.some(el => el.classList.contains('active'));
     }
 
     // Fonction pour gérer le défilement du corps de la page et l'opacité
     function toggleBodyScroll(disableScroll) {
         if (disableScroll) {
             document.body.style.overflow = 'hidden';
-            document.body.classList.add('modal-open'); // Add class when a modal/sidebar is open
+            document.body.classList.add('modal-open');
         } else {
-            // Restore scroll and remove class only if NO other modal/sidebar is active
-            if (!isAnyModalOrSidebarActive()) {
-                document.body.style.overflow = '';
-                document.body.classList.remove('modal-open'); // Remove class when all are closed
-            }
+            document.body.style.overflow = '';
+            document.body.classList.remove('modal-open');
         }
     }
 
-    // --- Header Scroll Effect ---
+    // --- NOUVELLE FONCTION : Ferme toutes les modales et sidebars ---
+    function closeAll() {
+        allModalsAndSidebars.forEach(el => {
+            el.classList.remove('active');
+        });
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+        toggleBodyScroll(false);
+    }
+    
+    // --- NOUVELLE FONCTION : Gère le clic sur l'overlay ---
+    if (overlay) {
+        overlay.addEventListener('click', closeAll);
+    }
+
+    // --- HEADER SCROLL EFFECT --- (Pas de changement)
     const header = document.querySelector('.header');
     if (header) {
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // Adjust scroll threshold as needed
+            if (window.scrollY > 50) {
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
@@ -48,42 +65,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Sidebar (Mobile Menu) Toggle ---
+    // --- Sidebar (Mobile Menu) Toggle --- (Légèrement modifié)
     const menuToggleBtn = document.getElementById('menu-toggle-btn');
     const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
 
     if (menuToggleBtn && sidebar && sidebarCloseBtn && overlay) {
         menuToggleBtn.addEventListener('click', () => {
+            closeAll(); // Ferme tout avant d'ouvrir un nouvel élément
             sidebar.classList.add('active');
             overlay.classList.add('active');
             toggleBodyScroll(true);
         });
 
-        sidebarCloseBtn.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-            toggleBodyScroll(false);
-            // Overlay will be managed by its own listener if no other modal is open
-        });
+        sidebarCloseBtn.addEventListener('click', closeAll);
     }
 
- 
-
-    // --- Contact Sidebar Toggle ---
+    // --- Contact Sidebar Toggle --- (Légèrement modifié)
     const contactOpenBtn = document.getElementById('contact_open_btn');
-    const contactOpenSidebarBtn = document.getElementById('contact-open-sidebar-btn'); // Button in sidebar
+    const contactOpenSidebarBtn = document.getElementById('contact-open-sidebar-btn');
     const contactSidebarCloseBtn = document.getElementById('contactsidebar_close_btn');
 
     function toggleContactSidebar() {
         if (contactSidebar) {
-            contactSidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            toggleBodyScroll(contactSidebar.classList.contains('active'));
-            // Close other modals/sidebars if open
-            if (sidebar) sidebar.classList.remove('active');
-            if (chatContainer) chatContainer.classList.remove('active');
-            if (loginModalOverlay) loginModalOverlay.classList.remove('active');
-            if (equipmentModalOverlay) equipmentModalOverlay.classList.remove('active');
-            if (reviewsModalOverlay) reviewsModalOverlay.classList.remove('active');
+            closeAll(); // Ferme tout avant d'ouvrir un nouvel élément
+            contactSidebar.classList.add('active');
+            overlay.classList.add('active');
+            toggleBodyScroll(true);
         }
     }
 
@@ -96,18 +103,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (contactOpenSidebarBtn) {
         contactOpenSidebarBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (sidebar) sidebar.classList.remove('active');
             toggleContactSidebar();
         });
     }
     if (contactSidebarCloseBtn) {
-        contactSidebarCloseBtn.addEventListener('click', toggleContactSidebar);
+        contactSidebarCloseBtn.addEventListener('click', closeAll);
     }
-
-    // --- Login/Registration Modal Toggle ---
-    const openLoginModalBtn = document.getElementById('open-login-modal'); // Header Favorites link for guests
-    const openLoginModalTriggers = document.querySelectorAll('.open-login-modal-trigger'); // "Enregistrer" link on apartment page
-
+    
+    // --- Login/Registration Modal Toggle --- (Modifié pour utiliser closeAll)
+    const openLoginModalBtn = document.getElementById('open-login-modal');
+    const openLoginModalTriggers = document.querySelectorAll('.open-login-modal-trigger');
     const loginTabBtn = document.getElementById('login-tab-btn');
     const registerTabBtn = document.getElementById('register-tab-btn');
     const loginSection = document.getElementById('login-section');
@@ -138,25 +143,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openLoginModal() {
         if (loginModalOverlay && overlay) {
+            closeAll(); // Ferme tout avant d'ouvrir
             loginModalOverlay.classList.add('active');
             overlay.classList.add('active');
             toggleBodyScroll(true);
-            // Close other modals/sidebars if open
-            if (sidebar) sidebar.classList.remove('active');
-            if (contactSidebar) contactSidebar.classList.remove('active');
-            if (chatContainer) chatContainer.classList.remove('active');
-            if (equipmentModalOverlay) equipmentModalOverlay.classList.remove('active');
-            if (reviewsModalOverlay) reviewsModalOverlay.classList.remove('active');
-
-            showLoginForm(); // Always show login form by default
+            showLoginForm(); // Affiche toujours le formulaire de connexion par défaut
         }
     }
 
-    function closeLoginModal() {
-        if (loginModalOverlay && overlay) {
-            loginModalOverlay.classList.remove('active');
-            toggleBodyScroll(false);
-        }
+    const loginModalCloseBtn = document.getElementById('login-modal-close-btn');
+    if (loginModalCloseBtn) {
+        loginModalCloseBtn.addEventListener('click', closeAll);
     }
 
     if (openLoginModalBtn) {
@@ -165,7 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             openLoginModal();
         });
     }
-
     openLoginModalTriggers.forEach(trigger => {
         trigger.addEventListener('click', (e) => {
             e.preventDefault();
@@ -173,34 +169,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const loginModalCloseBtn = document.getElementById('login-modal-close-btn');
-    if (loginModalCloseBtn) {
-        loginModalCloseBtn.addEventListener('click', closeLoginModal);
-    }
-
     if (loginModalOverlay) {
         loginModalOverlay.addEventListener('click', (e) => {
             if (e.target === loginModalOverlay) {
-                closeLoginModal();
+                closeAll();
             }
         });
     }
 
-    // --- Equipment Modal Toggle ---
+    // --- Equipment Modal Toggle --- (Modifié pour utiliser closeAll)
     const showAllEquipmentBtn = document.getElementById('show-all-Equipment-btn');
     const equipmentModalCloseBtn = document.getElementById('Equipment-modal-close');
 
     function toggleEquipmentModal() {
         if (equipmentModalOverlay) {
-            equipmentModalOverlay.classList.toggle('active');
-            overlay.classList.toggle('active');
-            toggleBodyScroll(equipmentModalOverlay.classList.contains('active'));
-            // Close other modals/sidebars if open
-            if (sidebar) sidebar.classList.remove('active');
-            if (contactSidebar) contactSidebar.classList.remove('active');
-            if (chatContainer) chatContainer.classList.remove('active');
-            if (loginModalOverlay) loginModalOverlay.classList.remove('active');
-            if (reviewsModalOverlay) reviewsModalOverlay.classList.remove('active');
+            closeAll(); // Ferme tout avant d'ouvrir
+            equipmentModalOverlay.classList.add('active');
+            overlay.classList.add('active');
+            toggleBodyScroll(true);
         }
     }
 
@@ -208,56 +194,36 @@ document.addEventListener('DOMContentLoaded', () => {
         showAllEquipmentBtn.addEventListener('click', toggleEquipmentModal);
     }
     if (equipmentModalCloseBtn) {
-        equipmentModalCloseBtn.addEventListener('click', toggleEquipmentModal);
+        equipmentModalCloseBtn.addEventListener('click', closeAll);
     }
     if (equipmentModalOverlay) {
         equipmentModalOverlay.addEventListener('click', (e) => {
             if (e.target === equipmentModalOverlay) {
-                toggleEquipmentModal();
+                closeAll();
             }
         });
     }
 
     // --- Reviews Modal Toggle (Placeholder, assuming similar structure) ---
     const showAllReviewsBtn = document.getElementById('show-all-reviews-btn');
-    // const reviewsModalCloseBtn = document.getElementById('reviews-modal-close'); // You'd need this ID in HTML
+    const reviewsModalCloseBtn = document.getElementById('reviews-modal-close');
 
-    // if (showAllReviewsBtn && reviewsModalOverlay) {
-    //     showAllReviewsBtn.addEventListener('click', () => {
-    //         reviewsModalOverlay.classList.add('active');
-    //         overlay.classList.add('active');
-    //         toggleBodyScroll(true);
-    //     });
-    // }
-    // if (reviewsModalCloseBtn && reviewsModalOverlay) {
-    //     reviewsModalCloseBtn.addEventListener('click', () => {
-    //         reviewsModalOverlay.classList.remove('active');
-    //         overlay.classList.remove('active');
-    //         toggleBodyScroll(false);
-    //     });
-    // }
-    // if (reviewsModalOverlay) {
-    //     reviewsModalOverlay.addEventListener('click', (e) => {
-    //         if (e.target === reviewsModalOverlay) {
-    //             reviewsModalOverlay.classList.remove('active');
-    //             overlay.classList.remove('active');
-    //             toggleBodyScroll(false);
-    //         }
-    //     });
-    // }
-
-    // --- Overlay global click listener (to close all) ---
-    if (overlay) {
-        overlay.addEventListener('click', () => {
-            if (sidebar) sidebar.classList.remove('active');
-            if (contactSidebar) contactSidebar.classList.remove('active');
-            if (chatContainer) chatContainer.classList.remove('active');
-            if (loginModalOverlay) loginModalOverlay.classList.remove('active');
-            if (equipmentModalOverlay) equipmentModalOverlay.classList.remove('active');
-            if (reviewsModalOverlay) reviewsModalOverlay.classList.remove('active');
-            
-            overlay.classList.remove('active');
-            toggleBodyScroll(false); // This will now correctly remove 'modal-open' if nothing else is active
+    if (showAllReviewsBtn && reviewsModalOverlay) {
+        showAllReviewsBtn.addEventListener('click', () => {
+            closeAll(); // Ferme tout avant d'ouvrir
+            reviewsModalOverlay.classList.add('active');
+            overlay.classList.add('active');
+            toggleBodyScroll(true);
+        });
+    }
+    if (reviewsModalCloseBtn && reviewsModalOverlay) {
+        reviewsModalCloseBtn.addEventListener('click', closeAll);
+    }
+    if (reviewsModalOverlay) {
+        reviewsModalOverlay.addEventListener('click', (e) => {
+            if (e.target === reviewsModalOverlay) {
+                closeAll();
+            }
         });
     }
 

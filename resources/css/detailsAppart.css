@@ -96,6 +96,7 @@ body.modal-open .apartment-main-content {
 }
 
 .apartment-gallery .thumbnail-grid {
+    cursor: pointer;
     grid-column: 2 / 3; /* Prend la deuxième colonne */
     grid-row: 1 / 3; /* Prend les deux lignes */
     display: grid;
@@ -191,7 +192,7 @@ body.modal-open .apartment-main-content {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: var(--border-radius-large); /* Apply to images too */
+    /* border-radius: var(--border-radius-medium); Apply to images too */
 }
 
 .apartment-gallery .thumbnail-grid {
@@ -206,7 +207,7 @@ body.modal-open .apartment-main-content {
     width: 100%;
     height: 100%; /* This is also key */
     object-fit: cover;
-    border-radius: var(--border-radius-large); /* Apply to images too */
+    border-radius: var(--border-radius-medium); /* Apply to images too */
 }
 
 /* --- Apartment Details Layout (Left and Right Columns) --- */

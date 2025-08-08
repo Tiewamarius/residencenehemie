@@ -14,6 +14,7 @@
             {{-- Section de Connexion --}}
             <div id="login-section" class="form-section active">
                 <form action="{{ route('login') }}" method="POST" class="login-form">
+                    @csrf
                     <div class="form-group">
                         <input type="text" id="login-email" name="email_or_username" placeholder="Entrez votre email ou nom d'utilisateur" required>
                     </div>
@@ -26,8 +27,8 @@
 
             {{-- Section d'Inscription --}}
             <div id="register-section" class="form-section">
-                <form action="{{route('register')}}" method="POST" class="register-form"> {{-- NOTE: Changé action à route('register') --}}
-                    @csrf {{-- N'oubliez pas le CSRF token pour les formulaires POST --}}
+                <form action="{{route('register')}}" method="POST" class="register-form">
+                    @csrf
                     <div class="form-group">
                         <input type="text" id="register-name" name="name" placeholder="Entrez votre nom complet" required>
                     </div>

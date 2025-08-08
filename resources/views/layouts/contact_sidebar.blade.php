@@ -8,8 +8,8 @@
         <p>Où que vous soyez, nos conseillers seront ravis de vous aider.</p>
         <ul>
             <li>
-                <a href="tel:+22500000000" class="contact-link">
-                    <i class="fas fa-phone-alt"></i> +225 00 00 00 00
+                <a href="tel:+2250707646363" class="contact-link">
+                    <i class="fas fa-phone-alt"></i> +225 07 07 64 63 63
                 </a>
             </li>
             <li>
@@ -18,12 +18,12 @@
                 </a>
             </li>
             <li>
-                <a href="mailto:contact@residencesnehemie.com" class="contact-link">
+                <a href="mailto:info@odedis.com" class="contact-link">
                     <i class="fas fa-envelope"></i> Envoyer un e-mail
                 </a>
             </li>
             <li>
-                <a href="https://wa.me/22500000000" target="_blank" class="contact-link">
+                <a href="https://wa.me/+2250707646363" target="_blank" class="contact-link">
                     <i class="fab fa-whatsapp"></i> WhatsApp
                 </a>
             </li>

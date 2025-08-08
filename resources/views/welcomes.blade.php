@@ -104,43 +104,49 @@
     {{-- Section "Pourquoi nous choisir" --}}
 <section class="why-choose-us">
     <h2 class="section-title">Pourquoi nous choisir ?</h2>
-    <p class="section-description">Nous avons conçu la Résidence Néhémie pour répondre à vos attentes les plus élevées. Voici ce qui fait notre différence.</p>
+    <!-- <p class="section-description">Nous avons conçu la Résidence Néhémie pour répondre à vos attentes les plus élevées. Voici ce qui fait notre différence.</p> -->
     <div class="why-choose-us-content">
         <div class="feature-buttons-container">
+            <!-- Bouton pour la qualité et le bien-être -->
             <button class="feature-button active"
                     data-feature="quality"
-                    data-image-display="images/RN2_Appart-4.jpeg"
-                    data-image-section="images/RN2_Appart-4.jpeg">
-                <!-- <i class="fas fa-gem"></i> -->
+                    data-image-section="http://127.0.0.1:8000/img/residences/tRex3gHwJe_RN2_Appart-4.jpeg">
+                <i class="fas fa-gem"></i>
                 <span>Votre Bien-Être</span>
             </button>
+            <!-- Bouton pour la flexibilité -->
             <button class="feature-button"
                     data-feature="flexibility"
-                    data-image-display="images/feature_flexibility.jpeg"
-                    data-image-section="images/feature_flexibility_section.jpeg">
-                <!-- <i class="fas fa-headset"></i> -->
+                    data-image-display=" "
+                    data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
+                <i class="fas fa-calendar-alt"></i>
                 <span>La Flexibilité</span>
             </button>
+            <!-- Bouton pour la sécurité -->
             <button class="feature-button"
                     data-feature="security_optimal"
-                    data-image-display="images/feature_security_optimal.jpeg"
-                    data-image-section="images/feature_security_optimal_section.jpeg">
-                <!-- <i class="fas fa-city"></i> -->
+                    data-image-display=" "
+                    data-image-section="http://127.0.0.1:8000/images/imageSecurit%C3%A9.jpg">
+                <i class="fas fa-shield-alt"></i>
                 <span>Sécurité Optimale</span>
+                <img src="images/imageSecurité.jpg" alt="" style='display:none;'>
             </button>
+            <!-- Bouton pour les commodités -->
             <button class="feature-button"
                     data-feature="amenities_comfort"
-                    data-image-display="images/feature_amenities_comfort.jpeg"
-                    data-image-section="images/feature_amenities_comfort_section.jpeg">
-                <!-- <i class="fas fa-shield-alt"></i> -->
+                    data-image-display=" "
+                    data-image-section="http://127.0.0.1:8000/img/residences/RwV1q1H0TW_RN8_Salon.jpg">
+                <i class="fas fa-concierge-bell"></i>
                 <span>Commodités & Confort</span>
             </button>
+            <!-- Bouton pour l'emplacement -->
             <button class="feature-button"
                     data-feature="accessibility"
-                    data-image-display="images/feature_accessibility.jpeg"
-                    data-image-section="images/feature_accessibility_section.jpeg">
-                <!-- <i class="fas fa-wheelchair"></i> -->
+                    data-image-display=" "
+                    data-image-section="http://127.0.0.1:8000/images/bckgEmplacement.jpg">
+                <i class="fas fa-map-marker-alt"></i>
                 <span>Emplacement idéal</span>
+                <img src="images/bckgEmplacement.jpg" alt="" style='display:none;'>
             </button>
         </div>
         <div class="feature-display-area">
@@ -150,6 +156,7 @@
     </div>
 </section>
 
+
     {{-- Section Témoignages --}}
     <section class="testimonials">
         <h2 class="section-title">Ce que nos clients disent</h2>
@@ -157,9 +164,9 @@
         <div class="properties-grid">
             <div class="testimonial-card">
                 <div class="flex items-center mb-4">
-                    <img src="https://placehold.co/60x60/FF385C/FFFFFF?text=JD" alt="Photo de profil de Jane Doe" class="rounded-full mr-4">
+                    <img src="images/couz.jpg" alt="Photo de profil de Jane Doe" class="rounded-full mr-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Jane Doe</h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Armel Dimitri</h3>
                         <p class="text-sm text-gray-600">Client fidèle</p>
                     </div>
                 </div>
@@ -169,7 +176,7 @@
                 <div class="flex items-center mb-4">
                     <img src="https://placehold.co/60x60/FF385C/FFFFFF?text=SM" alt="Photo de profil de Samuel Martin" class="rounded-full mr-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Samuel Martin</h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Thibaut Schoelcher</h3>
                         <p class="text-sm text-gray-600">Nouveau locataire</p>
                     </div>
                 </div>
@@ -177,9 +184,9 @@
             </div>
             <div class="testimonial-card">
                 <div class="flex items-center mb-4">
-                    <img src="https://placehold.co/60x60/FF385C/FFFFFF?text=EL" alt="Photo de profil d'Emma Leroy" class="rounded-full mr-4">
+                    <img src="images/bg.jpg" alt="Photo de profil d'Emma Leroy" class="rounded-full mr-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-800">Emma Leroy</h3>
+                        <h3 class="text-lg font-semibold text-gray-800">Oodo Schoelcher</h3>
                         <p class="text-sm text-gray-600">Investisseur</p>
                     </div>
                 </div>

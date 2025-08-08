@@ -6,8 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@yield('title', 'Résidences Nehemie')</title> {{-- Titre dynamique --}}
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- Inclure Vite pour vos assets CSS et JS --}}
     @vite([
+        
+        'resources/js/myapp.js',
+
+
         'resources/css/homepage.css',
         'resources/js/homepage.js',
 

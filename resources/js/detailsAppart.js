@@ -66,70 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Chat Assistant Modal Toggle ---
-    const formOpenBtn = document.getElementById('form-open');
-    const formOpenSidebarBtn = document.getElementById('form-open-sidebar'); // Button in sidebar
-    const chatCloseBtn = document.getElementById('chat-close-btn');
-    const chatInput = document.getElementById('chat_input');
-    const sendChatBtn = document.getElementById('send_chat_btn');
-    const chatMessages = document.getElementById('chat-messages');
-
-    function toggleChatModal() {
-        if (chatContainer) {
-            chatContainer.classList.toggle('active');
-            overlay.classList.toggle('active');
-            toggleBodyScroll(chatContainer.classList.contains('active'));
-            // Close other modals/sidebars if open
-            if (sidebar) sidebar.classList.remove('active');
-            if (contactSidebar) contactSidebar.classList.remove('active');
-            if (loginModalOverlay) loginModalOverlay.classList.remove('active');
-            if (equipmentModalOverlay) equipmentModalOverlay.classList.remove('active');
-            if (reviewsModalOverlay) reviewsModalOverlay.classList.remove('active');
-        }
-    }
-
-    if (formOpenBtn) {
-        formOpenBtn.addEventListener('click', toggleChatModal);
-    }
-    if (formOpenSidebarBtn) {
-        formOpenSidebarBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (sidebar) sidebar.classList.remove('active');
-            toggleChatModal();
-        });
-    }
-    if (chatCloseBtn) {
-        chatCloseBtn.addEventListener('click', toggleChatModal);
-    }
-
-    // Basic chat functionality (to be extended with LLM integration)
-    if (sendChatBtn && chatInput && chatMessages) {
-        sendChatBtn.addEventListener('click', () => {
-            const messageText = chatInput.value.trim();
-            if (messageText !== '') {
-                const userMessageDiv = document.createElement('div');
-                userMessageDiv.classList.add('message', 'user-message');
-                userMessageDiv.textContent = messageText;
-                chatMessages.appendChild(userMessageDiv);
-                chatInput.value = '';
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-
-                setTimeout(() => {
-                    const botMessageDiv = document.createElement('div');
-                    botMessageDiv.classList.add('message', 'bot-message');
-                    botMessageDiv.textContent = "Je suis un assistant virtuel. Comment puis-je vous aider davantage ?";
-                    chatMessages.appendChild(botMessageDiv);
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 1000);
-            }
-        });
-
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendChatBtn.click();
-            }
-        });
-    }
+ 
 
     // --- Contact Sidebar Toggle ---
     const contactOpenBtn = document.getElementById('contact_open_btn');

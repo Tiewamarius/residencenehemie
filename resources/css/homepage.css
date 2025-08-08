@@ -14,7 +14,7 @@
     --shadow-light: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
     --border-radius-small: 8px;
-    --border-radius-medium: 12px;
+    --border-radius-medium: 10px;
     --border-radius-large: 16px;
 }
 
@@ -499,7 +499,7 @@ button {
 /* --- Chat Assistant Modale --- */
 .chat_container {
     position: fixed;
-    bottom: 20px;
+    bottom: 100px;
     right: 20px;
     width: 350px;
     height: 450px;
@@ -602,13 +602,12 @@ button {
 
 /* --- Section Featured Properties --- */
 .featured-properties {
-    padding: 60px 24px; /* Ajusté */
+    padding: 50px 24px; /* Ajusté */
     background-color: var(--white); /* Fond blanc pour cette section */
     text-align: center;
     /* Ombre simple (décalage horizontal, décalage vertical, couleur) */
-    
-        box-shadow: 0px 50px 50px  50px rgba(255, 255, 255, 0.977);
-    
+    box-shadow: 0px 80px 50px 50px #fffffff9;
+
 }
 
 .section-title {
@@ -1006,7 +1005,7 @@ button {
         height: 400px;
         right: 5%;
         left: 5%;
-        bottom: 10px;
+        bottom: 100px;
         transform: scale(1); /* Pas de transformation sur les petits écrans */
     }
 }
@@ -1436,11 +1435,12 @@ button {
     }
 
     .chat_container {
-        width: 90%;
-        height: 400px;
-        right: 5%;
-        left: 5%;
-        bottom: 10px;
+        border: 1px solid var(--primary-color-hover);
+        width: 70%;
+        height: 350px;
+        right: 10%;
+        left: 10%;
+        bottom: 100px;
         transform: scale(1); /* Pas de transformation sur les petits écrans */
     }
 }
@@ -1459,21 +1459,20 @@ button {
     }
 }
 
-/* --- Sections: Why Choose Us & Testimonials --- */
-/* (Les règles générales .why-choose-us, .testimonials existantes sont conservées,
-   j'ai juste ajusté pour la section spécifique ci-dessous) */
 
 /* Styles pour la section "Pourquoi nous choisir" */
+
+/* Section principale "Pourquoi nous choisir" */
 .why-choose-us {
     position: relative;
-    padding: 80px 20px; /* Augmentation du padding pour plus d'espace */
+    padding: 30px 10px; /* Augmentation du padding pour plus d'espace */
     margin: 0 auto;
     text-align: center;
     overflow: hidden;
     color: var(--white); /* Texte blanc par défaut pour la section */
     background-color: var(--background-dark); /* Fond de secours */
     /* Variable CSS pour l'image de fond de la section entière, définie par JS */
-    --why-choose-us-background-image: url('../images/RN2_Appart-4.jpeg'); /* Image par défaut */
+    --why-choose-us-background-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Etre'); /* Image par défaut */
 }
 
 /* Pseudo-élément pour l'image de fond de la section */
@@ -1488,13 +1487,13 @@ button {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: brightness(0.4) blur(3px); /* Assombrit et floute l'image pour la lisibilité du texte */
+    filter: brightness(0.6) blur(px); /* Assombrit et floute l'image pour la lisibilité du texte */
     z-index: 0;
     transition: background-image 0.7s ease-in-out, filter 0.7s ease-in-out; /* Transition douce pour l'image et le filtre */
 }
 
 /* Pseudo-élément pour l'overlay de dégradé sur l'image de fond de la section (conservé mais optionnel si le filtre suffit) */
-/* .why-choose-us::after {
+.why-choose-us::after {
     content: '';
     position: absolute;
     top: 0;
@@ -1503,7 +1502,7 @@ button {
     height: 100%;
     background: rgba(0, 0, 0, 0.3);
     z-index: 1;
-} */
+}
 
 /* S'assure que le contenu de la section est au-dessus du fond et de l'overlay */
 .why-choose-us .section-title,
@@ -1522,13 +1521,13 @@ button {
     flex-direction: column; /* Par défaut, les éléments s'empilent sur mobile */
     gap: 30px; /* Espacement entre les deux colonnes */
     max-width: 1200px;
-    margin: 60px auto 0; /* Marge supérieure pour séparer du titre de section */
+    margin: 10px auto 0; /* Marge supérieure pour séparer du titre de section */
     align-items: flex-start; /* Aligne les éléments au début */
-    padding: 30px; /* Padding interne */
-    background-color: rgba(255, 255, 255, 0.05); /* Léger fond translucide pour le conteneur global */
+    padding: 10px; /* Padding interne */
+    /*background-color: rgba(255, 255, 255, 0.05);  Léger fond translucide pour le conteneur global */
     border-radius: var(--border-radius-large);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* Ombre pour le conteneur principal */
-    backdrop-filter: blur(5px); /* Effet de flou sur l'arrière-plan du conteneur */
+    /*box-shadow: 0 10px 30px rgba(0,0,0,0.3);  Ombre pour le conteneur principal */
+    backdrop-filter: blur(2px); /* Effet de flou sur l'arrière-plan du conteneur */
 }
 
 @media (min-width: 992px) { /* Pour les tablettes et ordinateurs */
@@ -1560,7 +1559,6 @@ button {
         margin-bottom: 20px; /* Marge pour séparer de la zone d'affichage */
     }
 }
-
 
 /* Boutons de fonctionnalité individuels (les "onglets") */
 .feature-button {
@@ -1615,15 +1613,15 @@ button {
     flex-direction: column;
     justify-content: center; /* Centre le contenu verticalement */
     align-items: flex-start; /* Aligne le texte à gauche */
-    padding: 40px; /* Padding plus généreux */
+    padding: 20px; /* Padding plus généreux */
     border-radius: var(--border-radius-medium);
     overflow: hidden;
     min-height: 400px; /* Hauteur minimale augmentée */
     color: var(--white);
     text-align: justify;
-    box-shadow: var(--shadow-medium);
+    /* box-shadow: var(--shadow-medium); */
     /* Variable CSS pour l'image de fond de la zone d'affichage, définie par JS */
-    --current-feature-image: url('public/images/bg.jpg'); /* Image par défaut */
+    --current-feature-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Etre'); /* Image par défaut */
 }
 
 /* Pseudo-élément pour l'image de fond de la zone d'affichage */
@@ -1650,7 +1648,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%); /* Dégradé sombre du bas vers le haut */
+    /*background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);  Dégradé sombre du bas vers le haut */
     border-radius: var(--border-radius-medium);
     z-index: 2;
 }
@@ -1676,11 +1674,10 @@ button {
     margin-bottom: 0;
 }
 
-
 /* Section "Témoignages" */
 .testimonials {
     background-color: var(--background-light); /* Fond clair pour les témoignages */
-    padding: 50px 24px;
+    padding: 30px 15px;
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;

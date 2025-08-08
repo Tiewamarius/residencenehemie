@@ -30,7 +30,11 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
     @yield('head_extra') {{-- Pour des styles ou scripts supplémentaires spécifiques à une page --}}
-
+<style>
+    html {
+            scroll-behavior: smooth; /* Pour un défilement fluide */
+        }
+</style>
 </head>
 <body>
 

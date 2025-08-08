@@ -41,5 +41,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::fallback(function () {
+    return redirect('/');
+});
 require __DIR__.'/auth.php';
 require __DIR__.'/admins-auth.php';

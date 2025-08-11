@@ -1278,6 +1278,7 @@ button {
 
 /* Responsive pour la modale de connexion */
 @media (max-width: 600px) {
+    
     .login-modal {
         margin: 20px; /* Ajoute une marge sur les très petits écrans */
         border-radius: var(--border-radius-medium);
@@ -1324,13 +1325,17 @@ button {
         font-size: 0.95em;
     }
 }
-
+ 
 /* ========================================================================= */
 /* Responsive Styles (Suite des styles existants) */
 /* ========================================================================= */
 
 /* Styles pour les grands écrans (tablettes et desktop) */
 @media (min-width: 768px) {
+    #button-opens{
+        display: none;
+    }
+
     .hero-card-container {
         max-width: 400px; /* Conserve la largeur compacte comme sur l'image */
         padding: 30px; /* Revert to default padding */
@@ -1365,9 +1370,14 @@ button {
 
 /* Styles pour les petits écrans (smartphones) */
 @media (max-width: 767px) {
+    #button-opens{
+        display: non;
+    }
+
     /* Le formulaire de recherche principal est affiché sur les petits écrans */
     .banner-search-form {
-        display: flex; /* Rendre le formulaire principal visible */
+
+        display: none; /* Rendre le formulaire principal visible */
         flex-direction: column; /* Empile les éléments */
         gap: 0;
         border: 1px solid var(--border-color);

@@ -1,661 +1,679 @@
- 
-/* --- Main Content Layout for detailsAppart --- */
+/*
+ * Revised CSS for the apartment detail page.
+ *
+ * This version consolidates media queries, improves readability with consistent
+ * comments and variable usage, and refines the responsiveness of key sections.
+ */
+
+/* ========================================================================== */
+/* --- CSS Variables & General Styles --- */
+/* ========================================================================== */
+/*
+ * Note: Assuming these variables are defined elsewhere in a global stylesheet.
+ * I've used them consistently where applicable.
+ * --primary-color
+ * --primary-color-hover
+ * --text-color-dark
+ * --text-color-medium
+ * --text-color-light
+ * --border-color
+ * --white
+ * --background-light
+ * --border-radius-small
+ * --border-radius-medium
+ * --border-radius-large
+ * --shadow-light
+ * --shadow-medium
+ */
+
+body.modal-open {
+  overflow: hidden; /* Prevent body scroll when modal is open */
+}
+
 .apartment-main-content {
-    padding-top: calc(4rem + 80px); /* Adjust for fixed header height + extra space */
-    padding-bottom: 4rem; /* Space before footer */
-    transition: opacity 0.3s ease, filter 0.3s ease; /* Add transition for opacity/blur */
+  padding-top: calc(4rem + 80px); /* Adjust for fixed header height + extra space */
+  padding-bottom: 4rem; /* Space before footer */
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
-/* Style for main content when a modal/sidebar is open */
 body.modal-open .apartment-main-content {
-    opacity: 0.6; /* Reduced opacity */
-    filter: blur(2px); /* Optional: add a slight blur */
-    pointer-events: none; /* Prevent interaction with elements behind overlay */
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
 }
-
 
 .apartment-main-content .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
+/* ========================================================================== */
+/* --- Apartment Header Section --- */
+/* ========================================================================== */
 .apartment-header-section {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .apartment-header-section h1 {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--text-color-dark);
-    margin-bottom: 0.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
+  margin-bottom: 0.5rem;
 }
 
 .apartment-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem 1.5rem; /* Row gap, column gap */
-    font-size: 0.95rem;
-    color: var(--text-color-medium);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color-medium);
 }
 
 .apartment-meta i {
-    margin-right: 0.4rem;
-    color: var(--text-color-dark);
+  margin-right: 0.4rem;
+  color: var(--text-color-dark);
 }
 
 .apartment-meta .rating i.fas.fa-star {
-    color: #FFC107; /* Yellow star */
+  color: #FFC107; /* Yellow star */
 }
 
 .apartment-meta .actions {
-    margin-left: auto; /* Pousse les actions à droite */
-    display: flex;
-    gap: 1rem;
+  margin-left: auto;
+  display: flex;
+  gap: 1rem;
 }
 
 .apartment-meta .action-link {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--text-color-dark);
-    font-weight: 500;
-    transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-color-dark);
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .apartment-meta .action-link:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-/* --- Apartment Gallery --- */
+/* ========================================================================== */
+/* --- Apartment Gallery (Mobile-first approach) --- */
+/* ========================================================================== */
 .apartment-gallery {
-    display: grid;
-    /* Grande image à gauche (2.5 parts), miniatures à droite (1.5 parts) */
-    grid-template-columns: 2.5fr 1.5fr;
-    /* Les miniatures prendront deux lignes */
-    grid-template-rows: repeat(2, 1fr);
-    gap: 8px; /* Espacement entre les images */
-    /*border-radius: 12px;  Coins arrondis pour l'ensemble de la galerie */
-    overflow: hidden; /* Assure que les images respectent les coins arrondis */
-    margin-bottom: 20px; /* Marge sous la galerie */
-    height: 500px; /* Hauteur fixe pour la galerie entière */
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for mobile */
+  grid-template-rows: auto;
+  height: auto; /* Flexible height for mobile */
+  gap: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius-large);
 }
 
 .apartment-gallery .main-image {
-    grid-column: 1 / 2; /* Prend la première colonne */
-    grid-row: 1 / 3; /* Prend les deux lignes */
-    height: 100%; /* S'assure que l'image principale remplit sa zone */
-    overflow: hidden; /* Cache tout débordement */
+  height: 250px; /* Adjusted height for mobile screens */
+  overflow: hidden;
 }
 
 .apartment-gallery .main-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Recouvre la zone sans déformer l'image */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-medium);
 }
 
 .apartment-gallery .thumbnail-grid {
-    cursor: pointer;
-    grid-column: 2 / 3; /* Prend la deuxième colonne */
-    grid-row: 1 / 3; /* Prend les deux lignes */
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Deux colonnes pour les miniatures */
-    grid-template-rows: repeat(2, 1fr); /* Deux lignes pour les miniatures */
-    gap: 8px; /* Espacement entre les miniatures */
-    height: 100%; /* S'assure que la grille de miniatures remplit sa zone */
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Flexible thumbnails */
+  grid-template-rows: auto;
+  gap: 8px;
+  height: auto;
 }
 
 .apartment-gallery .thumbnail-grid .thumbnail-item {
-    position: relative; /* Pour positionner le bouton "Afficher toutes les photos" */
-    overflow: hidden; /* Assure que les images respectent les coins arrondis */
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-medium);
 }
 
 .apartment-gallery .thumbnail-grid img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Recouvre la zone sans déformer l'image */
-    /*border-radius: 8px;  Coins arrondis pour chaque miniature */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Style pour le bouton "Afficher toutes les photos" */
 .apartment-gallery .thumbnail-grid .show-all-photos-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Fond semi-transparent */
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    opacity: 1; /* Visible par défaut */
-    transition: background-color 0.3s ease;
-    /*border-radius: 8px;  Coins arrondis comme les miniatures */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .apartment-gallery .thumbnail-grid .show-all-photos-overlay:hover {
-    background-color: rgba(0, 0, 0, 0.6); /* Plus sombre au survol */
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .apartment-gallery .thumbnail-grid .show-all-photos-overlay span {
-    font-weight: 600;
-    text-align: center;
-    padding: 10px;
+  font-weight: 600;
+  text-align: center;
+  padding: 10px;
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 992px) {
-    .apartment-gallery {
-        grid-template-columns: 1fr; /* Une seule colonne pour la galerie */
-        grid-template-rows: auto; /* Hauteur automatique */
-        height: auto; /* Permet à la hauteur de s'adapter au contenu */
-    }
-
-    .apartment-gallery .main-image {
-        grid-column: auto; /* Réinitialise la colonne */
-        grid-row: auto; /* Réinitialise la ligne */
-        height: 300px; /* Hauteur ajustée pour mobile */
-    }
-
-    .apartment-gallery .thumbnail-grid {
-        grid-column: auto; /* Réinitialise la colonne */
-        grid-row: auto; /* Réinitialise la ligne */
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Miniatures plus petites et flexibles */
-        height: auto; /* Hauteur automatique pour la grille */
-    }
+/* --- Media Queries for Larger Screens --- */
+@media (min-width: 768px) {
+  .apartment-gallery .main-image {
+    height: 300px;
+  }
 }
 
-@media (max-width: 767px) {
-    .apartment-gallery .main-image {
-        height: 250px; /* Encore plus petite sur les très petits écrans */
-    }
-}
+@media (min-width: 992px) {
+  .apartment-gallery {
+    /* Large image on left (2.5 parts), thumbnails on right (1.5 parts) */
+    grid-template-columns: 2.5fr 1.5fr;
+    grid-template-rows: repeat(2, 1fr);
+    height: 500px; /* Fixed height for desktop gallery */
+    gap: 1rem;
+  }
 
-
-@media (min-width: 768px) { /* Tablet and larger */
-    .apartment-gallery {
-        grid-template-columns: 2fr 1fr; /* Main image on left, grid on right */
-        grid-template-rows: repeat(2, 1fr); /* Two rows for thumbnails */
-        height: 400px; /* Fixed height for the gallery */
-    }
-}
-
-.apartment-gallery .main-image {
+  .apartment-gallery .main-image {
     grid-column: 1 / 2;
-    grid-row: 1 / 3; /* Spans two rows on desktop */
-}
-
-.apartment-gallery .main-image img {
-    width: 100%;
+    grid-row: 1 / 3;
     height: 100%;
-    object-fit: cover;
-    /* border-radius: var(--border-radius-medium); Apply to images too */
-}
+  }
 
-.apartment-gallery .thumbnail-grid {
-    display: grid;
+  .apartment-gallery .main-image img {
+    border-radius: var(--border-radius-large);
+  }
+
+  .apartment-gallery .thumbnail-grid {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
+    height: 100%;
     gap: 1rem;
-    height: 100%; /* Explicitly make it fill the height of its grid area */
+  }
 }
 
-.apartment-gallery .thumbnail-grid img {
-    width: 100%;
-    height: 100%; /* This is also key */
-    object-fit: cover;
-    border-radius: var(--border-radius-medium); /* Apply to images too */
-}
-
-/* --- Apartment Details Layout (Left and Right Columns) --- */
+/* ========================================================================== */
+/* --- Apartment Details Layout (Mobile-first approach) --- */
+/* ========================================================================== */
 .apartment-details-layout {
-    display: flex;
-    flex-direction: column; /* Stack on mobile */
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-@media (min-width: 1024px) { /* Desktop */
-    .apartment-details-layout {
-        flex-direction: row;
-    }
-    .details-left-column {
-        flex: 2; /* Takes 2/3 of space */
-    }
-    .details-right-column {
-        flex: 1; /* Takes 1/3 of space */
-    }
+@media (min-width: 1024px) {
+  .apartment-details-layout {
+    flex-direction: row;
+  }
+  .details-left-column {
+    flex: 2;
+  }
+  .details-right-column {
+    flex: 1;
+  }
 }
 
 .details-left-column > div {
-    margin-bottom: 2rem;
+  margin-bottom: 2rem;
 }
 
 .details-left-column hr {
-    border: none;
-    border-top: 1px solid var(--border-color);
-    margin: 2rem 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
 }
 
+/* ========================================================================== */
+/* --- Overview Section --- */
+/* ========================================================================== */
 .overview-section h2 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    color: var(--text-color-dark);
-    margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 0.5rem;
 }
 
 .overview-section .guest-info {
-    font-size: 1em;
-    color: var(--text-color-medium);
-    margin-bottom: 1rem;
+  font-size: 1em;
+  color: var(--text-color-medium);
+  margin-bottom: 1rem;
 }
 
 .overview-section .guest-info i {
-    color: var(--text-color-dark);
-    margin-right: 0.3rem;
+  color: var(--text-color-dark);
+  margin-right: 0.3rem;
 }
 
 .host-summary {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color); /* Separator */
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
-.host-summary .host-profile_picture {
-    width: 50px;
-    height: 50px;
-    border-radius: 9999px;
-    object-fit: cover;
+.host-summary .host-profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Using 50% for a perfect circle */
+  object-fit: cover;
 }
 
 .host-summary p {
-    font-weight: 500;
-    color: var(--text-color-dark);
+  font-weight: 500;
+  color: var(--text-color-dark);
 }
 
+/* ========================================================================== */
+/* --- Description & Equipment Sections --- */
+/* ========================================================================== */
 .description-section h3,
-.Equipment-section h3,
+.equipment-section h3,
 .reviews-section h3,
 .location-map-section h3 {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--text-color-dark);
-    margin-bottom: 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 1rem;
 }
 
 .description-section p {
-    color: var(--text-color-medium);
-    margin-bottom: 1rem;
+  color: var(--text-color-medium);
+  margin-bottom: 1rem;
 }
 
 .description-section .read-more {
-    color: var(--text-color-dark);
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.2s ease;
+  color: var(--text-color-dark);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .description-section .read-more:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
-.Equipment-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* 2 columns on larger screens */
-    gap: 1rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.Equipment-list li {
-    display: flex;
-    align-items: center;
-    color: var(--text-color-dark);
-    font-size: 0.95rem;
+.equipment-list li {
+  display: flex;
+  align-items: center;
+  color: var(--text-color-dark);
+  font-size: 0.95rem;
 }
 
-.Equipment-list li i {
-    margin-right: 0.75rem;
-    color: var(--text-color-medium);
+.equipment-list li i {
+  margin-right: 0.75rem;
+  color: var(--text-color-medium);
 }
 
-.show-all-Equipment, .show-all-reviews {
-    background-color: var(--white);
-    border: 1px solid var(--text-color-dark);
-    color: var(--text-color-dark);
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius-small);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    margin-top: 1.5rem;
+.show-all-equipment,
+.show-all-reviews {
+  background-color: var(--white);
+  border: 1px solid var(--text-color-dark);
+  color: var(--text-color-dark);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: 1.5rem;
 }
 
-.show-all-Equipment:hover, .show-all-reviews:hover {
-    background-color: var(--background-light);
+.show-all-equipment:hover,
+.show-all-reviews:hover {
+  background-color: var(--background-light);
 }
 
+/* ========================================================================== */
 /* --- Reviews Section --- */
+/* ========================================================================== */
 .reviews-section h3 i.fas.fa-star {
-    color: #FFC107;
-    margin-right: 0.5rem;
+  color: #FFC107;
+  margin-right: 0.5rem;
 }
 
 .review-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
 @media (min-width: 768px) {
-    .review-grid {
-        grid-template-columns: repeat(2, 1fr); /* Two columns for reviews */
-    }
+  .review-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .review-item {
-    background-color: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-medium);
-    padding: 1.25rem;
-    box-shadow: var(--shadow-light);
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-light);
 }
 
 .reviewer-info {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.reviewer-info .reviewer-profile_picture {
-    width: 40px;
-    height: 40px;
-    border-radius: 9999px;
-    object-fit: cover;
+.reviewer-info .reviewer-profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .reviewer-info span {
-    font-weight: 600;
-    color: var(--text-color-dark);
+  font-weight: 600;
+  color: var(--text-color-dark);
 }
 
 .review-comment {
-    color: var(--text-color-medium);
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
+  color: var(--text-color-medium);
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
 }
 
 .review-date {
-    font-size: 0.85rem;
-    color: var(--text-color-light);
+  font-size: 0.85rem;
+  color: var(--text-color-light);
 }
 
+/* ========================================================================== */
 /* --- Location Map Section --- */
+/* ========================================================================== */
 .location-map-section .map-placeholder {
-    width: 100%;
-    height: 300px; /* Fixed height for map placeholder */
-    background-color: #e0e0e0;
-    border-radius: var(--border-radius-medium);
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--text-color-medium);
-    font-size: 1.2rem;
+  width: 100%;
+  height: 300px;
+  background-color: #e0e0e0;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color-medium);
+  font-size: 1.2rem;
 }
 
 .location-map-section .map-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
+/* ========================================================================== */
 /* --- Booking Card (Right Column) --- */
+/* ========================================================================== */
 .booking-card {
-    background-color: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-large);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-medium);
-    position: sticky; /* Makes it stick when scrolling */
-    top: 90px; /* Adjusted to stick closer to the header */
-    /* If you want it to stop at the bottom of the content, more complex JS is needed */
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-large);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-medium);
+  position: sticky;
+  top: 90px;
 }
 
 .booking-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
-    margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .booking-header .price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-color-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
 }
 
 .booking-header .per-night {
-    font-size: 1em;
-    color: var(--text-color-medium);
+  font-size: 1em;
+  color: var(--text-color-medium);
 }
 
 .booking-header .rating {
-    margin-left: auto; /* Pousse la note à droite */
-    font-size: 0.95rem;
-    color: var(--text-color-medium);
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: var(--text-color-medium);
 }
 
 .booking-header .rating i.fas.fa-star {
-    color: #FFC107;
-    margin-right: 0.3rem;
+  color: #FFC107;
+  margin-right: 0.3rem;
 }
 
 .booking-form .form-group {
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-small);
-    margin-bottom: 1rem;
-    overflow: hidden; /* Ensures inner elements respect border-radius */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  margin-bottom: 1rem;
+  overflow: hidden;
 }
 
 .booking-form .date-selection {
-    display: flex;
-    border-bottom: 1px solid var(--border-color); /* Separator between dates */
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .booking-form .date-input-group {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .booking-form .date-input-group:first-child {
-    border-right: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
 }
 
 .booking-form .form-group label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-color-dark);
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
 }
 
 .booking-form .form-group input,
 .booking-form .form-group select {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 1em;
-    padding: 0;
-    color: var(--text-color-dark);
-    background: transparent;
-    -webkit-appearance: none; /* Supprime le style par défaut des selects */
-    -moz-appearance: none;
-    appearance: none;
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0;
+  color: var(--text-color-dark);
+  background: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .booking-form .guests-selection {
-    padding: 0.75rem 1rem;
-    position: relative; /* Pour l'icône de la flèche du select */
+  padding: 0.75rem 1rem;
+  position: relative;
 }
 
 .booking-form .guests-selection select {
-    padding-right: 25px; /* Espace pour l'icône */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23222222" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 16px;
+  padding-right: 25px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23222222" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
 }
 
 .check-availability-btn {
-    width: 100%;
-    padding: 1rem;
-    background-color: var(--primary-color);
-    color: var(--white);
-    border: none;
-    border-radius: var(--border-radius-small);
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    margin-bottom: 1rem;
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius-small);
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 1rem;
 }
 
 .check-availability-btn:hover {
-    background-color: var(--primary-color-hover);
+  background-color: var(--primary-color-hover);
 }
 
 .price-breakdown {
-    border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
 }
 
 .price-breakdown p {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-    color: var(--text-color-dark);
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color-dark);
 }
 
 .price-breakdown p span:first-child {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .price-breakdown .total-price {
-    font-weight: 600;
-    font-size: 1.1em;
-    margin-top: 1rem;
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-top: 1rem;
 }
 
-/* --- Equipment Modal --- */
-.Equipment-modal-overlay, .reviews-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+/* ========================================================================== */
+/* --- Modals (Equipment and Reviews) --- */
+/* ========================================================================== */
+.equipment-modal-overlay,
+.reviews-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-.Equipment-modal-overlay.active, .reviews-modal-overlay.active {
-    opacity: 1;
-    visibility: visible;
+.equipment-modal-overlay.active,
+.reviews-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-.Equipment-modal-content, .reviews-modal-content {
-    background-color: var(--white);
-    border-radius: var(--border-radius-large);
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 2rem;
-    position: relative;
-    transform: scale(0.9);
-    transition: transform 0.3s ease;
+.equipment-modal-content,
+.reviews-modal-content {
+  background-color: var(--white);
+  border-radius: var(--border-radius-large);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
 }
 
-.Equipment-modal-overlay.active .Equipment-modal-content,
+.equipment-modal-overlay.active .equipment-modal-content,
 .reviews-modal-overlay.active .reviews-modal-content {
-    transform: scale(1);
+  transform: scale(1);
 }
 
-.Equipment-modal-close, .reviews-modal-close {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text-color-medium);
-    transition: color 0.2s ease;
+.equipment-modal-close,
+.reviews-modal-close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color-medium);
+  transition: color 0.2s ease;
 }
 
-.Equipment-modal-close:hover, .reviews-modal-close:hover {
-    color: var(--text-color-dark);
+.equipment-modal-close:hover,
+.reviews-modal-close:hover {
+  color: var(--text-color-dark);
 }
 
-.Equipment-modal-content h2, .reviews-modal-content h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--text-color-dark);
-    margin-bottom: 1.5rem;
-    padding-left: 2.5rem; /* Space for close button */
+.equipment-modal-content h2,
+.reviews-modal-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
+  margin-bottom: 1.5rem;
+  padding-left: 2.5rem;
 }
 
-.Equipment-modal-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+.equipment-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
-.Equipment-modal-section ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.equipment-modal-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.Equipment-modal-section li {
-    display: flex;
-    align-items: center;
-    color: var(--text-color-dark);
-    font-size: 1em;
-    margin-bottom: 0.5rem;
+.equipment-modal-section li {
+  display: flex;
+  align-items: center;
+  color: var(--text-color-dark);
+  font-size: 1em;
+  margin-bottom: 0.5rem;
 }
 
-.Equipment-modal-section li i {
-    margin-right: 0.75rem;
-    color: var(--text-color-medium);
+.equipment-modal-section li i {
+  margin-right: 0.75rem;
+  color: var(--text-color-medium);
 }
 
-/* --- Reviews Modal (if implemented) --- */
 .reviews-modal-content .review-item {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-.reviews-modal-content .review-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
 }
 
- 
+.reviews-modal-content .review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}

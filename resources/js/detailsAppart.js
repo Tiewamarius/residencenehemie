@@ -1,32 +1,61 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Overlay (Assurez-vous que l'overlay est défini dans votre HTML) ---
-    const overlay = document.getElementById('overlay');
 
-    // --- Références à toutes les modales/sidebars pour la gestion de l'overlay ---
+    // --- Sélecteurs d'éléments : une seule fois pour tout le script ---
+    const overlay = document.getElementById('overlay');
     const sidebar = document.getElementById('sidebar');
     const contactSidebar = document.getElementById('contactsidebar');
-    const chatContainer = document.getElementById('chat-container');
     const loginModalOverlay = document.getElementById('login-modal-overlay');
     const equipmentModalOverlay = document.getElementById('Equipment-modal-overlay');
     const reviewsModalOverlay = document.getElementById('reviews-modal-overlay');
+    const header = document.querySelector('.header');
+
+    // Boutons et liens pour les modales/sidebars
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
+    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+    const contactOpenBtns = document.querySelectorAll('#contact_open_btn, #contact-open-sidebar-btn');
+    const contactSidebarCloseBtn = document.getElementById('contactsidebar_close_btn');
+    const openLoginModalTriggers = document.querySelectorAll('.open-login-modal-trigger, #open-login-modal');
+    const loginModalCloseBtn = document.getElementById('login-modal-close-btn');
+    const showAllEquipmentBtn = document.getElementById('show-all-Equipment-btn');
+    const equipmentModalCloseBtn = document.getElementById('Equipment-modal-close');
+    const showAllReviewsBtn = document.getElementById('show-all-reviews-btn');
+    const reviewsModalCloseBtn = document.getElementById('reviews-modal-close');
+
+    // Éléments de la modale de connexion
+    const loginTabBtn = document.getElementById('login-tab-btn');
+    const registerTabBtn = document.getElementById('register-tab-btn');
+    const loginSection = document.getElementById('login-section');
+    const registerSection = document.getElementById('register-section');
+
+    // Éléments de la galerie d'images
+    const mainImage = document.querySelector('.apartment-gallery .main-image img');
+    const thumbnailImages = document.querySelectorAll('.apartment-gallery .thumbnail-grid img');
+
+    // Éléments de la carte de réservation
+    const checkInDateInput = document.getElementById('check_in_date');
+    const checkOutDateInput = document.getElementById('check_out_date');
+    const pricePerNightSpan = document.querySelector('.booking-header .price');
+    const nightsTextBreakdown = document.querySelector('.price-breakdown p:first-child span:first-child');
+    const nightsPriceBreakdown = document.querySelector('.price-breakdown p:first-child span:last-child');
+    const serviceFeeSpan = document.querySelector('.price-breakdown p:nth-child(2) span:last-child');
+    const totalPriceElement = document.querySelector('.price-breakdown .total-price span:last-child');
+    const reserveButton = document.querySelector('.check-availability-btn');
 
     // Tableau de toutes les modales/sidebars pour une gestion simplifiée
     const allModalsAndSidebars = [
         sidebar,
         contactSidebar,
-        chatContainer,
         loginModalOverlay,
         equipmentModalOverlay,
         reviewsModalOverlay
-    ].filter(el => el !== null); // Filtre les éléments non trouvés dans le DOM
+    ].filter(el => el !== null);
 
+    // --- Fonctions utilitaires pour la gestion des modales/sidebars ---
 
-    // Fonction utilitaire pour vérifier si une modale/sidebar est active
-    function isAnyModalOrSidebarActive() {
-        return allModalsAndSidebars.some(el => el.classList.contains('active'));
-    }
-
-    // Fonction pour gérer le défilement du corps de la page et l'opacité
+    /**
+     * Désactive ou active le défilement du corps de la page.
+     * @param {boolean} disableScroll - Vrai pour désactiver, Faux pour activer.
+     */
     function toggleBodyScroll(disableScroll) {
         if (disableScroll) {
             document.body.style.overflow = 'hidden';
@@ -37,24 +66,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- NOUVELLE FONCTION : Ferme toutes les modales et sidebars ---
+    /**
+     * Ferme toutes les modales et sidebars actives.
+     */
     function closeAll() {
-        allModalsAndSidebars.forEach(el => {
-            el.classList.remove('active');
-        });
+        allModalsAndSidebars.forEach(el => el.classList.remove('active'));
         if (overlay) {
             overlay.classList.remove('active');
         }
         toggleBodyScroll(false);
     }
-    
-    // --- NOUVELLE FONCTION : Gère le clic sur l'overlay ---
+
+    /**
+     * Ouvre une modale ou une sidebar spécifique en fermant les autres.
+     * @param {HTMLElement} elementToOpen - L'élément à ouvrir.
+     */
+    function openModalOrSidebar(elementToOpen) {
+        if (!elementToOpen) return;
+        
+        closeAll();
+        elementToOpen.classList.add('active');
+        if (overlay) {
+            overlay.classList.add('active');
+        }
+        toggleBodyScroll(true);
+    }
+
+    // --- Écouteurs d'événements : GESTION CENTRALISÉE ---
+
+    // Événement de clic sur l'overlay pour fermer toutes les modales
     if (overlay) {
         overlay.addEventListener('click', closeAll);
     }
 
-    // --- HEADER SCROLL EFFECT --- (Pas de changement)
-    const header = document.querySelector('.header');
+    // Effet de défilement de l'en-tête
     if (header) {
         window.addEventListener('scroll', () => {
             if (window.scrollY > 50) {
@@ -64,60 +109,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
-    // --- Sidebar (Mobile Menu) Toggle --- (Légèrement modifié)
-    const menuToggleBtn = document.getElementById('menu-toggle-btn');
-    const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
-
-    if (menuToggleBtn && sidebar && sidebarCloseBtn && overlay) {
-        menuToggleBtn.addEventListener('click', () => {
-            closeAll(); // Ferme tout avant d'ouvrir un nouvel élément
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-            toggleBodyScroll(true);
-        });
-
+    
+    // Événements pour le menu latéral (sidebar)
+    if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', () => openModalOrSidebar(sidebar));
+    }
+    if (sidebarCloseBtn) {
         sidebarCloseBtn.addEventListener('click', closeAll);
     }
 
-    // --- Contact Sidebar Toggle --- (Légèrement modifié)
-    const contactOpenBtn = document.getElementById('contact_open_btn');
-    const contactOpenSidebarBtn = document.getElementById('contact-open-sidebar-btn');
-    const contactSidebarCloseBtn = document.getElementById('contactsidebar_close_btn');
-
-    function toggleContactSidebar() {
-        if (contactSidebar) {
-            closeAll(); // Ferme tout avant d'ouvrir un nouvel élément
-            contactSidebar.classList.add('active');
-            overlay.classList.add('active');
-            toggleBodyScroll(true);
-        }
-    }
-
-    if (contactOpenBtn) {
-        contactOpenBtn.addEventListener('click', (e) => {
+    // Événements pour la barre latérale de contact
+    contactOpenBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
-            toggleContactSidebar();
+            openModalOrSidebar(contactSidebar);
         });
-    }
-    if (contactOpenSidebarBtn) {
-        contactOpenSidebarBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            toggleContactSidebar();
-        });
-    }
+    });
     if (contactSidebarCloseBtn) {
         contactSidebarCloseBtn.addEventListener('click', closeAll);
     }
-    
-    // --- Login/Registration Modal Toggle --- (Modifié pour utiliser closeAll)
-    const openLoginModalBtn = document.getElementById('open-login-modal');
-    const openLoginModalTriggers = document.querySelectorAll('.open-login-modal-trigger');
-    const loginTabBtn = document.getElementById('login-tab-btn');
-    const registerTabBtn = document.getElementById('register-tab-btn');
-    const loginSection = document.getElementById('login-section');
-    const registerSection = document.getElementById('register-section');
 
+    // Événements pour la modale de connexion
     function showLoginForm() {
         if (loginSection && registerSection && loginTabBtn && registerTabBtn) {
             loginSection.classList.add('active');
@@ -141,158 +153,95 @@ document.addEventListener('DOMContentLoaded', () => {
         registerTabBtn.addEventListener('click', showRegisterForm);
     }
 
-    function openLoginModal() {
-        if (loginModalOverlay && overlay) {
-            closeAll(); // Ferme tout avant d'ouvrir
-            loginModalOverlay.classList.add('active');
-            overlay.classList.add('active');
-            toggleBodyScroll(true);
-            showLoginForm(); // Affiche toujours le formulaire de connexion par défaut
-        }
-    }
+    openLoginModalTriggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModalOrSidebar(loginModalOverlay);
+            showLoginForm(); // Afficher toujours le formulaire de connexion par défaut
+        });
+    });
 
-    const loginModalCloseBtn = document.getElementById('login-modal-close-btn');
     if (loginModalCloseBtn) {
         loginModalCloseBtn.addEventListener('click', closeAll);
     }
 
-    if (openLoginModalBtn) {
-        openLoginModalBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            openLoginModal();
-        });
-    }
-    openLoginModalTriggers.forEach(trigger => {
-        trigger.addEventListener('click', (e) => {
-            e.preventDefault();
-            openLoginModal();
-        });
-    });
-
-    if (loginModalOverlay) {
-        loginModalOverlay.addEventListener('click', (e) => {
-            if (e.target === loginModalOverlay) {
-                closeAll();
-            }
-        });
-    }
-
-    // --- Equipment Modal Toggle --- (Modifié pour utiliser closeAll)
-    const showAllEquipmentBtn = document.getElementById('show-all-Equipment-btn');
-    const equipmentModalCloseBtn = document.getElementById('Equipment-modal-close');
-
-    function toggleEquipmentModal() {
-        if (equipmentModalOverlay) {
-            closeAll(); // Ferme tout avant d'ouvrir
-            equipmentModalOverlay.classList.add('active');
-            overlay.classList.add('active');
-            toggleBodyScroll(true);
-        }
-    }
-
+    // Événements pour la modale d'équipement
     if (showAllEquipmentBtn) {
-        showAllEquipmentBtn.addEventListener('click', toggleEquipmentModal);
+        showAllEquipmentBtn.addEventListener('click', () => openModalOrSidebar(equipmentModalOverlay));
     }
     if (equipmentModalCloseBtn) {
         equipmentModalCloseBtn.addEventListener('click', closeAll);
     }
-    if (equipmentModalOverlay) {
-        equipmentModalOverlay.addEventListener('click', (e) => {
-            if (e.target === equipmentModalOverlay) {
-                closeAll();
-            }
-        });
-    }
 
-    // --- Reviews Modal Toggle (Placeholder, assuming similar structure) ---
-    const showAllReviewsBtn = document.getElementById('show-all-reviews-btn');
-    const reviewsModalCloseBtn = document.getElementById('reviews-modal-close');
-
-    if (showAllReviewsBtn && reviewsModalOverlay) {
-        showAllReviewsBtn.addEventListener('click', () => {
-            closeAll(); // Ferme tout avant d'ouvrir
-            reviewsModalOverlay.classList.add('active');
-            overlay.classList.add('active');
-            toggleBodyScroll(true);
-        });
+    // Événements pour la modale des avis
+    if (showAllReviewsBtn) {
+        showAllReviewsBtn.addEventListener('click', () => openModalOrSidebar(reviewsModalOverlay));
     }
-    if (reviewsModalCloseBtn && reviewsModalOverlay) {
+    if (reviewsModalCloseBtn) {
         reviewsModalCloseBtn.addEventListener('click', closeAll);
     }
-    if (reviewsModalOverlay) {
-        reviewsModalOverlay.addEventListener('click', (e) => {
-            if (e.target === reviewsModalOverlay) {
+
+    // Ajout d'écouteurs pour fermer les modales en cliquant sur leur propre arrière-plan
+    const closableModals = [loginModalOverlay, equipmentModalOverlay, reviewsModalOverlay].filter(el => el !== null);
+    closableModals.forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
                 closeAll();
             }
         });
-    }
+    });
 
-    // --- Image Gallery Functionality ---
-    const mainImage = document.querySelector('.apartment-gallery .main-image img');
-    const thumbnailImages = document.querySelectorAll('.apartment-gallery .thumbnail-grid img');
-
+    // --- Fonctionnalité de la galerie d'images ---
     if (mainImage && thumbnailImages.length > 0) {
         thumbnailImages.forEach(thumbnail => {
             thumbnail.addEventListener('click', () => {
-                // Swap the src and alt attributes
-                const tempSrc = mainImage.src;
-                const tempAlt = mainImage.alt;
-
+                // Change l'image principale pour afficher la vignette cliquée
                 mainImage.src = thumbnail.src;
                 mainImage.alt = thumbnail.alt;
 
-                thumbnail.src = tempSrc;
-                thumbnail.alt = tempAlt;
+                // Optionnel : on pourrait aussi mettre en surbrillance la vignette active
+                // thumbnailImages.forEach(img => img.classList.remove('active'));
+                // thumbnail.classList.add('active');
             });
         });
     }
 
-    // --- Price Calculation Logic for Booking Card ---
-    const checkInDateInput = document.getElementById('check_in_date');
-    const checkOutDateInput = document.getElementById('check_out_date');
-    const numGuestsSelect = document.getElementById('num_guests');
-    const pricePerNightSpan = document.querySelector('.booking-header .price');
-    const totalPriceElement = document.querySelector('.price-breakdown .total-price span:last-child');
-    const nightsPriceBreakdown = document.querySelector('.price-breakdown p:first-child span:last-child');
-    const nightsTextBreakdown = document.querySelector('.price-breakdown p:first-child span:first-child');
-    const serviceFeeSpan = document.querySelector('.price-breakdown p:nth-child(2) span:last-child');
-
-    // Get the base price from the HTML (assuming it's available or from a data attribute)
-    // For now, let's parse it from the initial display. In a real app, you might have it in a hidden input.
+    // --- Logique de calcul du prix pour la carte de réservation ---
     const initialPriceText = pricePerNightSpan ? pricePerNightSpan.textContent : '0 FCFA';
-    const basePricePerNight = parseFloat(initialPriceText.replace(/\sFCFA/g, '').replace(/,/g, '.')); // Handle spaces and commas
+    const basePricePerNight = parseFloat(initialPriceText.replace(/\sFCFA/g, '').replace(/,/g, '.'));
+    const serviceFee = 10000;
 
-    const serviceFee = 10000; // Fixed service fee for now
-
-    // Set min date for check-in to today
+    // Définit la date minimale pour l'arrivée à la date d'aujourd'hui
     const today = new Date();
-    today.setDate(today.getDate()); // Set to today
     const todayISO = today.toISOString().split('T')[0];
-    if (checkInDateInput) {
-        checkInDateInput.min = todayISO;
-    }
 
+    /**
+     * Calcule et affiche le prix total de la réservation.
+     */
     function calculateTotalPrice() {
         const checkInDate = checkInDateInput ? new Date(checkInDateInput.value) : null;
         const checkOutDate = checkOutDateInput ? new Date(checkOutDateInput.value) : null;
 
-        if (!checkInDate || !checkOutDate || checkOutDate <= checkInDate) {
-            // Reset if dates are invalid or not selected
-            nightsTextBreakdown.textContent = `0 FCFA x 0 nuits`;
-            nightsPriceBreakdown.textContent = '0 FCFA';
-            serviceFeeSpan.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
-            totalPriceElement.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+        let isValid = checkInDate && checkOutDate && checkOutDate > checkInDate;
+
+        if (!isValid) {
+            if (nightsTextBreakdown) nightsTextBreakdown.textContent = `${basePricePerNight.toLocaleString('fr-FR')} FCFA x 0 nuit(s)`;
+            if (nightsPriceBreakdown) nightsPriceBreakdown.textContent = '0 FCFA';
+            if (serviceFeeSpan) serviceFeeSpan.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+            if (totalPriceElement) totalPriceElement.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+            if (reserveButton) reserveButton.disabled = true;
             return;
         }
 
         const timeDiff = checkOutDate.getTime() - checkInDate.getTime();
-        const numNights = Math.ceil(timeDiff / (1000 * 3600 * 24)); // Calculate nights
+        const numNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
         if (numNights <= 0) {
-            nightsTextBreakdown.textContent = `0 FCFA x 0 nuits`;
-            nightsPriceBreakdown.textContent = '0 FCFA';
-            serviceFeeSpan.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
-            totalPriceElement.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+            if (nightsTextBreakdown) nightsTextBreakdown.textContent = `${basePricePerNight.toLocaleString('fr-FR')} FCFA x 0 nuit(s)`;
+            if (nightsPriceBreakdown) nightsPriceBreakdown.textContent = '0 FCFA';
+            if (serviceFeeSpan) serviceFeeSpan.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+            if (totalPriceElement) totalPriceElement.textContent = `${serviceFee.toLocaleString('fr-FR')} FCFA`;
+            if (reserveButton) reserveButton.disabled = true;
             return;
         }
 
@@ -311,30 +260,36 @@ document.addEventListener('DOMContentLoaded', () => {
         if (totalPriceElement) {
             totalPriceElement.textContent = `${totalAmount.toLocaleString('fr-FR')} FCFA`;
         }
+        if (reserveButton) reserveButton.disabled = false;
     }
 
-    // Add event listeners for date changes and initial calculation
-    if (checkInDateInput) {
-        checkInDateInput.addEventListener('change', calculateTotalPrice);
-    }
-    if (checkOutDateInput) {
-        checkOutDateInput.addEventListener('change', calculateTotalPrice);
-    }
-    // No need for numGuestsSelect to trigger price calculation if price is per night per room, not per person.
-    // If price changes per person, you'd integrate that logic here.
-
-    // Initial calculation on page load
-    calculateTotalPrice();
-
-    // Ensure check-out date is always after check-in date
+    // --- Initialisation de Flatpickr pour les champs de date ---
     if (checkInDateInput && checkOutDateInput) {
-        checkInDateInput.addEventListener('change', () => {
-            if (checkOutDateInput.value && checkOutDateInput.value < checkInDateInput.value) {
-                checkOutDateInput.value = checkInDateInput.value;
+        flatpickr(checkInDateInput, {
+            locale: 'fr',
+            dateFormat: 'Y-m-d',
+            minDate: 'today',
+            onChange: function(selectedDates, dateStr, instance) {
+                // S'assure que la date de départ n'est pas antérieure à la date d'arrivée
+                if (checkOutDateInput.value && dateStr > checkOutDateInput.value) {
+                    checkOutDateInput.value = dateStr;
+                }
+                // Met à jour la date minimale de départ
+                if (checkOutDateInput._flatpickr) {
+                    checkOutDateInput._flatpickr.set('minDate', dateStr);
+                }
+                calculateTotalPrice();
             }
-            checkOutDateInput.min = checkInDateInput.value;
-            calculateTotalPrice();
         });
-        checkOutDateInput.addEventListener('change', calculateTotalPrice);
+
+        flatpickr(checkOutDateInput, {
+            locale: 'fr',
+            dateFormat: 'Y-m-d',
+            minDate: checkInDateInput.value || 'today',
+            onChange: calculateTotalPrice
+        });
     }
+
+    // Premier calcul au chargement de la page
+    calculateTotalPrice();
 });

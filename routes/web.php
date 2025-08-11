@@ -2,16 +2,24 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResidenceController;
+use App\Http\Controllers\auth\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Residence;
 
 Route::get('/', function () {
     $residences = Residence::with(['images', 'types'])->get();
 
-    return view('welcomes',compact('residences'));
+    return view('welcomes', compact('residences'));
 });
 
-// Route pour la liste des résidences
+// Route pour la redirection vers Google
+Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])
+    ->name('socialite.google.redirect');
+
+// Route pour le rappel (callback) de Google
+Route::get('/auth/google/callback', [SocialiteController::class, 'callback'])
+    ->name('socialite.google.callback');
+
 Route::get('/residences', [ResidenceController::class, 'index'])->name('residences.index');
 
 Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppart'])->name('residences.detailsAppart');
@@ -30,7 +38,7 @@ Route::get('/favoris', function () {
 Route::get('/dashboards', function () {
     $residences = Residence::with(['images', 'types'])->get();
 
-    return view('dashboards',compact('residences'));
+    return view('dashboards', compact('residences'));
 })->middleware(['auth', 'verified'])->name('dashboards');
 
 
@@ -52,5 +60,5 @@ Route::fallback(function () {
     // Par défaut, redirige vers la page d'accueil
     return redirect('/');
 });
-require __DIR__.'/auth.php';
-require __DIR__.'/admins-auth.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admins-auth.php';

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -8,21 +9,24 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
     {{-- Inclure Vite pour vos assets CSS et JS --}}
     @vite([
-        
-        'resources/js/myapp.js',
+
+    'resources/js/myapp.js',
 
 
-        'resources/css/homepage.css',
-        'resources/js/homepage.js',
+    'resources/css/homepage.css',
+    'resources/js/homepage.js',
 
-        'resources/css/detailsAppart.css',
-        'resources/js/detailsAppart.js',
+    'resources/css/detailsAppart.css',
+    'resources/js/detailsAppart.js',
 
-        'resources/css/homeUser.css',
-        'resources/js/homeUser.js'
-        ])
+    'resources/css/homeUser.css',
+    'resources/js/homeUser.js'
+    ])
 
     {{-- Font Awesome pour les icônes --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -30,12 +34,14 @@
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
     @yield('head_extra') {{-- Pour des styles ou scripts supplémentaires spécifiques à une page --}}
-<style>
-    html {
-            scroll-behavior: smooth; /* Pour un défilement fluide */
+    <style>
+        html {
+            scroll-behavior: smooth;
+            /* Pour un défilement fluide */
         }
-</style>
+    </style>
 </head>
+
 <body>
 
     {{-- Inclure la Sidebar (Menu Mobile) --}}
@@ -68,4 +74,5 @@
     @yield('scripts_extra') {{-- Pour des scripts JS supplémentaires spécifiques à une page --}}
 
 </body>
+
 </html>

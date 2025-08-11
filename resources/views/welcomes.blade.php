@@ -128,13 +128,13 @@
                 <span>Votre Bien-Être</span>
             </button>
             <!-- Bouton pour la flexibilité -->
-            <button class="feature-button"
+            <!-- <button class="feature-button"
                 data-feature="flexibility"
                 data-image-display=" "
                 data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
                 <i class="fas fa-calendar-alt"></i>
                 <span>La Flexibilité</span>
-            </button>
+            </button> -->
             <!-- Bouton pour la sécurité -->
             <button class="feature-button"
                 data-feature="security_optimal"

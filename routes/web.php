@@ -41,7 +41,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// --- Route de secours (Fallback) ---
+
 Route::fallback(function () {
+    // Vérifie si un utilisateur est authentifié avec le guard 'admin'
+    if (auth()->guard('admin')->check()) {
+        return redirect('/admin/dashboard');
+    }
+
+    // Par défaut, redirige vers la page d'accueil
     return redirect('/');
 });
 require __DIR__.'/auth.php';

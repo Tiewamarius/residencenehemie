@@ -77,10 +77,7 @@
       href="{{asset('../Admin-Dashboard/assets/css/soft-ui-dashboard-tailwind.css?v=1.0.5')}}" rel="stylesheet" />
     <!-- Nepcha Analytics (nepcha.com) -->
     <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-    <script
-      defer
-      data-site="YOUR_DOMAIN_HERE"
-      src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+    <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
   </head>
 <body
     class="m-0 font-sans antialiased font-normal bg-white text-start text-base leading-default text-slate-500">
@@ -142,7 +139,7 @@
                   <li>
                     <a
                       class="block px-4 py-2 mr-2 font-normal transition-all lg-max:opacity-0 duration-250 ease-soft-in-out text-sm text-slate-700 lg:px-2"
-                      href="../pages/sign-up.html">
+                      href="{{ route('admin.register') }}">
                       <i class="mr-1 fas fa-user-circle opacity-60"></i>
                       Sign Up
                     </a>
@@ -189,28 +186,26 @@
                     <p class="mb-0">Entrer Username et Mot de pass</p>
                   </div>
                   <div class="flex-auto p-6">
-                    <form role="form">
-                      <label class="mb-2 ml-1 font-bold text-xs text-slate-700"
-                        >Email</label
-                      >
+                    <form method="POST" action="{{ route('admin.login') }}">
+                      <label class="mb-2 ml-1 font-bold text-xs text-slate-700">
+                        Email
+                        </label>
                       <div class="mb-4">
-                        <input
-                          type="email"
+                        <input type="email"
                           class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
                           placeholder="Email"
                           aria-label="Email"
-                          aria-describedby="email-addon" />
+                          aria-describedby="email-addon"   name="email" :value="old('email')" required autofocus autocomplete="username" />
                       </div>
                       <label class="mb-2 ml-1 font-bold text-xs text-slate-700"
                         >Password</label
                       >
                       <div class="mb-4">
-                        <input
-                          type="email"
-                          class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
+                        <input type="password" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
                           placeholder="Password"
                           aria-label="Password"
-                          aria-describedby="password-addon" />
+                          aria-describedby="password-addon" name="password"
+                            required autocomplete="current-password"/>
                       </div>
                       <div class="min-h-6 mb-0.5 block pl-12">
                         <input
@@ -226,7 +221,7 @@
                       </div>
                       <div class="text-center">
                         <button
-                          type="button"
+                          type="submit"
                           class="inline-block w-full px-6 py-3 mt-6 mb-0 font-bold text-center text-white uppercase align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer shadow-soft-md bg-x-25 bg-150 leading-pro text-xs ease-soft-in tracking-tight-soft bg-gradient-to-tl from-blue-600 to-cyan-400 hover:scale-102 hover:shadow-soft-xs active:opacity-85">
                           Sign in
                         </button>
@@ -238,7 +233,7 @@
                     <p class="mx-auto mb-6 leading-normal text-sm">
                       Don't have an account?
                       <a
-                        href="../pages/sign-up.html"
+                        href="{{ route('admin.register') }}"
                         class="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text"
                         >Sign up</a
                       >

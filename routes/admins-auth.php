@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminAuth\AdminConfirmablePasswordController;
 use App\Http\Controllers\AdminAuth\AdminEmailVerificationNotificationController;
 use App\Http\Controllers\AdminAuth\AdminEmailVerificationPromptController;
 use App\Http\Controllers\AdminAuth\AdminNewPasswordController;
+use App\Http\Controllers\AdminAuth\AdminController;
 use App\Http\Controllers\AdminAuth\AdminPasswordController;
 use App\Http\Controllers\AdminAuth\AdminPasswordResetLinkController;
 use App\Http\Controllers\AdminAuth\RegisteredAdminController;
@@ -36,6 +37,15 @@ Route:: prefix('admin')->middleware('guest:admin')->group(function () {
 });
 
 Route:: prefix('admin')->middleware('auth:admin')->group(function () {
+    Route::get('dashboard', [AdminController::class, 'homes'])
+        ->name('adminauth.homes');
+    
+    Route::get('residences', [AdminController::class, 'residences'])
+        ->name('adminauth.residences');
+   
+
+
+
     Route::get('verify-email', AdminEmailVerificationPromptController::class)
         ->name('verification.notice');
 
@@ -55,11 +65,10 @@ Route:: prefix('admin')->middleware('auth:admin')->group(function () {
     Route::put('password', [AdminPasswordController::class, 'update'])->name('password.update');
 
 
-    Route::get('/dashboard', function () {
-    return view('AdminDashboard');
-})->name('admin.AdminDashboard');
 
 
-    Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])
+
+
+    Route::post('/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
         ->name('admin.logout');
 });

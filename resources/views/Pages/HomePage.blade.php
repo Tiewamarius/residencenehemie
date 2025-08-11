@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,8 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
     {{-- Si vous utilisez des icônes Unicons (comme uil-times), assurez-vous d'inclure leur CDN --}}
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    
+
 </head>
+
 <body>
     {{-- Sidebar (Menu Mobile) --}}
     <div class="sidebar" id="sidebar">
@@ -29,17 +31,17 @@
             <!-- <li><a href="" class="sidebar_nav_link"><i class="fas fa-search"></i> Recherche</a></li> -->
             {{-- Liens d'authentification pour la sidebar --}}
             @guest
-                <!-- <li><a href="{{ route('register') }}" class="sidebar_nav_link"><i class="fas fa-user-plus"></i> S'inscrire</a></li> -->
-                <!-- <li><a href="{{ route('login') }}" class="sidebar_nav_link"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li> -->
+            <!-- <li><a href="{{ route('register') }}" class="sidebar_nav_link"><i class="fas fa-user-plus"></i> S'inscrire</a></li> -->
+            <!-- <li><a href="{{ route('login') }}" class="sidebar_nav_link"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li> -->
             @else
-                <li><a href="{{ route('favorites.index') }}" class="sidebar_nav_link"><i class="fas fa-heart"></i> Favoris</a></li>
-                <li><a href="{{ route('dashboard') }}" class="sidebar_nav_link"><i class="fas fa-user-circle"></i> Mon Compte</a></li>
-                <li><a href="#" class="sidebar_nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
+            <li><a href="{{ route('favorites.index') }}" class="sidebar_nav_link"><i class="fas fa-heart"></i> Favoris</a></li>
+            <li><a href="{{ route('dashboard') }}" class="sidebar_nav_link"><i class="fas fa-user-circle"></i> Mon Compte</a></li>
+            <li><a href="#" class="sidebar_nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
                     <i class="fas fa-sign-out-alt"></i> Déconnexion
                 </a></li>
-                <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="d-none">
-                    @csrf
-                </form>
+            <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
             @endguest
             <li><button class="button sidebar_assistant_btn" id="form-open-sidebar">Assistant</button></li>
         </ul>
@@ -57,22 +59,22 @@
                 <li><a href="#" class="nav_link" id="contact_open_btn">Contact</a></li>
                 <li><a href="" class="nav_link">A propos</a></li>
                 <li><a href="" class="nav_link"><i class="fas fa-search"></i></a></li>
-                
+
                 @guest
-                    {{-- Le lien Favoris ouvre la modale de connexion si l'utilisateur n'est pas connecté --}}
-                    <li><a href="#" class="nav_link" id="open-login-modal"><i class="fas fa-heart"></i></a></li>
-                    <!-- <li><a href="{{ route('register') }}" class="nav_link"><i class="fas fa-user-plus"></i></a></li>
+                {{-- Le lien Favoris ouvre la modale de connexion si l'utilisateur n'est pas connecté --}}
+                <li><a href="#" class="nav_link" id="open-login-modal"><i class="fas fa-heart"></i></a></li>
+                <!-- <li><a href="{{ route('register') }}" class="nav_link"><i class="fas fa-user-plus"></i></a></li>
                     <li><a href="{{ route('login') }}" class="nav_link"><i class="fas fa-sign-in-alt"></i></a></li> -->
                 @else
-                    {{-- Le lien Favoris redirige vers la page des favoris si l'utilisateur est connecté --}}
-                    <li><a href="{{ route('favorites.index') }}" class="nav_link"><i class="fas fa-heart"></i></a></li>
-                    <li><a href="{{ route('dashboard') }}" class="nav_link"><i class="fas fa-user-circle"></i></a></li>
-                    <li><a href="#" class="nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-header').submit();">
+                {{-- Le lien Favoris redirige vers la page des favoris si l'utilisateur est connecté --}}
+                <li><a href="{{ route('favorites.index') }}" class="nav_link"><i class="fas fa-heart"></i></a></li>
+                <li><a href="{{ route('dashboard') }}" class="nav_link"><i class="fas fa-user-circle"></i></a></li>
+                <li><a href="#" class="nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-header').submit();">
                         <i class="fas fa-sign-out-alt"></i>
                     </a></li>
-                    <form id="logout-form-header" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
+                <form id="logout-form-header" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
                 @endguest
             </ul>
             <button class="button" id="form-open">Assistant</button>
@@ -86,26 +88,26 @@
     <section class="home">
         <div class="image-slider">
             @forelse($residences->take(8) as $index => $residence)
-                @php
-                    $mainImage = $residence->images->where('est_principale', true)->first();
-                    if (!$mainImage) {
-                        // Fallback to default slider images if no main image is found
-                        $imageSource = asset('images/default_slider_' . (($index % 2) + 1) . '.jpg');
-                    } else {
-                        $imageSource = asset($mainImage->chemin_image);
-                    }
-                @endphp
-                {{-- IMPORTANT: Assurez-vous que les images existent dans public/images/ ou aux chemins spécifiés par $residence->images->chemin_image --}}
-                <img src="{{ $imageSource }}" alt="Image de {{ $residence->nom }}" class="slider-image {{ $index === 0 ? 'active' : '' }}">
+            @php
+            $mainImage = $residence->images->where('est_principale', true)->first();
+            if (!$mainImage) {
+            // Fallback to default slider images if no main image is found
+            $imageSource = asset('images/default_slider_' . (($index % 2) + 1) . '.jpg');
+            } else {
+            $imageSource = asset($mainImage->chemin_image);
+            }
+            @endphp
+            {{-- IMPORTANT: Assurez-vous que les images existent dans public/images/ ou aux chemins spécifiés par $residence->images->chemin_image --}}
+            <img src="{{ $imageSource }}" alt="Image de {{ $residence->nom }}" class="slider-image {{ $index === 0 ? 'active' : '' }}">
             @empty
-                {{-- Fallback si aucune résidence ou image n'est trouvée pour le slider --}}
-                <img src="{{ asset('images/default_slider_1.jpg') }}" alt="Image par défaut 1" class="slider-image active">
-                <img src="{{ asset('images/default_slider_2.jpg') }}" alt="Image par défaut 2" class="slider-image">
-                {{-- Vous pouvez ajouter plus d'images par défaut si nécessaire dans public/images/ --}}
+            {{-- Fallback si aucune résidence ou image n'est trouvée pour le slider --}}
+            <img src="{{ asset('images/default_slider_1.jpg') }}" alt="Image par défaut 1" class="slider-image active">
+            <img src="{{ asset('images/default_slider_2.jpg') }}" alt="Image par défaut 2" class="slider-image">
+            {{-- Vous pouvez ajouter plus d'images par défaut si nécessaire dans public/images/ --}}
             @endforelse
         </div>
 
-        <div class="hero-content-wrapper" >
+        <div class="hero-content-wrapper">
             <div class="hero-card-container">
                 <h3>Bingerville: Fehkesse</h3>
                 <p class="hero-card-description">Trouvez et réservez des hébergements uniques sur Résidences Nehemie</p>
@@ -210,34 +212,34 @@
         <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
         <div class="properties-grid">
             @forelse($residences->take(3) as $featuredResidence) {{-- Affiche les 3 premières résidences comme vedettes --}}
-                {{-- Rendre la carte entière cliquable en l'enveloppant dans un <a> --}}
-                <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
-                    <div class="property-card">
-                        <div class="property-image">
-                            @php
-                                $featuredImage = $featuredResidence->images->where('est_principale', true)->first();
-                                if (!$featuredImage) {
-                                    $featuredImage = $featuredResidence->images->sortBy('order')->first();
-                                }
-                                $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : asset('images/default.jpg');
-                            @endphp
-                            <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" alt="Cliquez">
-                            {{-- L'icône de favoris ouvre la modale de connexion si l'utilisateur n'est pas connecté --}}
-                            <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
-                            {{-- Le bouton "Voir plus" est supprimé --}}
-                        </div>
-                        <div class="property-details">
-                            <h3>{{ Str::limit($featuredResidence->nom, 30) }}</h3>
-                            <p class="property-location">{{ $featuredResidence->ville }}</p>
-                            <p class="property-price">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
-                        </div>
+            {{-- Rendre la carte entière cliquable en l'enveloppant dans un <a> --}}
+            <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
+                <div class="property-card">
+                    <div class="property-image">
+                        @php
+                        $featuredImage = $featuredResidence->images->where('est_principale', true)->first();
+                        if (!$featuredImage) {
+                        $featuredImage = $featuredResidence->images->sortBy('order')->first();
+                        }
+                        $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : asset('images/default.jpg');
+                        @endphp
+                        <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" alt="Cliquez">
+                        {{-- L'icône de favoris ouvre la modale de connexion si l'utilisateur n'est pas connecté --}}
+                        <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
+                        {{-- Le bouton "Voir plus" est supprimé --}}
                     </div>
-                </a>
+                    <div class="property-details">
+                        <h3>{{ Str::limit($featuredResidence->nom, 30) }}</h3>
+                        <p class="property-location">{{ $featuredResidence->ville }}</p>
+                        <p class="property-price">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
+                    </div>
+                </div>
+            </a>
             @empty
-                <p class="text-gray-600 col-span-full text-center">Aucune propriété en vedette pour le moment.</p>
+            <p class="text-gray-600 col-span-full text-center">Aucune propriété en vedette pour le moment.</p>
             @endforelse
         </div>
-        
+
     </section>
 
     {{-- Nouvelle Sidebar de Contact (à droite) --}}
@@ -311,4 +313,5 @@
 
     {{-- Le script JavaScript est inclus via @vite en haut du fichier, donc pas besoin de le répéter ici --}}
 </body>
+
 </html>

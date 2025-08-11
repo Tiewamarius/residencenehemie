@@ -26,9 +26,12 @@
     <div class="hero-content-wrapper">
         <div class="hero-card-container">
             <h3>Bingerville: Fehkesse</h3>
-            <p class="hero-card-description">Trouvez et réservez des hébergements uniques sur Résidences Nehemie</p>
+            <p class="hero-card-description">Réservez des hébergements sur Résidences Néhémie</p>
 
-            <form action="#" method="GET" class="banner-search-form">
+            <button class="button" id="button-opens">CHERCHER</button>
+            <button class="button" id="close-buttons" style="display:none;margin-bottom: 10px; background-color: gray;color:whitesmoke;">REDUIR</button>
+
+            <form action=" #" method="GET" id="search-form-opens" class="banner-search-form">
                 <div class="form-group">
                     <label for="address">ADRESSE</label>
                     <input type="text" id="address" name="address" placeholder="N'importe où">

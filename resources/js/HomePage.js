@@ -151,6 +151,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Récupérer le bouton et le formulaire par leur ID
+    const openButton = document.getElementById('button-opens');
+    const closeButton = document.getElementById('close-buttons');
+    const searchForm = document.getElementById('search-form-opens');
+
+    // Ajouter un écouteur d'événement 'click' au bouton
+    openButton.addEventListener('click', () => {
+            searchForm.style.display = 'flex';
+            openButton.style.display = 'none';
+            closeButton.style.display = 'flex';
+        
+    });
+
+    closeButton.addEventListener('click', () => {
+        // Basculer l'état d'affichage du formulaire
+         searchForm.style.display = 'none';
+            openButton.style.display = 'flex';
+            closeButton.style.display = 'none';
+         
+    });
+
     // --- Contact Sidebar Toggle ---
     const contactOpenBtn = document.getElementById('contact_open_btn');
     const contactOpenSidebarBtn = document.getElementById('contact-open-sidebar-btn'); // Button in sidebar

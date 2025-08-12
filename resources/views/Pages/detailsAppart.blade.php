@@ -221,12 +221,17 @@
                             </select>
                         </div>
                         @guest
-                        <div class="mt-4 text-center">
+                        <form class="booking-form" action="{{ route('residences.book', ['residence' => $residence->id]) }}" method="POST">
+                            @csrf
+                            {{-- ... le reste du formulaire ... --}}
+                            <button type="submit" class="check-availability-btn">RESERVER</button>
+                        </form>
+                        <!-- <div class="mt-4 text-center">
                             <p class="text-gray-600 mb-2">Vous n'êtes pas connecté ?</p>
                             <a href="{{ route('socialite.google.redirect') }}" class="inline-block px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200">
                                 Continuer avec Google
                             </a>
-                        </div>
+                        </div> -->
                         @else
                         {{-- Le formulaire de réservation ici, car l'utilisateur est connecté --}}
                         <form class="booking-form" action="{{ route('residences.book', ['residence' => $residence->id]) }}" method="POST">

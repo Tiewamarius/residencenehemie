@@ -28,23 +28,25 @@ class RegisteredAdminController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Admin::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.Admin::class],
+        'phone_number' => ['required', 'string', 'max:20', 'unique:'.Admin::class], // Ajout du numéro de téléphone
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
+    ]);
 
-        $admin = Admin::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+    $admin = Admin::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone_number' => $request->phone_number, // Ajout du numéro de téléphone
+        'password' => Hash::make($request->password),
+    ]);
 
-        event(new Registered($admin));
+    event(new Registered($admin));
 
-        Auth::guard('admin')->login($admin);
+    Auth::guard('admin')->login($admin);
 
-        return redirect(route('admin.home', absolute: false));
-    }
+    return redirect(route('admin.homes', absolute: false));
+}
 }

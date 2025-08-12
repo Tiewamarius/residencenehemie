@@ -28,7 +28,7 @@ class AdminAuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('adminauth.home', absolute: false));
+        return redirect()->intended(route('adminauth.homes', absolute: false));
     }
 
     /**
@@ -42,6 +42,6 @@ class AdminAuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('admin/login');
+        return redirect()->route('admin.login'); // Utilisez la fonction 'route' pour plus de flexibilité.
     }
 }

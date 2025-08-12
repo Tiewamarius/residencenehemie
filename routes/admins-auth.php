@@ -37,12 +37,34 @@ Route:: prefix('admin')->middleware('guest:admin')->group(function () {
 });
 
 Route:: prefix('admin')->middleware('auth:admin')->group(function () {
+    
+    // Route home
     Route::get('dashboard', [AdminController::class, 'homes'])
         ->name('adminauth.homes');
     
+
+    // Route All resiences
     Route::get('residences', [AdminController::class, 'residences'])
-        ->name('adminauth.residences');
+        ->name('admin.residences');
    
+
+    // Route booking
+    Route::get('bookings', [AdminController::class,'index'])
+    ->name('admin.bookings');
+
+    // Route to show a single booking.
+    Route::get('bookings/{booking}', [AdminController::class, 'show'])->name('bookings.show');
+
+    // Route to show the form for editing a booking.
+    Route::get('bookings/{booking}/edit', [AdminController::class, 'edit'])->name('bookings.edit');
+
+    // Route to handle the form submission for updating a booking
+    Route::put('bookings/{booking}', [AdminController::class, 'update'])->name('bookings.update');
+    
+    // Route to delete a booking. Use the DELETE HTTP method.
+    Route::delete('bookings/{booking}', [AdminController::class, 'destroy'])->name('bookings.destroy');
+
+
 
 
 
@@ -69,6 +91,6 @@ Route:: prefix('admin')->middleware('auth:admin')->group(function () {
 
 
 
-    Route::post('/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
+    Route::post('admin/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
         ->name('admin.logout');
 });

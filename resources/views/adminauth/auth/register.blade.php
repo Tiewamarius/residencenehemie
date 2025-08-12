@@ -1,58 +1,3 @@
-<x-guest-layout>
-    ADMIN REGISTER
-    <form method="POST" action="{{ route('admin.register') }}">
-        @csrf
-
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
-        </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                type="password"
-                name="password"
-                required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                type="password"
-                name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('admin.login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -181,77 +126,108 @@
     </div>
     <main class="mt-0 transition-all duration-200 ease-soft-in-out">
         <section>
-            <div
-                class="relative flex items-center p-0 overflow-hidden bg-center bg-cover min-h-75-screen">
+            <div class="relative flex items-center p-0 overflow-hidden bg-center bg-cover min-h-75-screen">
                 <div class="container z-10">
                     <div class="flex flex-wrap mt-0 -mx-3">
                         <div class="flex flex-col w-full max-w-full px-3 mx-auto md:flex-0 shrink-0 md:w-6/12 lg:w-5/12 xl:w-4/12">
-                            <div
-                                class="relative flex flex-col min-w-0 mt-32 break-words bg-transparent border-0 shadow-none rounded-2xl bg-clip-border">
-                                <div
-                                    class="p-6 pb-0 mb-0 bg-transparent border-b-0 rounded-t-2xl">
-                                    <h3
-                                        class="relative z-10 font-bold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">
+                            <div class="relative flex flex-col min-w-0 mt-32 break-words bg-transparent border-0 shadow-none rounded-2xl bg-clip-border">
+                                <div class="p-6 pb-0 mb-0 bg-transparent border-b-0 rounded-t-2xl">
+                                    <h3 class="relative z-10 font-bold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">
                                         Welcome
                                     </h3>
-                                    <p class="mb-0">Entrer Username et Mot de pass</p>
+                                    <p class="mb-0">Créer un nouveau compte</p>
                                 </div>
                                 <div class="flex-auto p-6">
                                     <form role="form text-left" method="POST" action="{{ route('admin.register') }}">
+                                        @csrf
+
                                         <div class="mb-4">
                                             <input
                                                 type="text"
                                                 class="text-sm focus:shadow-soft-primary-outline leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 px-3 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:transition-shadow"
-                                                placeholder="Name"
+                                                placeholder="Nom"
                                                 aria-label="Name"
-                                                aria-describedby="email-addon" />
+                                                aria-describedby="email-addon"
+                                                name="name"
+                                                value="{{ old('name') }}"
+                                                required autofocus autocomplete="name" />
+                                            @error('name')
+                                            <div class="text-sm text-red-500">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="mb-4">
                                             <input
-                                                type="password"
+                                                type="text"
                                                 class="text-sm focus:shadow-soft-primary-outline leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 px-3 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:transition-shadow"
                                                 placeholder="N° Telephone"
-                                                aria-label="Password"
-                                                aria-describedby="password-addon" />
+                                                aria-label="Phone"
+                                                name="phone_number"
+                                                value="{{ old('phone_number') }}"
+                                                autocomplete="tel" />
+                                            @error('phone_number')
+                                            <div class="text-sm text-red-500">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="mb-4">
                                             <input
                                                 type="email"
                                                 class="text-sm focus:shadow-soft-primary-outline leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 px-3 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:transition-shadow"
                                                 placeholder="Email"
                                                 aria-label="Email"
-                                                aria-describedby="email-addon" />
+                                                aria-describedby="email-addon"
+                                                name="email"
+                                                value="{{ old('email') }}"
+                                                required autocomplete="email" />
+                                            @error('email')
+                                            <div class="text-sm text-red-500">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="mb-4">
                                             <input
                                                 type="password"
                                                 class="text-sm focus:shadow-soft-primary-outline leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 px-3 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:transition-shadow"
-                                                placeholder="Password"
+                                                placeholder="Mot de passe"
                                                 aria-label="Password"
-                                                aria-describedby="password-addon" />
+                                                aria-describedby="password-addon"
+                                                name="password"
+                                                required autocomplete="new-password" />
+                                            @error('password')
+                                            <div class="text-sm text-red-500">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="mb-4">
                                             <input
                                                 type="password"
                                                 class="text-sm focus:shadow-soft-primary-outline leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding py-2 px-3 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:bg-white focus:text-gray-700 focus:outline-none focus:transition-shadow"
-                                                placeholder="Confirm Password"
-                                                aria-label="Password"
-                                                aria-describedby="password-addon" />
+                                                placeholder="Confirmer le mot de passe"
+                                                aria-label="Confirm Password"
+                                                name="password_confirmation"
+                                                required autocomplete="new-password" />
                                         </div>
+
                                         <div class="min-h-6 pl-6.92 mb-0.5 block">
                                             <input
                                                 id="terms"
                                                 class="w-4.92 h-4.92 ease-soft -ml-6.92 rounded-1.4 checked:bg-gradient-to-tl checked:from-gray-900 checked:to-slate-800 after:text-xxs after:font-awesome after:duration-250 after:ease-soft-in-out duration-250 relative float-left mt-1 cursor-pointer appearance-none border border-solid border-slate-200 bg-white bg-contain bg-center bg-no-repeat align-top transition-all after:absolute after:flex after:h-full after:w-full after:items-center after:justify-center after:text-white after:opacity-0 after:transition-all after:content-['\f00c'] checked:border-0 checked:border-transparent checked:bg-transparent checked:after:opacity-100"
                                                 type="checkbox"
-                                                value=""
-                                                checked />
+                                                name="terms"
+                                                required
+                                                value="1" />
                                             <label
                                                 class="mb-2 ml-1 font-normal cursor-pointer select-none text-sm text-slate-700"
                                                 for="terms">
                                                 I agree the
                                                 <a href="javascript:;" class="font-bold text-slate-700">Terms and Conditions</a>
                                             </label>
+                                            @error('terms')
+                                            <div class="text-sm text-red-500">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                         <div class="text-center">
                                             <button
                                                 type="submit"
@@ -261,29 +237,15 @@
                                         </div>
                                         <p class="mt-4 mb-0 leading-normal text-sm">
                                             Already have an account?
-                                            <a
-                                                href="../pages/sign-in.html"
-                                                class="font-bold text-slate-700">Sign in</a>
+                                            <a href="{{ route('admin.login') }}" class="font-bold text-slate-700">Sign in</a>
                                         </p>
                                     </form>
-                                </div>
-                                <div
-                                    class="p-6 px-1 pt-0 text-center bg-transparent border-t-0 border-t-solid rounded-b-2xl lg:px-2">
-                                    <p class="mx-auto mb-6 leading-normal text-sm">
-                                        Don't have an account?
-                                        <a
-                                            href="{{ route('admin.login') }}"
-                                            class="relative z-10 font-semibold text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text">Sign up</a>
-                                    </p>
                                 </div>
                             </div>
                         </div>
                         <div class="w-full max-w-full px-3 lg:flex-0 shrink-0 md:w-6/12">
                             <div class="absolute top-0 hidden w-3/5 h-full -mr-32 overflow-hidden -skew-x-10 -right-40 rounded-bl-xl md:block">
-                                <div
-                                    class="absolute inset-x-0 top-0 z-0 h-full -ml-16 bg-cover skew-x-10"
-                                    style=" background-image: url('../Admin-Dashboard/assets/img/curved-images/curved6.jpg');
-                    "></div>
+                                <div class="absolute inset-x-0 top-0 z-0 h-full -ml-16 bg-cover skew-x-10" style="background-image: url('../Admin-Dashboard/assets/img/curved-images/curved6.jpg');"></div>
                             </div>
                         </div>
                     </div>

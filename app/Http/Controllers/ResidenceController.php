@@ -12,7 +12,7 @@ class ResidenceController extends Controller
      */
     public function index()
     {
-        $residences = Residence::with('images','types')->get(); // Ou Residence::paginate(10);
+        $residences = Residence::with('images', 'types')->get(); // Ou Residence::paginate(10);
 
         // Passe les résidences à la vue
         return view('Pages.index', compact('residences'));
@@ -23,14 +23,15 @@ class ResidenceController extends Controller
     {
         $residences = Residence::with(['images', 'types'])->get();
 
-    return view('Pages/HomePage', compact('residences'));
+        return view('Pages/HomePage', compact('residences'));
     }
-    
+
     /**
      * Affiche les détails d'une résidence spécifique.
      */
     public function detailsAppart(Residence $residence)
     {
+        $residences = Residence::with(['images', 'types'])->get();
         // 1. Charge toutes les relations nécessaires pour la vue
         $residence->load([
             'images',        // Pour la galerie d'images
@@ -42,7 +43,7 @@ class ResidenceController extends Controller
         ]);
 
         // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
-        return view('Pages.detailsAppart', compact('residence'));
+        return view('Pages.detailsAppart', compact('residence', 'residences'));
     }
 
     public function favoris(Residence $residence)
@@ -50,5 +51,4 @@ class ResidenceController extends Controller
         // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
         return view('Pages.favoris');
     }
-    
 }

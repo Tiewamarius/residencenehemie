@@ -252,6 +252,7 @@
         </section>
     </div>
 
+
     {{-- Modale pour afficher tous les équipements --}}
     <!-- <div class="Equipment-modal-overlay" id="Equipment-modal-overlay">
         <div class="Equipment-modal-content">
@@ -306,6 +307,47 @@
         </div>
     </div> -->
     </div>
-</main>
 
+</main>
+{{-- Section "Nos appartements en vedette" --}}
+<section class="featured-properties" id="appartements">
+    <h2 class="section-title">Nos appartements en vedette</h2>
+    <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
+    <div class="properties-grid">
+        @forelse($residences->take(3) as $featuredResidence)
+        <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
+            <div class="property-card">
+                <div class="property-image">
+                    @php
+                    $featuredImage = $featuredResidence->images->where('est_principale', true)->first();
+                    if (!$featuredImage) {
+                    $featuredImage = $featuredResidence->images->sortBy('order')->first();
+                    }
+                    $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : asset('images/default.jpg');
+                    @endphp
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';" alt="Cliquez">
+                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
+                </div>
+                <div class="property-details">
+                    <div class="property-review">
+                        <p class="review-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(4.5/5)</span>
+                        </p>
+                    </div>
+                    <h3>{{ Str::limit($featuredResidence->nom, 30) }}</h3>
+                    <p class="property-location">{{ $featuredResidence->ville }}</p>
+                    <p class="property-price">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
+                </div>
+            </div>
+        </a>
+        @empty
+        <p class="text-gray-600 col-span-full text-center">Aucune propriété en vedette pour le moment.</p>
+        @endforelse
+    </div>
+</section>
 @endsection

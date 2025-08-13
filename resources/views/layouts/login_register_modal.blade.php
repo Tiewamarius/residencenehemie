@@ -10,7 +10,7 @@
         </div>
         <div class="login-modal-content">
             <h2 class="login-modal-welcome">Bienvenue sur Résidences Nehemie</h2>
-            
+
             {{-- Section de Connexion --}}
             <div id="login-section" class="form-section active">
                 <form action="{{ route('login') }}" method="POST" class="login-form">

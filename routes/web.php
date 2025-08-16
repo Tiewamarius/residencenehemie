@@ -20,6 +20,7 @@ Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])
 Route::get('/auth/google/callback', [SocialiteController::class, 'callback'])
     ->name('socialite.google.callback');
 
+// Route residence view
 Route::get('/residences', [ResidenceController::class, 'index'])->name('residences.index');
 
 Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppart'])->name('residences.detailsAppart');
@@ -28,11 +29,15 @@ Route::get('/detailsAppart', function () {
     return view('Pages/detailsAppart');
 });
 
+// Route favoris
+
 Route::get('/favoris', [ResidenceController::class, 'favoris'])->name('residences.favorites');
 
 Route::get('/favoris', function () {
     return view('favorites.favorites'); // Assurez-vous que vous avez un fichier 'resources/views/favorites/index.blade.php'
 })->name('favorites.index');
+
+Route::post('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
 
 
 Route::get('/dashboards', function () {

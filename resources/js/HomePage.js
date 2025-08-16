@@ -46,10 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function isAnyModalOrSidebarActive() {
         return (sidebar && sidebar.classList.contains('active')) ||
-               (contactSidebar && contactSidebar.classList.contains('active')) ||
-               (chatContainer && chatContainer.classList.contains('active')) ||
-               (loginModalOverlay && loginModalOverlay.classList.contains('active')) ||
-               (searchModalOverlay && searchModalOverlay.classList.contains('active'));
+            (contactSidebar && contactSidebar.classList.contains('active')) ||
+            (chatContainer && chatContainer.classList.contains('active')) ||
+            (loginModalOverlay && loginModalOverlay.classList.contains('active')) ||
+            (searchModalOverlay && searchModalOverlay.classList.contains('active'));
     }
 
     function toggleBodyScroll(disableScroll) {
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (chatContainer) chatContainer.classList.remove('active');
             if (loginModalOverlay) loginModalOverlay.classList.remove('active');
             if (searchModalOverlay) searchModalOverlay.classList.remove('active');
-            
+
             overlay.classList.remove('active');
             toggleBodyScroll(false);
         });
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==================================================
-    // --- Modal de Connexion / Inscription (Corrigé et mis à jour) ---
+    // --- Modal de Connexion / Inscription ---
     // ==================================================
     const openLoginModalBtn = document.getElementById('open-login-modal-btn');
     const loginModalCloseBtn = document.getElementById('login-modal-close-btn');
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginModalOverlay.classList.add('active');
             overlay.classList.add('active');
             toggleBodyScroll(true);
-            showLoginForm();
+            showLoginForm(); // Affiche la section de connexion par défaut
         }
     }
 
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginModalCloseBtn) {
         loginModalCloseBtn.addEventListener('click', closeLoginModal);
     }
-    
+
     if (loginModalOverlay) {
         loginModalOverlay.addEventListener('click', (e) => {
             if (e.target === loginModalOverlay) {
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginTabBtn) {
         loginTabBtn.addEventListener('click', showLoginForm);
     }
-    
+
     if (registerTabBtn) {
         registerTabBtn.addEventListener('click', showRegisterForm);
     }
@@ -285,6 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ======================================================
     // --- GESTION DE LA SOUMISSION DES FORMULAIRES (AJAX) ---
     // ======================================================
+    // Récupérer le jeton CSRF à partir de la balise meta
+    const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+    const csrfToken = csrfTokenElement ? csrfTokenElement.getAttribute('content') : null;
+
     // Fonction pour afficher des messages d'erreur ou de succès
     function displayFormMessage(formElement, message, type) {
         // Crée ou trouve un élément pour les messages
@@ -302,37 +306,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Soumission du formulaire de connexion
     if (loginForm) {
         loginForm.addEventListener('submit', async (e) => {
-            // Empêcher le comportement par défaut du formulaire (rechargement de la page)
             e.preventDefault();
-
-            // Afficher un message de chargement
             displayFormMessage(loginForm, "Connexion en cours...", 'info');
-            
+
             const formData = new FormData(loginForm);
-            
+
+            // Ajouter le jeton CSRF aux en-têtes de la requête
+            const headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken // Ajout du jeton CSRF
+            };
+
             try {
-                // Envoyer les données au serveur Laravel
                 const response = await fetch(loginForm.action, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest', // Important pour Laravel
-                    }
+                    headers: headers
                 });
+
+                // Si le serveur a déclenché une redirection, on la gère ici
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
 
                 const result = await response.json();
 
                 if (response.ok) {
-                    // Si la réponse est un succès (statut 200)
                     displayFormMessage(loginForm, result.message, 'success');
-                    // Rediriger l'utilisateur ou fermer la modale après un court délai
                     setTimeout(() => {
-                        window.location.href = result.redirect || '/'; // Redirection
+                        window.location.href = result.redirect || '/';
                     }, 1500);
                 } else {
-                    // Si la réponse contient des erreurs (ex: statut 422 - validation)
-                    const errors = result.errors;
-                    const firstError = errors[Object.keys(errors)[0]][0];
+                    // Si la réponse n'est pas OK, le statut peut être 419, 422, etc.
+                    // On gère les erreurs de validation ou d'autres erreurs du serveur
+                    const firstError = (result.errors && Object.keys(result.errors).length > 0) ?
+                        result.errors[Object.keys(result.errors)[0]][0] :
+                        result.message || "Une erreur est survenue. Veuillez réessayer.";
                     displayFormMessage(loginForm, firstError, 'error');
                 }
             } catch (error) {
@@ -346,20 +356,29 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             displayFormMessage(registerForm, "Inscription en cours...", 'info');
 
             const formData = new FormData(registerForm);
+
+            // Ajouter le jeton CSRF aux en-têtes de la requête
+            const headers = {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': csrfToken // Ajout du jeton CSRF
+            };
 
             try {
                 const response = await fetch(registerForm.action, {
                     method: 'POST',
                     body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                    }
+                    headers: headers
                 });
-                
+
+                // Si le serveur a déclenché une redirection, on la gère ici
+                if (response.redirected) {
+                    window.location.href = response.url;
+                    return;
+                }
+
                 const result = await response.json();
 
                 if (response.ok) {
@@ -368,8 +387,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = result.redirect || '/';
                     }, 1500);
                 } else {
-                    const errors = result.errors;
-                    const firstError = errors[Object.keys(errors)[0]][0];
+                    const firstError = (result.errors && Object.keys(result.errors).length > 0) ?
+                        result.errors[Object.keys(result.errors)[0]][0] :
+                        result.message || "Une erreur est survenue. Veuillez réessayer.";
                     displayFormMessage(registerForm, firstError, 'error');
                 }
             } catch (error) {
@@ -453,8 +473,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data) {
             featureDisplayTitle.textContent = data.title;
             featureDisplayText.textContent = data.text;
-            featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
-            whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
+            if (imageDisplay) {
+                featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
+            }
+            if (imageSection) {
+                whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
+            }
         }
     }
 
@@ -472,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             handleInteraction(button);
         });
-        
+
         button.addEventListener('mouseenter', () => {
             handleInteraction(button);
         });
@@ -485,4 +509,146 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSection = initialActiveButton.dataset.imageSection;
         updateFeatureDisplay(featureKey, imageDisplay, imageSection);
     }
+
+    // ===========================================================
+    // --- NOUVEAU : Ouverture de la modale via l'URL ---
+    // ===========================================================
+    const currentPath = window.location.pathname;
+
+    if (currentPath.startsWith('/login')) {
+        openLoginModal();
+    } else if (currentPath.startsWith('/register')) {
+        openLoginModal();
+        showRegisterForm();
+    }
+
+
+// Script Search
+
+    const searchForms = document.getElementById('search-form-opens');
+    const propertiesContainer = document.getElementById('properties-container');
+    const resultsHeaderContainer = document.getElementById('results-header-container');
+    const targetSection = document.getElementById('appartments');
+
+
+    function createApartmentCard(apartment) {
+        const imageUrl = apartment.featuredImage ? apartment.featuredImage : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+        const detailRoute = `/residences/detailsAppart/${apartment.id}`;
+        const isSuperhost = apartment.is_superhost ?
+            `<span class="absolute top-2 left-2 bg-white text-gray-900 font-semibold px-2 py-1 rounded-full text-xs shadow-md">Superhôte</span>` : '';
+
+        let stars = '';
+        const fullStars = Math.floor(apartment.rating);
+        const hasHalfStar = apartment.rating % 1 > 0;
+        for (let i = 0; i < fullStars; i++) {
+            stars += '<i class="fas fa-star"></i>';
+        }
+        if (hasHalfStar) {
+            stars += '<i class="fas fa-star-half-alt"></i>';
+        }
+
+        return `
+                    <a href="${detailRoute}" class="property-card-link">
+                        <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
+                            <div class="property-image h-48 bg-gray-200 relative">
+                                ${isSuperhost}
+                                <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
+                                <span class="wishlist-icon"><i class="fas fa-heart"></i></span>
+                            </div>
+                            <div class="property-details p-4">
+                                <div class="property-review flex items-center mb-2">
+                                    <p class="review-stars flex items-center text-yellow-400 text-sm">
+                                        ${stars}
+                                        <span class="text-gray-600 ml-2">(${apartment.rating}/5)</span>
+                                    </p>
+                                </div>
+                                <h3 class="font-semibold text-gray-800 text-lg">${apartment.nom.length > 30 ? apartment.nom.substring(0, 30) + '...' : apartment.nom}</h3>
+                                <p class="property-location text-gray-500 text-sm mt-1">${apartment.ville}</p>
+                                <p class="property-price font-bold text-gray-900 mt-2">À partir de ${apartment.prix_min.toLocaleString('fr-FR')} XOF</p>
+                            </div>
+                        </div>
+                    </a>
+                `;
+    }
+
+    function renderProperties(apartments) {
+        propertiesContainer.style.opacity = '0';
+        setTimeout(() => {
+            propertiesContainer.innerHTML = '';
+            if (apartments.length > 0) {
+                apartments.forEach(apartment => {
+                    propertiesContainer.innerHTML += createApartmentCard(apartment);
+                });
+                resultsHeaderContainer.innerHTML = `
+                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">${apartments.length} logements disponibles</h2>
+                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez les résultats de votre recherche.</p>
+                        `;
+            } else {
+                propertiesContainer.innerHTML = '<p class="text-gray-600 col-span-full text-center text-xl p-8">Aucun appartement disponible pour cette recherche.</p>';
+                resultsHeaderContainer.innerHTML = `
+                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Aucun résultat trouvé</h2>
+                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez essayer une autre recherche.</p>
+                        `;
+            }
+            propertiesContainer.style.opacity = '1';
+        }, 500);
+    }
+
+    searchForms.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Récupération des valeurs du formulaire
+        const address = document.getElementById('address').value;
+        const arrivee = document.getElementById('arrivee').value;
+        const depart = document.getElementById('depart').value;
+        const adultes = document.getElementById('adultes').value;
+        const enfants = document.getElementById('enfants').value;
+
+        // Afficher l'état de chargement
+        propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
+        resultsHeaderContainer.innerHTML = `
+                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
+                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
+                `;
+
+        // Construire l'objet de données à envoyer
+        const searchData = {
+            address: address,
+            arrivee: arrivee,
+            depart: depart,
+            adultes: adultes,
+            enfants: enfants
+        };
+
+        try {
+            // Effectuer une requête POST vers votre API
+            const response = await fetch('/api/search-apartments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(searchData)
+            });
+
+            // Vérifier si la réponse est OK
+            if (!response.ok) {
+                throw new Error('Erreur réseau ou réponse de l\'API non valide.');
+            }
+
+            // Récupérer les données JSON de la réponse
+            const apartments = await response.json();
+
+            // Afficher les résultats
+            renderProperties(apartments);
+
+        } catch (error) {
+            // Gérer les erreurs de la requête
+            console.error('Erreur lors de la recherche des appartements :', error);
+            propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
+            resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
+        }
+    });
+
+
 });

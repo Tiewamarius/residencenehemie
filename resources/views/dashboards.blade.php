@@ -3,6 +3,7 @@
 @section('title', 'Accueil - Résidences Nehemie') {{-- Titre spécifique à cette page --}}
 
 @section('content')
+
 {{-- Section principale avec slider et formulaire de recherche --}}
 <section class="home">
     <div class="image-slider">
@@ -26,61 +27,45 @@
     <div class="hero-content-wrapper">
         <div class="hero-card-container">
             <h3>Bingerville: Fehkesse</h3>
-            <p class="hero-card-description">Réservez des hébergements sur Résidences Néhémie</p>
+            <p class="hero-card-description">Cherche les hébergements Disponible</p>
 
             <button class="button" id="button-opens">CHERCHER</button>
             <button class="button" id="close-buttons" style="display:none;margin-bottom: 10px; background-color: gray;color:whitesmoke;">REDUIR</button>
 
-            <form action=" #" method="GET" id="search-form-opens" class="banner-search-form">
-                <div class="form-group">
-                    <label for="address">ADRESSE</label>
-                    <input type="text" id="address" name="address" placeholder="N'importe où">
-                </div>
-                <div class="form-group-row">
-                    <div class="form-group date-input">
-                        <label for="arrivee">ARRIVÉE</label>
-                        <input type="date" id="arrivee" name="arrivee" placeholder="Ajouter une date">
+            <form class="booking-form" action=" " method="POST" id="search-form-opens" class="banner-search-form">
+                @csrf {{-- Protection CSRF si la form est soumise --}}
+                <div class="form-group date-selection">
+                    <div class="date-input-group">
+                        <label for="check_in_date">ARRIVÉE</label>
+                        <input type="text" id="check_in_date" name="date_arrivee" readonly placeholder="Ajouter une date">
                     </div>
-                    <div class="form-group date-input">
-                        <label for="depart">DÉPART</label>
-                        <input type="date" id="depart" name="depart" placeholder="Ajouter une date">
+                    <div class="date-input-group">
+                        <label for="check_out_date">DÉPART</label>
+                        <input type="text" id="check_out_date" name="date_depart" readonly placeholder="Ajouter une date">
                     </div>
                 </div>
-                <div class="form-group-row">
-                    <div class="form-group select-input">
-                        <label for="adultes">ADULTES</label>
-                        <select id="adultes" name="adultes">
-                            <option value="1">1</option>
-                            <option value="2" selected>2</option>
-                            <option value="3">3</option>
-                        </select>
-                    </div>
-                    <div class="form-group select-input">
-                        <label for="enfants">ENFANTS</label>
-                        <select id="enfants" name="enfants">
-                            <option value="0" selected>0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" class="search-button">Rechercher</button>
+
+
+                <button type="submit" class="check-availability-btn">CHERCHER</button>
+
             </form>
         </div>
     </div>
 </section>
 
-{{-- Section "Nos appartements en vedette" --}}
-<section class="featured-properties" id="appartements">
-    <h2 class="section-title">Nos appartements en vedette</h2>
-    <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
-    <div class="properties-grid">
+<!-- Section "Nos appartements en vedette" -->
+<section class="featured-properties max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8" id="appartements">
+    <div id="results-header-container">
+        <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Nos appartements en vedette</h2>
+        <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
+    </div>
+
+    <div id="properties-container" class="properties-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {{-- Le contenu sera chargé ici par JavaScript --}}
         @forelse($residences->take(3) as $featuredResidence)
         <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
-            <div class="property-card">
-                <div class="property-image">
+            <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
+                <div class="property-image h-48 bg-gray-200 relative">
                     @php
                     $featuredImage = $featuredResidence->images->where('est_principale', true)->first();
                     if (!$featuredImage) {
@@ -88,23 +73,23 @@
                     }
                     $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : asset('images/default.jpg');
                     @endphp
-                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';" alt="Cliquez">
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';" class="w-full h-full object-cover">
                     <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
                 </div>
-                <div class="property-details">
-                    <div class="property-review">
-                        <p class="review-stars">
+                <div class="property-details p-4">
+                    <div class="property-review flex items-center mb-2">
+                        <p class="review-stars flex items-center text-yellow-400 text-sm">
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star"></i>
                             <i class="fas fa-star-half-alt"></i>
-                            <span>(4.5/5)</span>
+                            <span class="text-gray-600 ml-2">(4.5/5)</span>
                         </p>
                     </div>
-                    <h3>{{ Str::limit($featuredResidence->nom, 30) }}</h3>
-                    <p class="property-location">{{ $featuredResidence->ville }}</p>
-                    <p class="property-price">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
+                    <h3 class="font-semibold text-gray-800 text-lg">{{ Str::limit($featuredResidence->nom, 30) }}</h3>
+                    <p class="property-location text-gray-500 text-sm mt-1">{{ $featuredResidence->ville }}</p>
+                    <p class="property-price font-bold text-gray-900 mt-2">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
                 </div>
             </div>
         </a>
@@ -113,6 +98,7 @@
         @endforelse
     </div>
 </section>
+
 
 {{-- Section "Pourquoi nous choisir" --}}
 <section class="why-choose-us">

@@ -450,10 +450,10 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Votre Bien-Être",
             text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
         },
-        'flexibility': {
-            title: "La Flexibilité",
-            text: "Que vous ayez besoin d'un séjour de courte, moyenne ou longue durée, nous nous adaptons à vos besoins. Nos périodes de location sont à définir ensemble, vous offrant la liberté de planifier votre séjour en toute sérénité."
-        },
+        // 'flexibility': {
+        //     title: "La Flexibilité",
+        //     text: "Que vous ayez besoin d'un séjour de courte, moyenne ou longue durée, nous nous adaptons à vos besoins. Nos périodes de location sont à définir ensemble, vous offrant la liberté de planifier votre séjour en toute sérénité."
+        // },
         'security_optimal': {
             title: "Sécurité Optimale",
             text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."

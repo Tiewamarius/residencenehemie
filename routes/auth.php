@@ -57,8 +57,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-    Route::post('/residences/{residence}/book', [BookingController::class, 'store'])
-        ->name('residences.book');
 
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])

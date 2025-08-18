@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Residence;
-use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\Favorite;
 
 class ResidenceController extends Controller
 {
@@ -56,14 +57,53 @@ class ResidenceController extends Controller
         return view('Pages.detailsAppart', compact('residence', 'residences'));
     }
 
+
+
     /**
-     * Affiche la page des favoris.
-     * Cette méthode ne reçoit pas de paramètre de résidence.
+     * Affiche la page des favoris de l'utilisateur.
      */
     public function favoris()
     {
-        return view('Pages.favoris');
+        // On récupère les résidences favorites de l'utilisateur authentifié
+        $favorites = Auth::user()->favorites()->where('favoritable_type', Residence::class)->get();
+
+        // On charge les résidences associées aux favoris pour avoir leurs détails
+        $favoriteResidences = $favorites->map(function ($favorite) {
+            return $favorite->favoritable;
+        });
+
+        return view('Pages.favoris', compact('favoriteResidences'));
     }
+
+    /**
+     * Ajoute ou retire une résidence des favoris de l'utilisateur.
+     */
+    public function toggleFavori(Residence $residence)
+    {
+        // Récupérer l'utilisateur authentifié
+        $user = Auth::user();
+
+        // Vérifier si la résidence est déjà dans les favoris de l'utilisateur
+        $favorite = $user->favorites()
+            ->where('favoritable_id', $residence->id)
+            ->where('favoritable_type', Residence::class)
+            ->first();
+
+        if ($favorite) {
+            // Si oui, la retirer en supprimant l'entrée
+            $favorite->delete();
+            return response()->json(['status' => 'removed', 'message' => 'Retiré des favoris']);
+        } else {
+            // Sinon, l'ajouter en créant une nouvelle entrée
+            $user->favorites()->create([
+                'favoritable_id' => $residence->id,
+                'favoritable_type' => Residence::class,
+            ]);
+            return response()->json(['status' => 'added', 'message' => 'Ajouté aux favoris']);
+        }
+    }
+
+
 
     /**
      * Gère la recherche d'appartements.

@@ -2,33 +2,36 @@
 
 namespace App\Models;
 
-// Importez les modèles avec lesquels User a des relations
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Favorite;
 
-// class User extends Authenticatable implements MustVerifyEmail Implémentez MustVerifyEmail si besoin
+/**
+ * @property-read Collection|Favorite[] $favorites
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',          
-    'profile_picture', 
-    'phone_number',
-    'address',       
-    'description',   // NOUVEAU
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'profile_picture',
+        'phone_number',
+        'address',
+        'description',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,7 +60,7 @@ class User extends Authenticatable
      */
     public function bookings()
     {
-        return $this->hasMany(Booking::class); // Assurez-vous que le modèle Booking existe
+        return $this->hasMany(Booking::class);
     }
 
     /**
@@ -65,7 +68,7 @@ class User extends Authenticatable
      */
     public function reviews()
     {
-        return $this->hasMany(Review::class); // Assurez-vous que le modèle Review existe
+        return $this->hasMany(Review::class);
     }
 
     /**
@@ -73,7 +76,7 @@ class User extends Authenticatable
      */
     public function favorites()
     {
-        return $this->hasMany(Favorite::class); // Assurez-vous que le modèle Favorite existe
+        return $this->hasMany(Favorite::class);
     }
 
     /**
@@ -81,7 +84,7 @@ class User extends Authenticatable
      */
     public function messages()
     {
-        return $this->hasMany(Message::class); // Assurez-vous que le modèle Message existe
+        return $this->hasMany(Message::class);
     }
 
     // --- Accessors ou autres méthodes utiles ---

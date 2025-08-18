@@ -450,10 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Votre Bien-Être",
             text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
         },
-        // 'flexibility': {
-        //     title: "La Flexibilité",
-        //     text: "Que vous ayez besoin d'un séjour de courte, moyenne ou longue durée, nous nous adaptons à vos besoins. Nos périodes de location sont à définir ensemble, vous offrant la liberté de planifier votre séjour en toute sérénité."
-        // },
         'security_optimal': {
             title: "Sécurité Optimale",
             text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
@@ -511,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ===========================================================
-    // --- NOUVEAU : Ouverture de la modale via l'URL ---
+    // --- Ouverture de la modale via l'URL ---
     // ===========================================================
     const currentPath = window.location.pathname;
 
@@ -523,19 +519,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-// Script Search
-
+    // Script Search
     const searchForms = document.getElementById('search-form-opens');
     const propertiesContainer = document.getElementById('properties-container');
     const resultsHeaderContainer = document.getElementById('results-header-container');
     const targetSection = document.getElementById('appartments');
-
 
     function createApartmentCard(apartment) {
         const imageUrl = apartment.featuredImage ? apartment.featuredImage : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
         const detailRoute = `/residences/detailsAppart/${apartment.id}`;
         const isSuperhost = apartment.is_superhost ?
             `<span class="absolute top-2 left-2 bg-white text-gray-900 font-semibold px-2 py-1 rounded-full text-xs shadow-md">Superhôte</span>` : '';
+
+        // Déterminez si l'appartement est en favoris pour l'icône de cœur
+        const heartClass = apartment.is_favorited ? 'fas' : 'far';
 
         let stars = '';
         const fullStars = Math.floor(apartment.rating);
@@ -548,27 +545,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         return `
-                    <a href="${detailRoute}" class="property-card-link">
-                        <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
-                            <div class="property-image h-48 bg-gray-200 relative">
-                                ${isSuperhost}
-                                <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
-                                <span class="wishlist-icon"><i class="fas fa-heart"></i></span>
-                            </div>
-                            <div class="property-details p-4">
-                                <div class="property-review flex items-center mb-2">
-                                    <p class="review-stars flex items-center text-yellow-400 text-sm">
-                                        ${stars}
-                                        <span class="text-gray-600 ml-2">(${apartment.rating}/5)</span>
-                                    </p>
-                                </div>
-                                <h3 class="font-semibold text-gray-800 text-lg">${apartment.nom.length > 30 ? apartment.nom.substring(0, 30) + '...' : apartment.nom}</h3>
-                                <p class="property-location text-gray-500 text-sm mt-1">${apartment.ville}</p>
-                                <p class="property-price font-bold text-gray-900 mt-2">À partir de ${apartment.prix_min.toLocaleString('fr-FR')} XOF</p>
-                            </div>
+            <a href="${detailRoute}" class="property-card-link">
+                <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
+                    <div class="property-image h-48 bg-gray-200 relative">
+                        ${isSuperhost}
+                        <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
+                        <span class="wishlist-icon" data-residence-id="${apartment.id}"><i class="${heartClass} fa-heart"></i></span>
+                    </div>
+                    <div class="property-details p-4">
+                        <div class="property-review flex items-center mb-2">
+                            <p class="review-stars flex items-center text-yellow-400 text-sm">
+                                ${stars}
+                                <span class="text-gray-600 ml-2">(${apartment.rating}/5)</span>
+                            </p>
                         </div>
-                    </a>
-                `;
+                        <h3 class="font-semibold text-gray-800 text-lg">${apartment.nom.length > 30 ? apartment.nom.substring(0, 30) + '...' : apartment.nom}</h3>
+                        <p class="property-location text-gray-500 text-sm mt-1">${apartment.ville}</p>
+                        <p class="property-price font-bold text-gray-900 mt-2">À partir de ${apartment.prix_min.toLocaleString('fr-FR')} XOF</p>
+                    </div>
+                </div>
+            </a>
+        `;
     }
 
     function renderProperties(apartments) {
@@ -580,15 +577,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     propertiesContainer.innerHTML += createApartmentCard(apartment);
                 });
                 resultsHeaderContainer.innerHTML = `
-                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">${apartments.length} logements disponibles</h2>
-                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez les résultats de votre recherche.</p>
-                        `;
+                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">${apartments.length} logements disponibles</h2>
+                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez les résultats de votre recherche.</p>
+                `;
             } else {
                 propertiesContainer.innerHTML = '<p class="text-gray-600 col-span-full text-center text-xl p-8">Aucun appartement disponible pour cette recherche.</p>';
                 resultsHeaderContainer.innerHTML = `
-                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Aucun résultat trouvé</h2>
-                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez essayer une autre recherche.</p>
-                        `;
+                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Aucun résultat trouvé</h2>
+                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez essayer une autre recherche.</p>
+                `;
             }
             propertiesContainer.style.opacity = '1';
         }, 500);
@@ -607,9 +604,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Afficher l'état de chargement
         propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
         resultsHeaderContainer.innerHTML = `
-                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
-                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
-                `;
+            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
+            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
+        `;
 
         // Construire l'objet de données à envoyer
         const searchData = {
@@ -650,5 +647,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // =========================================================
+    // --- NOUVEAU : Fonctionnalité de gestion des favoris ---
+    // =========================================================
 
+    // J'utilise une délégation d'événements pour les icônes de favoris,
+    // car les cartes sont ajoutées dynamiquement au DOM.
+    document.body.addEventListener('click', async (e) => {
+        // Cibler l'icône de cœur ou son parent avec la classe 'wishlist-icon'
+        const wishlistIcon = e.target.closest('.wishlist-icon');
+        if (!wishlistIcon) {
+            return; // Si l'élément cliqué n'est pas un icône de favori, on ne fait rien
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const residenceId = wishlistIcon.dataset.residenceId;
+        const icon = wishlistIcon.querySelector('i');
+        const token = document.querySelector('meta[name="csrf-token"]').content;
+
+        if (!token) {
+            console.error('Erreur: Jeton CSRF non trouvé.');
+            // Gérer l'erreur, par exemple, en affichant un message à l'utilisateur
+            return;
+        }
+
+        try {
+            const response = await fetch(`/toggle-favori/${residenceId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({}) // Un corps vide peut être envoyé si le backend s'attend à du JSON
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.status === 'added') {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    console.log(result.message);
+                } else if (result.status === 'removed') {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    console.log(result.message);
+                }
+            } else {
+                if (response.status === 401) {
+                    // Si l'utilisateur n'est pas connecté, on déclenche l'ouverture de la modale de connexion
+                    openLoginModal();
+                    console.warn('Vous devez être connecté pour ajouter des favoris.');
+                } else {
+                    console.error('Erreur du serveur:', result.message || 'Une erreur est survenue.');
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête de favoris:', error);
+        }
+    });
 });

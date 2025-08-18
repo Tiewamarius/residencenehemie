@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Routes pour les réservations d'invités (requête POST)
-Route::post('/bookings/guest', [BookingController::class, 'storeGuestBooking'])->name('residences.bookguest');
+// Route::post('/bookings/guest', [BookingController::class, 'storeGuestBooking'])->name('residences.bookguest');
 
 // Routes du tableau de bord
 Route::get('/dashboards', function () {

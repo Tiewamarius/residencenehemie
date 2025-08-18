@@ -72,7 +72,7 @@ class Residence extends Model
     {
         return $this->morphMany(Favorite::class, 'favoritable');
     }
-    
+
     public function user()
     {
         return $this->belongsTo(User::class);

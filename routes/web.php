@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResidenceController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\auth\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Residence;
@@ -34,8 +35,9 @@ Route::get('/favoris', function () {
 Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppart'])
     ->name('residences.detailsAppart');
 
-// Route pour la page de réservation (qui affiche le formulaire, GET)
+// Route pour la page de réservation (qui affiche le formulaire,  )
 Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'bookguest']);
+
 
 // Route pour la recherche d'appartements via une API (requête POST)
 Route::post('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
@@ -44,9 +46,21 @@ Route::post('/api/search-apartments', [ResidenceController::class, 'search'])->n
 Route::middleware('auth')->group(function () {
     // Routes de profil utilisateur
     Route::get('/homeUser', [ProfileController::class, 'homeUser'])->name('profile.homeUser');
-    // Route pour la page de réservation (qui affiche le formulaire, GET)
+    // Route pour la page de réservation (qui affiche le formulaire, )
     Route::post('/residences/{residence}/reserver', [BookingController::class, 'reserver'])
         ->name('residences.reserver');
+
+    // Nouvelle route pour afficher la page de paiement après la réservation
+    Route::get('/paiement/{residence}', [PaiementController::class, 'showPaymentPage'])->name('paiements.show');
+
+    // Nouvelle route pour traiter le paiement
+    Route::post('/paiement/process', [PaiementController::class, 'process'])->name('paiements.process');
+
+    // Route pour la page de confirmation de succès
+    Route::get('/paiement/success', function () {
+        return view('Pages.success'); // Créez une vue 'success.blade.php' pour cette page
+    })->name('paiements.success');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

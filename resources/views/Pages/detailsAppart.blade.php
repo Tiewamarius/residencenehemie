@@ -190,11 +190,13 @@ $amenityIcons = [
                     </div>
 
                     {{-- Formulaire de réservation. Le formulaire est prêt à envoyer les données. --}}
-                    <form class="booking-form" action="{{ route(Auth::check() ? 'residences.reserver' : 'residences.bookguest', $residence->id) }}" method="POST">
+                    <!-- <form class="booking-form" action="{{ route(Auth::check() ? 'residences.reserver' : 'residences.bookguest', $residence->id) }}" method="POST"> -->
+                    <form class="booking-form" action="{{ route('residences.reserver', $residence->id) }}" method="POST">
                         @csrf
                         {{-- Champs cachés pour envoyer des données essentielles au serveur --}}
                         <input type="hidden" name="residence_id" value="{{ $residence->id }}">
                         <input type="hidden" name="total_price" id="total-price-input">
+                        <input type="hidden" name="type_id" value="{{ $firstType->id ?? '' }}">
 
                         <div class="form-group date-selection">
                             <div class="date-input-group">

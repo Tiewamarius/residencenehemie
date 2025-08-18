@@ -1630,7 +1630,7 @@ button {
     text-align: justify;
     /* box-shadow: var(--shadow-medium); */
     /* Variable CSS pour l'image de fond de la zone d'affichage, définie par JS */
-    --current-feature-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Ejtre'); /* Image par défaut */
+    --current-feature-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Etre'); /* Image par défaut */
 }
 
 /* Pseudo-élément pour l'image de fond de la zone d'affichage */
@@ -1641,7 +1641,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: var(--current-feature-image); /* Utilise la variable CSS */
+    /*background-image: var(--current-feature-image);  Utilise la variable CSS */
     background-size: cover;
     background-position: center;
     border-radius: var(--border-radius-medium);

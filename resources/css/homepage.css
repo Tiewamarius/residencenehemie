@@ -1534,7 +1534,6 @@ button {
     margin: 10px auto 0; /* Marge supérieure pour séparer du titre de section */
     align-items: flex-start; /* Aligne les éléments au début */
     padding: 10px; /* Padding interne */
-    /*background-color: rgba(255, 255, 255, 0.05);  Léger fond translucide pour le conteneur global */
     border-radius: var(--border-radius-large);
     /*box-shadow: 0 10px 30px rgba(0,0,0,0.3);  Ombre pour le conteneur principal */
     backdrop-filter: blur(2px); /* Effet de flou sur l'arrière-plan du conteneur */
@@ -1642,7 +1641,7 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: var(--current-feature-image); /* Utilise la variable CSS */
+    /*background-image: var(--current-feature-image);  Utilise la variable CSS */
     background-size: cover;
     background-position: center;
     border-radius: var(--border-radius-medium);

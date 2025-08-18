@@ -473,7 +473,7 @@ body.modal-open .apartment-main-content {
 .booking-form .form-group {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-small);
-  margin-bottom: 1rem;
+  margin-bottom: 0.1rem;
   overflow: hidden;
 }
 
@@ -484,7 +484,7 @@ body.modal-open .apartment-main-content {
 
 .booking-form .date-input-group {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.2rem 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -495,7 +495,7 @@ body.modal-open .apartment-main-content {
 
 .booking-form .form-group label {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-color-dark);
   margin-bottom: 0.25rem;
   text-transform: uppercase;
@@ -516,7 +516,7 @@ body.modal-open .apartment-main-content {
 }
 
 .booking-form .guests-selection {
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 1rem;
   position: relative;
 }
 

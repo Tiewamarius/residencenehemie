@@ -10,16 +10,18 @@
         </div>
         <div class="login-modal-content">
             <h2 class="login-modal-welcome">Bienvenue sur Résidences Nehemie</h2>
-            
+
             {{-- Section de Connexion --}}
             <div id="login-section" class="form-section active">
                 <form action="{{ route('login') }}" method="POST" class="login-form">
                     @csrf
+                    {{-- Zone pour afficher les messages de succès ou d'erreur --}}
+                    <div class="form-message"></div>
                     <div class="form-group">
-                        <input type="text" id="login-email" name="email_or_username" placeholder="Entrez votre email ou nom d'utilisateur" required>
+                        <input type="text" id="login-email" name="email" placeholder="Entrez votre email ou nom d'utilisateur" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="login-password" name="password" placeholder="Entrez votre mot de passe" required>
+                        <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
                     </div>
                     <button type="submit" class="button login-continue-btn">Se connecter</button>
                 </form>
@@ -29,6 +31,8 @@
             <div id="register-section" class="form-section">
                 <form action="{{route('register')}}" method="POST" class="register-form">
                     @csrf
+                    {{-- Zone pour afficher les messages de succès ou d'erreur --}}
+                    <div class="form-message"></div>
                     <div class="form-group">
                         <input type="text" id="register-name" name="name" placeholder="Entrez votre nom complet" required>
                     </div>
@@ -39,7 +43,7 @@
                         <input type="password" id="register-password" name="password" placeholder="Créez un mot de passe" required>
                     </div>
                     <div class="form-group">
-                        <input type="password" id="register-confirm-password" name="password_confirmation" placeholder="Confirmez votre mot de passe" required> {{-- Nommage standard pour confirmation --}}
+                        <input type="password" id="register-confirm-password" name="password_confirmation" placeholder="Confirmez votre mot de passe" required>
                     </div>
                     <button type="submit" class="button login-continue-btn">S'inscrire</button>
                 </form>

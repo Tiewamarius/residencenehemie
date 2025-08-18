@@ -10,25 +10,25 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-    'user_id',
-    'residence_id',
-    'type_id',
-    'date_arrivee',
-    'date_depart',
-    'nombre_adultes',
-    'nombre_enfants',
-    'total_price',      // <-- Assurez-vous que c'est bien 'total_price' ici aussi
-    'statut',
-    'numero_reservation', // NOUVEAU
-    'details_client',     // NOUVEAU
-    'note_client',        // NOUVEAU
-];
+        'user_id',
+        'residence_id',
+        'type_id',
+        'date_arrivee',
+        'date_depart',
+        'nombre_adultes',
+        'nombre_enfants',
+        'total_price',      // <-- Assurez-vous que c'est bien 'total_price' ici aussi
+        'statut',
+        'numero_reservation', // NOUVEAU
+        'details_client',     // NOUVEAU
+        'note_client',        // NOUVEAU
+    ];
 
-protected $casts = [
-    'date_arrivee' => 'date',
-    'date_depart' => 'date',
-    'details_client' => 'array', // Pour que Laravel caste automatiquement le JSON en array
-];
+    protected $casts = [
+        'date_arrivee' => 'date',
+        'date_depart' => 'date',
+        'details_client' => 'array', // Pour que Laravel caste automatiquement le JSON en array
+    ];
 
     // --- Relations ---
 
@@ -64,6 +64,10 @@ protected $casts = [
         return $this->hasOne(Payment::class);
     }
 
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
     /**
      * Une réservation peut avoir un avis associé.
      */

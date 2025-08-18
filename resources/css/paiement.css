@@ -1,0 +1,140 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7fafc;
+}
+
+.payment-main-content {
+    padding-top: 5rem;
+    padding-bottom: 2rem;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.payment-container {
+    @apply flex flex-col md:flex-row gap-8 max-w-6xl mx-auto bg-white shadow-xl rounded-2xl p-6 md:p-10;
+}
+
+.payment-left-column,
+.payment-right-column {
+    @apply flex-1;
+}
+
+.back-link {
+    @apply text-gray-600 hover:text-gray-900 transition-colors duration-200 mb-6 inline-block;
+}
+
+h1 {
+    @apply text-3xl font-bold text-gray-800 mb-6;
+}
+
+h2 {
+    @apply text-xl font-semibold text-gray-700 mb-4;
+}
+
+h3 {
+    @apply text-lg font-semibold text-gray-700 mb-3 mt-6;
+}
+
+.payment-option {
+    @apply border border-gray-300 rounded-xl p-4 mb-4 transition-all duration-200 cursor-pointer;
+}
+
+.payment-option:hover {
+    @apply border-blue-500;
+}
+
+.payment-option input[type="radio"] {
+    display: none;
+}
+
+.payment-option input[type="radio"]:checked + .payment-label {
+    @apply font-semibold text-blue-600;
+}
+
+.payment-label {
+    @apply flex items-center gap-3 text-gray-700;
+}
+
+.payment-label::before {
+    content: '';
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid #9ca3af;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.payment-option input[type="radio"]:checked + .payment-label::before {
+    border-color: #3b82f6;
+    background-color: #3b82f6;
+    box-shadow: 0 0 0 3px white, 0 0 0 5px #3b82f6;
+}
+
+.card-details {
+    @apply mt-4 pt-4 border-t border-gray-200 hidden;
+}
+
+.form-group {
+    @apply mb-4;
+}
+
+.form-group label {
+    @apply block text-sm font-medium text-gray-600 mb-1;
+}
+
+.form-group input,
+.form-group select {
+    @apply w-full p-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed;
+}
+
+.form-row {
+    @apply flex gap-4;
+}
+
+.form-row .form-group {
+    @apply flex-1;
+}
+
+.submit-payment-btn {
+    @apply w-full bg-blue-600 text-white font-bold py-3 rounded-xl mt-6 hover:bg-blue-700 transition-colors duration-200 shadow-md;
+}
+
+.booking-summary-card {
+    @apply bg-gray-50 rounded-2xl p-6 shadow-inner;
+}
+
+.residence-summary {
+    @apply flex items-center gap-4 border-b border-gray-200 pb-6 mb-6;
+}
+
+.residence-summary img {
+    @apply w-20 h-20 object-cover rounded-xl;
+}
+
+.residence-summary h4 {
+    @apply text-lg font-bold text-gray-800;
+}
+
+.rating {
+    @apply text-sm text-yellow-500;
+}
+
+.travel-info p,
+.price-details p {
+    @apply flex justify-between items-center text-gray-600 mb-2;
+}
+
+.travel-info p span:first-child,
+.price-details p span:first-child {
+    @apply font-medium;
+}
+
+.price-details {
+    @apply border-t border-gray-200 pt-6 mt-6;
+}
+
+.price-details .total {
+    @apply text-xl font-bold text-gray-800 mt-4;
+}

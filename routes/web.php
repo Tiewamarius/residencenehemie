@@ -50,9 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/residences/{residence}/reserver', [BookingController::class, 'reserver'])
         ->name('residences.reserver');
 
-    // Nouvelle route pour afficher la page de paiement après la réservation
-    Route::get('/paiement/{residence}', [PaiementController::class, 'showPaymentPage'])->name('paiements.show');
-
+    // Route correcte pour afficher la page de paiement d'une réservation
+    Route::get('/paiement/{booking}', [PaiementController::class, 'showPaymentPage'])->name('paiements.show');
     // Nouvelle route pour traiter le paiement
     Route::post('/paiement/process', [PaiementController::class, 'process'])->name('paiements.process');
 

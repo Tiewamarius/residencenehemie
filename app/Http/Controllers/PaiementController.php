@@ -6,21 +6,23 @@ use App\Models\Booking;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaiementController extends Controller
 {
     /**
      * Affiche la page de paiement pour une réservation spécifique.
      *
-     * @param  \App\Models\Booking  $residence
+     * @param  \App\Models\Booking  $booking
      * @return \Illuminate\View\View
      */
-    public function showPaymentPage(Booking $residence)
+    public function showPaymentPage(Booking $booking)
     {
-        // Charge les relations nécessaires pour la vue
-        $residence->load('residence.images', 'residence.reviews', 'residence.types');
+        // Charge les relations nécessaires pour la vue afin d'éviter le problème N+1
+        // REMARQUE: Assurez-vous d'avoir une relation 'type' dans votre modèle Booking.
+        $booking->load('residence.images', 'residence.reviews', 'type');
 
-        return view('Pages.paiement', compact('residence'));
+        return view('Pages.paiement', compact('booking'));
     }
 
     /**
@@ -31,22 +33,28 @@ class PaiementController extends Controller
      */
     public function process(Request $request)
     {
+        // 1. Valider les données du formulaire
         $validatedData = $request->validate([
             'booking_id' => 'required|exists:bookings,id',
             'payment_method' => 'required|string',
-            'total_price' => 'required|numeric',
+            'total_price' => 'required|numeric|min:0',
         ]);
 
-        // Simuler une transaction réussie pour l'exemple
-        // Dans une application réelle, vous feriez appel à une passerelle de paiement (Stripe, CinetPay, etc.)
-        $transactionId = 'TRANS-' . time();
-        $paymentStatus = 'completed';
+        try {
+            // Utiliser une transaction de base de données pour garantir l'intégrité
+            DB::beginTransaction();
 
-        // Utiliser une transaction de base de données pour garantir que les deux opérations réussissent
-        DB::transaction(function () use ($validatedData, $transactionId, $paymentStatus) {
-            // Créer le paiement
+            // 2. Récupérer la réservation
+            $booking = Booking::findOrFail($validatedData['booking_id']);
+
+            // 3. Simuler le processus de paiement
+            // Dans une application réelle, ce serait ici que vous appelleriez une API de paiement externe
+            $transactionId = 'TRANS-' . time();
+            $paymentStatus = 'completed'; // Ou 'failed', selon le résultat de l'API
+
+            // 4. Créer l'enregistrement de paiement
             Payment::create([
-                'booking_id' => $validatedData['booking_id'],
+                'booking_id' => $booking->id,
                 'transaction_id' => $transactionId,
                 'montant' => $validatedData['total_price'],
                 'methode_paiement' => $validatedData['payment_method'],
@@ -54,13 +62,22 @@ class PaiementController extends Controller
                 'date_paiement' => now(),
             ]);
 
-            // Mettre à jour le statut de la réservation
-            $residence = Booking::findOrFail($validatedData['booking_id']);
-            $residence->statut = 'paid';
-            $residence->save();
-        });
+            // 5. Mettre à jour le statut de la réservation
+            $booking->statut = 'paid';
+            $booking->save();
 
-        // Rediriger vers une page de succès
-        return redirect()->route('paiements.success')->with('success', 'Paiement et réservation confirmés !');
+            // 6. Confirmer la transaction
+            DB::commit();
+
+            // 7. Rediriger avec un message de succès
+            return redirect()->route('paiements.success')->with('success', 'Paiement et réservation confirmés !');
+        } catch (\Exception $e) {
+            // 8. En cas d'erreur, annuler la transaction
+            DB::rollBack();
+            Log::error('Erreur lors du traitement du paiement: ' . $e->getMessage());
+
+            // 9. Rediriger avec un message d'erreur
+            return redirect()->back()->with('error', 'Une erreur est survenue lors du paiement. Veuillez réessayer.')->withInput();
+        }
     }
 }

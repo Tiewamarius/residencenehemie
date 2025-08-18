@@ -79,7 +79,7 @@
         </div>
 
         {{-- Contenu de l'onglet pour "Réservations précédentes" --}}
-        <div id="reservations" class="tab-content bg-white rounded-xl shadow-md p-6 hidden" style="display:none;">
+        <div id="reservations" class="tab-content bg-white rounded-xl shadow-md p-6 hidden" style="display:nfone;">
             <h2 class="text-2xl font-semibold mb-6 text-gray-900">Réservations précédentes</h2>
             <div class="text-gray-500 text-center py-10">
                 <p>Contenu des réservations précédentes...</p>
@@ -87,7 +87,7 @@
         </div>
 
         {{-- Contenu de l'onglet pour "Connexions" --}}
-        <div id="connections" class="tab-content bg-white rounded-xl shadow-md p-6" style="display:none;">
+        <div id="connections" class="tab-content bg-white rounded-xl shadow-md p-6" style="display:ncone;">
             <h2 class=" text-2xl font-semibold mb-6 text-gray-900">Connexions</h2>
             <div class="text-gray-500 text-center py-10">
                 <p>Contenu des connexions...</p>

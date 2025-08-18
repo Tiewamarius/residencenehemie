@@ -14,6 +14,9 @@ export default defineConfig({
                 'resources/css/detailsAppart.css',
                 'resources/css/detailsAppart.js',
 
+                'resources/css/paiement.css',
+                'resources/css/paiement.js',
+
                 'resources/css/homeUser.css',
                 'resources/css/homeUser.js'
                 

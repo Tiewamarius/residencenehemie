@@ -24,6 +24,9 @@
     'resources/css/detailsAppart.css',
     'resources/js/detailsAppart.js',
 
+    'resources/css/paiement.css',
+    'resources/js/paiement.js',
+
     'resources/css/homeUser.css',
     'resources/js/homeUser.js'
     ])

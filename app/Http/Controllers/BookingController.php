@@ -49,7 +49,8 @@ class BookingController extends Controller
             ];
 
             // 4. Créer et sauvegarder la nouvelle réservation
-            Booking::create([
+            // Assurez-vous de stocker l'objet Booking créé
+            $booking = Booking::create([
                 'user_id' => Auth::id(),
                 'residence_id' => $validatedData['residence_id'],
                 'type_id' => $validatedData['type_id'],
@@ -60,15 +61,14 @@ class BookingController extends Controller
                 'statut' => 'pending',
                 'total_price' => $totalPrice,
                 'numero_reservation' => $reservationNumber,
-                'details_client' => $detailsClient,
+                'details_client' => json_encode($detailsClient), // Important: convert to JSON for database
                 'note_client' => $validatedData['note_client'] ?? null,
             ]);
 
-            // 5. Rediriger avec un message de succès
-            return redirect()->route('paiements.show', ['booking' => $residence->id]);
+            // 5. Rediriger vers la page de paiement en utilisant l'ID de la réservation
+            return redirect()->route('paiements.show', ['booking' => $booking->id]);
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
-            // Cela peut inclure des erreurs de validation ou d'autres exceptions
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la réservation. Veuillez réessayer.')->withInput();
         }
     }

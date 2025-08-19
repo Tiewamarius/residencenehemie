@@ -13,22 +13,22 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-    'name',
-    'email',
-    'password',
-    'role',          
-    'profile_picture', 
-    'phone_number',
-    'address',       
-    'description',   // NOUVEAU
-];
+        'name',
+        'email',
+        'password',
+        'role',
+        'profile_picture',
+        'phone_number',
+        'address',
+        'description',   // NOUVEAU
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -75,6 +75,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Favorite::class); // Assurez-vous que le modèle Favorite existe
     }
+
+
 
     /**
      * Un utilisateur peut avoir plusieurs messages.

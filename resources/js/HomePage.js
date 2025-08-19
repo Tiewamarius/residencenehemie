@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-container');
     const loginModalOverlay = document.getElementById('login-modal-overlay');
     const searchModalOverlay = document.getElementById('search-modal-overlay');
+    const loginModal = document.getElementById('loginModal'); // Référence à la modale de connexion
 
     function isAnyModalOrSidebarActive() {
         return (sidebar && sidebar.classList.contains('active')) ||
@@ -450,10 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "Votre Bien-Être",
             text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
         },
-        // 'flexibility': {
-        //     title: "La Flexibilité",
-        //     text: "Que vous ayez besoin d'un séjour de courte, moyenne ou longue durée, nous nous adaptons à vos besoins. Nos périodes de location sont à définir ensemble, vous offrant la liberté de planifier votre séjour en toute sérénité."
-        // },
         'security_optimal': {
             title: "Sécurité Optimale",
             text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
@@ -523,13 +520,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-// Script Search
-
+    // Script Search
     const searchForms = document.getElementById('search-form-opens');
     const propertiesContainer = document.getElementById('properties-container');
     const resultsHeaderContainer = document.getElementById('results-header-container');
     const targetSection = document.getElementById('appartments');
-
 
     function createApartmentCard(apartment) {
         const imageUrl = apartment.featuredImage ? apartment.featuredImage : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
@@ -547,28 +542,31 @@ document.addEventListener('DOMContentLoaded', () => {
             stars += '<i class="fas fa-star-half-alt"></i>';
         }
 
+        // Déterminer l'état initial de l'icône de favori (assurez-vous que l'attribut data-is-favorite est bien défini dans votre HTML)
+        const isFavorited = apartment.is_favorite ? 'fas active' : 'far';
+
         return `
-                    <a href="${detailRoute}" class="property-card-link">
-                        <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
-                            <div class="property-image h-48 bg-gray-200 relative">
-                                ${isSuperhost}
-                                <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
-                                <span class="wishlist-icon"><i class="fas fa-heart"></i></span>
-                            </div>
-                            <div class="property-details p-4">
-                                <div class="property-review flex items-center mb-2">
-                                    <p class="review-stars flex items-center text-yellow-400 text-sm">
-                                        ${stars}
-                                        <span class="text-gray-600 ml-2">(${apartment.rating}/5)</span>
-                                    </p>
-                                </div>
-                                <h3 class="font-semibold text-gray-800 text-lg">${apartment.nom.length > 30 ? apartment.nom.substring(0, 30) + '...' : apartment.nom}</h3>
-                                <p class="property-location text-gray-500 text-sm mt-1">${apartment.ville}</p>
-                                <p class="property-price font-bold text-gray-900 mt-2">À partir de ${apartment.prix_min.toLocaleString('fr-FR')} XOF</p>
-                            </div>
+            <a href="${detailRoute}" class="property-card-link">
+                <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
+                    <div class="property-image h-48 bg-gray-200 relative">
+                        ${isSuperhost}
+                        <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
+                        <span class="wishlist-icon ${isFavorited ? 'active' : ''}" data-residence-id="${apartment.id}"><i class="${isFavorited} fa-heart"></i></span>
+                    </div>
+                    <div class="property-details p-4">
+                        <div class="property-review flex items-center mb-2">
+                            <p class="review-stars flex items-center text-yellow-400 text-sm">
+                                ${stars}
+                                <span class="text-gray-600 ml-2">(${apartment.rating}/5)</span>
+                            </p>
                         </div>
-                    </a>
-                `;
+                        <h3 class="font-semibold text-gray-800 text-lg">${apartment.nom.length > 30 ? apartment.nom.substring(0, 30) + '...' : apartment.nom}</h3>
+                        <p class="property-location text-gray-500 text-sm mt-1">${apartment.ville}</p>
+                        <p class="property-price font-bold text-gray-900 mt-2">À partir de ${apartment.prix_min.toLocaleString('fr-FR')} XOF</p>
+                    </div>
+                </div>
+            </a>
+        `;
     }
 
     function renderProperties(apartments) {
@@ -580,17 +578,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     propertiesContainer.innerHTML += createApartmentCard(apartment);
                 });
                 resultsHeaderContainer.innerHTML = `
-                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">${apartments.length} logements disponibles</h2>
-                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez les résultats de votre recherche.</p>
-                        `;
+                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">${apartments.length} logements disponibles</h2>
+                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez les résultats de votre recherche.</p>
+                `;
             } else {
                 propertiesContainer.innerHTML = '<p class="text-gray-600 col-span-full text-center text-xl p-8">Aucun appartement disponible pour cette recherche.</p>';
                 resultsHeaderContainer.innerHTML = `
-                            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Aucun résultat trouvé</h2>
-                            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez essayer une autre recherche.</p>
-                        `;
+                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Aucun résultat trouvé</h2>
+                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez essayer une autre recherche.</p>
+                `;
             }
             propertiesContainer.style.opacity = '1';
+            // IMPORTANT : Relier les écouteurs d'événements après le rendu des éléments
+            setupWishlistListeners();
         }, 500);
     }
 
@@ -607,9 +607,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Afficher l'état de chargement
         propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
         resultsHeaderContainer.innerHTML = `
-                    <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
-                    <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
-                `;
+            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
+            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
+        `;
 
         // Construire l'objet de données à envoyer
         const searchData = {
@@ -649,6 +649,100 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
         }
     });
+// ======================================
+// --- SCRIPT DE GESTION DES FAVORIS ---
+// ======================================
+// Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
+function setupWishlistListeners() {
+    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
+    wishlistIcons.forEach(icon => {
+        icon.addEventListener('click', async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const residenceId = icon.dataset.residenceId;
+            const heartIcon = icon.querySelector('i.fa-heart');
+
+            // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
+            if (icon.classList.contains('open-login-modal-trigger')) {
+                console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
+                // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'block';
+                }
+                return;
+            }
+
+            // Déterminer l'état actuel de l'icône de cœur
+            const isFavorited = heartIcon.classList.contains('fas');
+            
+            // On inverse immédiatement l'icône pour un retour visuel rapide
+            heartIcon.classList.toggle('fas');
+            heartIcon.classList.toggle('far');
+            icon.classList.toggle('active');
+
+            // On construit l'URL et la méthode de la requête en fonction de l'état
+            // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
+            // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
+            // ou DELETE pour ces actions.
+            const url = isFavorited
+                ? `/favorites/remove/${residenceId}`
+                : `/favorites/add/${residenceId}`;
+            const method = isFavorited ? 'DELETE' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                });
+
+                // Gérer les cas de réponse d'erreur HTTP
+                if (!response.ok) {
+                    // Si la requête échoue, on annule l'effet visuel immédiat
+                    heartIcon.classList.toggle('fas');
+                    heartIcon.classList.toggle('far');
+                    icon.classList.toggle('active');
+
+                    // On affiche le message d'erreur du serveur, si disponible
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Erreur de la requête.');
+                }
+
+                const result = await response.json();
+                console.log(result.message);
+
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des favoris.', error);
+                
+                // On annule le changement d'interface utilisateur en cas d'erreur
+                heartIcon.classList.toggle('fas');
+                heartIcon.classList.toggle('far');
+                icon.classList.toggle('active');
+
+                // On affiche un message d'erreur à l'utilisateur
+                // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
+                // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
+                const errorModal = document.getElementById('error-modal');
+                const errorModalMessage = document.getElementById('error-modal-message');
+                if (errorModal && errorModalMessage) {
+                    errorModalMessage.textContent = `Erreur : ${error.message}`;
+                    errorModal.style.display = 'block';
+                } else {
+                    console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
+                }
+            }
+        });
+    });
+}
+
+// Lancer la configuration des écouteurs au chargement initial
+setupWishlistListeners();
 
 });

@@ -65,9 +65,15 @@
                     @php
                     $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
                     $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+                    // Check if the user has favorited this residence
+                    $isFavorited = auth()->check() ? auth()->user()->favorites->contains('residence_id', $featuredResidence->id) : false;
                     @endphp
                     <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
-                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
+                    {{-- Ajout d'attributs de données pour le JS et une classe pour l'état initial --}}
+                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest {{ $isFavorited ? 'active' : '' }}" data-residence-id="{{ $featuredResidence->id }}">
+                        {{-- Utilisation de l'icône appropriée selon l'état --}}
+                        <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
+                    </span>
                 </div>
                 <div class="property-details">
                     @php

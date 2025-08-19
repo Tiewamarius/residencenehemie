@@ -100,51 +100,58 @@
                 <!-- Colonne de droite : Récapitulatif de la réservation -->
                 <div class="flex-1">
                     <div class="booking-summary-card bg-gray-50 rounded-2xl p-6 shadow-inner">
-                        <div class="residence-summary flex items-center gap-4 border-b border-gray-200 pb-6 mb-6">
-                            <img src="{{ asset($booking->residence->images->where('est_principale', true)->first()->chemin_image) ?? 'https://placehold.co/100x100' }}" alt="Image de la résidence" class="w-20 h-20 object-cover rounded-xl">
-                            <div>
-                                <h4 class="text-lg font-bold text-gray-800">{{ $booking->residence->nom }}</h4>
-                                <span class="rating text-sm text-yellow-500">
-                                    <i class="fas fa-star"></i> {{ number_format($booking->residence->reviews->avg('note'), 2) ?? 'N/A' }} ({{ $booking->residence->reviews->count() }} avis)
-                                </span>
+                        <div class="booking-summary-card">
+                            <div class="residence-summary">
+                                {{-- Correction de l'erreur "Attempt to read property on null" --}}
+                                {{-- On vérifie d'abord si l'image principale existe avant d'accéder à sa propriété 'chemin_image'. --}}
+                                @php
+                                $mainImage = $booking->residence->images->where('est_principale', true)->first();
+                                $imagePath = $mainImage ? asset($mainImage->chemin_image) : 'https://placehold.co/100x100';
+                                @endphp
+                                <img src="{{ $imagePath }}" alt="Image de la résidence" class="w-20 h-20 object-cover rounded-xl">
+                                <div>
+                                    <h4>{{ $booking->residence->nom }}</h4>
+                                    <span class="rating">
+                                        <i class="fas fa-star"></i> {{ number_format($booking->residence->reviews->avg('note'), 2) ?? 'N/A' }} ({{ $booking->residence->reviews->count() }} avis)
+                                    </span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="travel-info">
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6">Informations sur le voyage</h3>
-                            <p class="flex justify-between items-center text-gray-600 mb-2">
-                                <span class="font-medium">Dates</span>
-                                <span>{{ \Carbon\Carbon::parse($booking->date_arrivee)->translatedFormat('d F') }} - {{ \Carbon\Carbon::parse($booking->date_depart)->translatedFormat('d F Y') }}</span>
-                            </p>
-                            <p class="flex justify-between items-center text-gray-600 mb-2">
-                                <span class="font-medium">Adult(s)s</span>
-                                <span>{{ $booking->nombre_adultes }} adulte(s)</span>
-                            </p>
-                            <p class="flex justify-between items-center text-gray-600 mb-2">
-                                <span class="font-medium">Enfants</span>
-                                <span>{{ $booking->nombre_enfants }} enfant(s)</span>
-                            </p>
-                        </div>
+                            <div class="travel-info">
+                                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6">Informations sur le voyage</h3>
+                                <p class="flex justify-between items-center text-gray-600 mb-2">
+                                    <span class="font-medium">Dates</span>
+                                    <span>{{ \Carbon\Carbon::parse($booking->date_arrivee)->translatedFormat('d F') }} - {{ \Carbon\Carbon::parse($booking->date_depart)->translatedFormat('d F Y') }}</span>
+                                </p>
+                                <p class="flex justify-between items-center text-gray-600 mb-2">
+                                    <span class="font-medium">Adult(s)s</span>
+                                    <span>{{ $booking->nombre_adultes }} adulte(s)</span>
+                                </p>
+                                <p class="flex justify-between items-center text-gray-600 mb-2">
+                                    <span class="font-medium">Enfants</span>
+                                    <span>{{ $booking->nombre_enfants }} enfant(s)</span>
+                                </p>
+                            </div>
 
-                        <div class="price-details border-t border-gray-200 pt-6 mt-6">
-                            <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6">Détail du prix</h3>
-                            <p class="flex justify-between items-center text-gray-600 mb-2">
-                                <span class="font-medium">{{ number_format($booking->type->prix_base, 0, ',', ' ') }} FCFA x {{ \Carbon\Carbon::parse($booking->date_arrivee)->diffInDays($booking->date_depart) }} nuit(s)</span>
-                                <span>{{ number_format($booking->total_price + 10000, 0, ',', ' ') }} FCFA</span>
-                            </p>
-                            <p class="flex justify-between items-center text-gray-600 mb-2">
-                                <span class="font-medium">Frais de service</span>
-                                <span>10 000 FCFA</span>
-                            </p>
-                            <p class="total text-xl font-bold text-gray-800 mt-4 flex justify-between items-center">
-                                <span>Total</span>
-                                <span>{{ number_format($booking->total_price, 0, ',', ' ') }} FCFA</span>
-                            </p>
+                            <div class="price-details border-t border-gray-200 pt-6 mt-6">
+                                <h3 class="text-lg font-semibold text-gray-700 mb-3 mt-6">Détail du prix</h3>
+                                <p class="flex justify-between items-center text-gray-600 mb-2">
+                                    <span class="font-medium">{{ number_format($booking->type->prix_base, 0, ',', ' ') }} FCFA x {{ \Carbon\Carbon::parse($booking->date_arrivee)->diffInDays($booking->date_depart) }} nuit(s)</span>
+                                    <span>{{ number_format($booking->total_price + 10000, 0, ',', ' ') }} FCFA</span>
+                                </p>
+                                <p class="flex justify-between items-center text-gray-600 mb-2">
+                                    <span class="font-medium">Frais de service</span>
+                                    <span>10 000 FCFA</span>
+                                </p>
+                                <p class="total text-xl font-bold text-gray-800 mt-4 flex justify-between items-center">
+                                    <span>Total</span>
+                                    <span>{{ number_format($booking->total_price, 0, ',', ' ') }} FCFA</span>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
     @endsection
 </body>

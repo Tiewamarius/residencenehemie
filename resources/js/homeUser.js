@@ -1,33 +1,68 @@
+/**
+ * Script pour gérer la navigation par onglets sur la page du tableau de bord.
+ *
+ * Ce script écoute les clics sur les éléments de navigation de la barre latérale.
+ * Lorsqu'un élément est cliqué, il affiche le contenu de l'onglet correspondant
+ * et met à jour les classes pour refléter l'onglet actif.
+ */
+document.addEventListener('DOMContentLoaded', () => {
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Sélectionne tous les liens de navigation d'onglet
-        const navItems = document.querySelectorAll('.profile-nav-item');
-        // Sélectionne tous les conteneurs de contenu d'onglet
-        const tabContents = document.querySelectorAll('.tab-content');
+    // Sélectionne tous les éléments de navigation avec la classe 'profile-nav-item'
+    const navItems = document.querySelectorAll('.profile-nav-item');
 
-        // Ajoute un écouteur d'événement de clic à chaque lien de navigation
+    // Sélectionne tous les conteneurs de contenu des onglets avec la classe 'tab-content'
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    /**
+     * Cache tous les onglets de contenu et supprime la classe 'active' de tous les éléments de navigation.
+     */
+    const resetTabs = () => {
+        // Supprime la classe 'active' de tous les éléments de navigation
         navItems.forEach(item => {
-            item.addEventListener('click', function(event) {
-                // Empêche le comportement par défaut du lien
-                event.preventDefault();
+            item.classList.remove('active');
+        });
 
-                // Récupère l'ID de l'onglet à partir de l'attribut data-tab
-                const tabId = this.getAttribute('data-tab');
+        // Cache tous les conteneurs de contenu des onglets
+        tabContents.forEach(content => {
+            content.classList.add('hidden');
+        });
+    };
 
-                // Supprime la classe 'active' de tous les éléments de navigation
-                navItems.forEach(nav => nav.classList.remove('active'));
+    /**
+     * Met en place les écouteurs d'événements pour chaque élément de navigation.
+     */
+    navItems.forEach(item => {
+        item.addEventListener('click', (event) => {
+            // Empêche le comportement par défaut du lien (rechargement de la page)
+            event.preventDefault();
 
-                // Ajoute la classe 'active' à l'élément cliqué
-                this.classList.add('active');
+            // Récupère l'ID de l'onglet cible à partir de l'attribut 'data-tab'
+            const targetTabId = item.getAttribute('data-tab');
 
-                // Cache tous les conteneurs de contenu d'onglet
-                tabContents.forEach(content => content.classList.add('hidden'));
+            // Réinitialise l'état de tous les onglets et éléments de navigation
+            resetTabs();
 
-                // Affiche le conteneur de contenu d'onglet correspondant
-                const activeTabContent = document.getElementById(tabId);
-                if (activeTabContent) {
-                    activeTabContent.classList.remove('hidden');
-                }
-            });
+            // Ajoute la classe 'active' à l'élément de navigation cliqué
+            item.classList.add('active');
+
+            // Affiche l'onglet de contenu correspondant en retirant la classe 'hidden'
+            const targetTab = document.getElementById(targetTabId);
+            if (targetTab) {
+                targetTab.classList.remove('hidden');
+            }
         });
     });
+
+    // Initialisation : au chargement, on cache tout d'abord...
+    resetTabs();
+
+    // ...puis on affiche l'onglet par défaut (celui avec la classe 'active' dans le HTML)
+    const activeItem = document.querySelector('.profile-nav-item.active');
+    if (activeItem) {
+        const targetTabId = activeItem.getAttribute('data-tab');
+        const targetTab = document.getElementById(targetTabId);
+        if (targetTab) {
+            targetTab.classList.remove('hidden');
+        }
+    }
+});

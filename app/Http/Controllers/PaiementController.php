@@ -47,12 +47,20 @@ class PaiementController extends Controller
             // 2. Récupérer la réservation
             $booking = Booking::findOrFail($validatedData['booking_id']);
 
-            // 3. Simuler le processus de paiement
-            // Dans une application réelle, ce serait ici que vous appelleriez une API de paiement externe
-            $transactionId = 'TRANS-' . time();
-            $paymentStatus = 'completed'; // Ou 'failed', selon le résultat de l'API
+            // 3. Déterminer le statut de la réservation et du paiement en fonction de la méthode
+            $bookingStatus = 'paid';
+            $paymentStatus = 'completed';
 
-            // 4. Créer l'enregistrement de paiement
+            // Si la méthode de paiement est 'espece', la réservation est confirmée, mais le paiement est en attente
+            if ($validatedData['payment_method'] === 'espece') {
+                $bookingStatus = 'confirmed';
+                $paymentStatus = 'pending';
+            }
+
+            // 4. Simuler le processus de paiement (remplacé par l'API de paiement dans un environnement réel)
+            $transactionId = 'TRANS-' . time();
+
+            // 5. Créer l'enregistrement de paiement
             Payment::create([
                 'booking_id' => $booking->id,
                 'transaction_id' => $transactionId,
@@ -62,21 +70,26 @@ class PaiementController extends Controller
                 'date_paiement' => now(),
             ]);
 
-            // 5. Mettre à jour le statut de la réservation
-            $booking->statut = 'paid';
+            // 6. Mettre à jour le statut de la réservation
+            $booking->statut = $bookingStatus;
             $booking->save();
 
-            // 6. Confirmer la transaction
+            // 7. Confirmer la transaction
             DB::commit();
 
-            // 7. Rediriger avec un message de succès
-            return redirect()->route('paiements.success')->with('success', 'Paiement et réservation confirmés !');
+            // 8. Rediriger avec un message de succès
+            // Le message a été rendu plus générique pour s'adapter à toutes les méthodes de paiement
+            $successMessage = $validatedData['payment_method'] === 'espece'
+                ? 'Votre réservation a été confirmée ! Un agent vous contactera pour finaliser le paiement.'
+                : 'Paiement et réservation confirmés !';
+
+            return redirect()->route('/')->with('success', $successMessage);
         } catch (\Exception $e) {
-            // 8. En cas d'erreur, annuler la transaction
+            // 9. En cas d'erreur, annuler la transaction
             DB::rollBack();
             Log::error('Erreur lors du traitement du paiement: ' . $e->getMessage());
 
-            // 9. Rediriger avec un message d'erreur
+            // 10. Rediriger avec un message d'erreur
             return redirect()->back()->with('error', 'Une erreur est survenue lors du paiement. Veuillez réessayer.')->withInput();
         }
     }

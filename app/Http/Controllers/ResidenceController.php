@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Residence;
 use App\Models\Favorite;
+use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -53,8 +55,27 @@ class ResidenceController extends Controller
             'user'           // Pour les informations sur l'hôte de la résidence
         ]);
 
+        // 2. Récupère les réservations confirmées ou payées pour cette résidence
+        $bookedDates = Booking::where('residence_id', $residence->id)
+            ->whereIn('statut', ['confirmed', 'paid'])
+            ->get(['date_arrivee', 'date_depart']);
+
+        // 3. Crée une liste de toutes les dates (jours) indisponibles
+        $unavailableDates = [];
+        foreach ($bookedDates as $booking) {
+            $startDate = Carbon::parse($booking->date_arrivee);
+            $endDate = Carbon::parse($booking->date_depart);
+
+            // Boucle sur chaque jour entre la date d'arrivée et de départ
+            // pour les ajouter à la liste des dates indisponibles
+            while ($startDate->lte($endDate)) {
+                $unavailableDates[] = $startDate->toDateString();
+                $startDate->addDay();
+            }
+        }
+
         // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
-        return view('Pages.detailsAppart', compact('residence', 'residences'));
+        return view('Pages.detailsAppart', compact('residence', 'residences', 'unavailableDates'));
     }
 
     /**

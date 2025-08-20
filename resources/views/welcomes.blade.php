@@ -45,9 +45,7 @@
                     </div>
                 </div>
 
-
                 <button type="submit" class="check-availability-btn">CHERCHER</button>
-
             </form>
         </div>
     </div>
@@ -59,10 +57,19 @@
     <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
     <div class="properties-grid">
         @forelse(($residences->take(3) ?? collect()) as $featuredResidence)
+        @php
+        $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
+        $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+        @endphp
         <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
             <div class="property-card">
                 <div class="property-image">
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
+
+                    {{-- Favoris Gérés par JS --}}
+                    @auth
                     @php
+
                     $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
                     $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
                     // Check if the user has favorited this residence
@@ -74,6 +81,8 @@
                         {{-- Utilisation de l'icône appropriée selon l'état --}}
                         <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
                     </span>
+                    
+                    @endauth
                 </div>
                 <div class="property-details">
                     @php
@@ -103,7 +112,6 @@
     </div>
 </section>
 
-
 {{-- Section "Pourquoi nous choisir" --}}
 <section class="why-choose-us">
     <h2 class="section-title">Pourquoi nous choisir ?</h2>
@@ -118,14 +126,6 @@
                 <span>Votre Bien-Être</span>
                 <img src="images/imageSecurité.jpg" alt="" style='display:none;'>
             </button>
-            <!-- Bouton pour la flexibilité -->
-            <!-- <button class="feature-button"
-                data-feature="flexibility"
-                data-image-display=" "
-                data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
-                <i class="fas fa-calendar-alt"></i>
-                <span>La Flexibilité</span>
-            </button> -->
             <!-- Bouton pour la sécurité -->
             <button class="feature-button"
                 data-feature="security_optimal"
@@ -159,7 +159,6 @@
         </div>
     </div>
 </section>
-
 
 {{-- Section Témoignages --}}
 <section class="testimonials">
@@ -198,4 +197,10 @@
         </div>
     </div>
 </section>
+
+@endsection
+
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script></script>
 @endsection

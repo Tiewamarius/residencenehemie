@@ -4,9 +4,7 @@
 
 @section('content')
 
-{{-- Les classes Tailwind remplacent le code CSS "pur" pour le style. --}}
-
-{{-- Zone de contenu principal --}}
+{{-- Conteneur principal avec les classes Tailwind --}}
 <main class="flex-grow container mx-auto px-6 py-8 flex flex-col lg:flex-row space-y-8 lg:space-y-0 lg:space-x-8">
 
     {{-- Barre latérale gauche / Navigation --}}
@@ -14,6 +12,7 @@
         <h2 class="text-2xl font-semibold mb-6 text-gray-900">Profil</h2>
         <nav>
             <ul>
+                {{-- L'attribut 'data-tab' lie le lien à l'ID du contenu. --}}
                 <li>
                     <a href="#" data-tab="about-me" class="profile-nav-item flex items-center p-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200 active">
                         <i class="fas fa-user-circle text-xl mr-3"></i>
@@ -38,7 +37,7 @@
 
     {{-- Contenu principal de droite - Conteneur du contenu de l'onglet --}}
     <section class="w-full lg:w-3/4 flex flex-col space-y-8">
-        {{-- Contenu de l'onglet pour "À propos de moi" --}}
+        {{-- Le script JavaScript gère maintenant la visibilité de l'onglet. --}}
         <div id="about-me" class="tab-content bg-white rounded-xl shadow-md p-6">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-semibold text-gray-900">À propos de moi</h2>
@@ -78,16 +77,16 @@
             </div>
         </div>
 
-        {{-- Contenu de l'onglet pour "Réservations précédentes" --}}
-        <div id="reservations" class="tab-content bg-white rounded-xl shadow-md p-6 hidden" style="display:nfone;">
+        {{-- Le script JavaScript gère maintenant la visibilité de l'onglet. --}}
+        <div id="reservations" class="tab-content bg-white rounded-xl shadow-md p-6">
             <h2 class="text-2xl font-semibold mb-6 text-gray-900">Réservations précédentes</h2>
             <div class="text-gray-500 text-center py-10">
                 <p>Contenu des réservations précédentes...</p>
             </div>
         </div>
 
-        {{-- Contenu de l'onglet pour "Connexions" --}}
-        <div id="connections" class="tab-content bg-white rounded-xl shadow-md p-6" style="display:ncone;">
+        {{-- Le script JavaScript gère maintenant la visibilité de l'onglet. --}}
+        <div id="connections" class="tab-content bg-white rounded-xl shadow-md p-6">
             <h2 class=" text-2xl font-semibold mb-6 text-gray-900">Connexions</h2>
             <div class="text-gray-500 text-center py-10">
                 <p>Contenu des connexions...</p>
@@ -96,5 +95,5 @@
     </section>
 </main>
 
-
+{{-- Inclure le script JavaScript ici pour gérer la logique des onglets --}}
 @endsection

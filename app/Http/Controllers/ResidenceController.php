@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Residence;
+use App\Models\Favorite;
+use App\Models\Booking;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Models\Favorite;
 
 class ResidenceController extends Controller
 {
@@ -53,8 +55,27 @@ class ResidenceController extends Controller
             'user'           // Pour les informations sur l'hôte de la résidence
         ]);
 
+        // 2. Récupère les réservations confirmées ou payées pour cette résidence
+        $bookedDates = Booking::where('residence_id', $residence->id)
+            ->whereIn('statut', ['confirmed', 'paid'])
+            ->get(['date_arrivee', 'date_depart']);
+
+        // 3. Crée une liste de toutes les dates (jours) indisponibles
+        $unavailableDates = [];
+        foreach ($bookedDates as $booking) {
+            $startDate = Carbon::parse($booking->date_arrivee);
+            $endDate = Carbon::parse($booking->date_depart);
+
+            // Boucle sur chaque jour entre la date d'arrivée et de départ
+            // pour les ajouter à la liste des dates indisponibles
+            while ($startDate->lte($endDate)) {
+                $unavailableDates[] = $startDate->toDateString();
+                $startDate->addDay();
+            }
+        }
+
         // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
-        return view('Pages.detailsAppart', compact('residence', 'residences'));
+        return view('Pages.detailsAppart', compact('residence', 'residences', 'unavailableDates'));
     }
 
 
@@ -75,6 +96,58 @@ class ResidenceController extends Controller
         return view('Pages.favoris', compact('favoriteResidences'));
     }
 
+
+    // Fonction d'ajout de résidence en favoris avec la relation polymorphe
+    public function storefavoris(Residence $residence)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Veuillez vous connecter pour ajouter des favoris.'], 401);
+        }
+
+        try {
+            $user = Auth::user();
+            // Vérifier si la résidence est déjà un favori de cet utilisateur en utilisant la relation polymorphe
+            if ($user->favorites()->where('favoritable_id', $residence->id)->where('favoritable_type', Residence::class)->exists()) {
+                return response()->json(['message' => 'La résidence est déjà en favoris.'], 409);
+            }
+
+            // Créer une nouvelle instance de favori en utilisant la relation de l'utilisateur
+            $favorite = new Favorite();
+            $favorite->favoritable_id = $residence->id;
+            $favorite->favoritable_type = Residence::class;
+            $user->favorites()->save($favorite);
+
+            return response()->json(['message' => 'Résidence ajoutée aux favoris.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'ajout aux favoris.', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Erreur lors de l\'ajout aux favoris.'], 500);
+        }
+    }
+
+    // Fonction de suppression de résidence des favoris avec la relation polymorphe
+    public function destroyfavoris(Residence $residence)
+    {
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Veuillez vous connecter pour gérer vos favoris.'], 401);
+        }
+
+        try {
+            $user = Auth::user();
+            // Trouver et supprimer l'entrée dans la table des favoris
+            $favorite = $user->favorites()->where('favoritable_id', $residence->id)->where('favoritable_type', Residence::class)->first();
+
+            if (!$favorite) {
+                return response()->json(['message' => 'Cette résidence n\'est pas dans vos favoris.'], 404);
+            }
+
+            $favorite->delete();
+
+            return response()->json(['message' => 'Résidence supprimée des favoris.'], 200);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la suppression des favoris.', ['error' => $e->getMessage(), 'user_id' => Auth::id()]);
+            return response()->json(['message' => 'Erreur lors de la suppression des favoris.'], 500);
+        }
+    }
     /**
      * Ajoute ou retire une résidence des favoris de l'utilisateur.
      */

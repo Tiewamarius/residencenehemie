@@ -68,8 +68,15 @@ Route::middleware('auth')->group(function () {
     // Route::post('/residences/{residence}/book', [BookingController::class, 'store'])->name('residences.book');
 
     // Route pour la gestion des favoris
-    Route::get('/favorites', [ResidenceController::class, 'index'])->name('favorites.index');
-    Route::get('/favoris', [ResidenceController::class, 'favoris'])->name('residences.favorites');
+    // Votre fonction storefavoris() est parfaitement conçue pour cette action.
+    Route::post('/favorites/add/{residence}', [ResidenceController::class, 'storefavoris'])->name('favorites.storefavoris');
+
+    // La suppression doit idéalement utiliser la méthode DELETE (c'est ce que votre JS essaie déjà de faire).
+    // Votre fonction destroyfavoris() est également prête pour cela.
+    Route::delete('/favorites/remove/{residence}', [ResidenceController::class, 'deletefavoris'])->name('favorites.deletefavoris');
+
+    // Si vous avez une route pour afficher les favoris, elle utiliserait la méthode GET
+    Route::get('/favorites', [ResidenceController::class, ' favoris'])->name('favorites.index');
 });
 
 // Routes pour les réservations d'invités (requête POST)

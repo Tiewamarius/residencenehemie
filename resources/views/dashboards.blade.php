@@ -53,43 +53,47 @@
     </div>
 </section>
 
-<!-- Section "Nos appartements en vedette" -->
-<section class="featured-properties max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8" id="appartements">
-    <div id="results-header-container">
-        <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Nos appartements en vedette</h2>
-        <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
-    </div>
-
-    <div id="properties-container" class="properties-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {{-- Le contenu sera chargé ici par JavaScript --}}
-        @forelse($residences->take(3) as $featuredResidence)
+{{-- Section "Nos appartements en vedette" --}}
+<section class="featured-properties" id="appartements">
+    <h2 class="section-title">Nos appartements en vedette</h2>
+    <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
+    <div class="properties-grid">
+        @forelse(($residences->take(3) ?? collect()) as $featuredResidence)
         <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
-            <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
-                <div class="property-image h-48 bg-gray-200 relative">
+            <div class="property-card">
+                <div class="property-image">
                     @php
-                    $featuredImage = $featuredResidence->images->where('est_principale', true)->first();
-                    if (!$featuredImage) {
-                    $featuredImage = $featuredResidence->images->sortBy('order')->first();
-                    }
-                    $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : asset('images/default.jpg');
+                    $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
+                    $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+                    // Check if the user has favorited this residence
+                    $isFavorited = auth()->check() ? auth()->user()->favorites->contains('residence_id', $featuredResidence->id) : false;
                     @endphp
-                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';" class="w-full h-full object-cover">
-                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
+                    {{-- Ajout d'attributs de données pour le JS et une classe pour l'état initial --}}
+                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest {{ $isFavorited ? 'active' : '' }}" data-residence-id="{{ $featuredResidence->id }}">
+                        {{-- Utilisation de l'icône appropriée selon l'état --}}
+                        <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
+                    </span>
                 </div>
-                <div class="property-details p-4">
-                    <div class="property-review flex items-center mb-2">
-                        <p class="review-stars flex items-center text-yellow-400 text-sm">
+                <div class="property-details">
+                    @php
+                    $featuredAvgRating = $featuredResidence->reviews->avg('note');
+                    @endphp
+                    <div class="property-review">
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($i <=floor($featuredAvgRating ?? 0))
                             <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
+                            @elseif ($i - floor($featuredAvgRating ?? 0) === 0.5)
                             <i class="fas fa-star-half-alt"></i>
-                            <span class="text-gray-600 ml-2">(4.5/5)</span>
-                        </p>
+                            @else
+                            <i class="far fa-star"></i>
+                            @endif
+                            @endfor
+                            <span>({{ number_format($featuredAvgRating ?? 0, 1) }}/5)</span>
                     </div>
-                    <h3 class="font-semibold text-gray-800 text-lg">{{ Str::limit($featuredResidence->nom, 30) }}</h3>
-                    <p class="property-location text-gray-500 text-sm mt-1">{{ $featuredResidence->ville }}</p>
-                    <p class="property-price font-bold text-gray-900 mt-2">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
+                    <h3>{{ Str::limit($featuredResidence->nom, 30) }}</h3>
+                    <p class="property-location">{{ $featuredResidence->ville }}</p>
+                    <p class="property-price">À partir de {{ number_format($featuredResidence->types->min('prix_base') ?? 0, 0, ',', ' ') }} XOF</p>
                 </div>
             </div>
         </a>

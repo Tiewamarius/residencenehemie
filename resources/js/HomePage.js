@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatContainer = document.getElementById('chat-container');
     const loginModalOverlay = document.getElementById('login-modal-overlay');
     const searchModalOverlay = document.getElementById('search-modal-overlay');
+    const loginModal = document.getElementById('loginModal'); // Référence à la modale de connexion
 
     function isAnyModalOrSidebarActive() {
         return (sidebar && sidebar.classList.contains('active')) ||
@@ -544,13 +545,17 @@ document.addEventListener('DOMContentLoaded', () => {
             stars += '<i class="fas fa-star-half-alt"></i>';
         }
 
+        // Déterminer l'état initial de l'icône de favori (assurez-vous que l'attribut data-is-favorite est bien défini dans votre HTML)
+        const isFavorited = apartment.is_favorite ? 'fas active' : 'far';
+
         return `
             <a href="${detailRoute}" class="property-card-link">
                 <div class="property-card bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl relative transition-all duration-300 ease-in-out">
                     <div class="property-image h-48 bg-gray-200 relative">
                         ${isSuperhost}
                         <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
-                        <span class="wishlist-icon" data-residence-id="${apartment.id}"><i class="${heartClass} fa-heart"></i></span>
+                        <span class="wishlist-icon ${isFavorited ? 'active' : ''}" data-residence-id="${apartment.id}"><i class="${isFavorited} fa-heart"></i></span>
+
                     </div>
                     <div class="property-details p-4">
                         <div class="property-review flex items-center mb-2">
@@ -588,6 +593,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }
             propertiesContainer.style.opacity = '1';
+            // IMPORTANT : Relier les écouteurs d'événements après le rendu des éléments
+            setupWishlistListeners();
         }, 500);
     }
 
@@ -646,32 +653,103 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
         }
     });
+// ======================================
+// --- SCRIPT DE GESTION DES FAVORIS ---
+// ======================================
+// Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
+function setupWishlistListeners() {
+    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    // =========================================================
-    // --- NOUVEAU : Fonctionnalité de gestion des favoris ---
-    // =========================================================
+    wishlistIcons.forEach(icon => {
+        icon.addEventListener('click', async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
 
-    // J'utilise une délégation d'événements pour les icônes de favoris,
-    // car les cartes sont ajoutées dynamiquement au DOM.
-    document.body.addEventListener('click', async (e) => {
-        // Cibler l'icône de cœur ou son parent avec la classe 'wishlist-icon'
-        const wishlistIcon = e.target.closest('.wishlist-icon');
-        if (!wishlistIcon) {
-            return; // Si l'élément cliqué n'est pas un icône de favori, on ne fait rien
-        }
+            const residenceId = icon.dataset.residenceId;
+            const heartIcon = icon.querySelector('i.fa-heart');
 
-        e.preventDefault();
-        e.stopPropagation();
+            // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
+            if (icon.classList.contains('open-login-modal-trigger')) {
+                console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
+                // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'block';
+                }
+                return;
+            }
 
-        const residenceId = wishlistIcon.dataset.residenceId;
-        const icon = wishlistIcon.querySelector('i');
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+            // Déterminer l'état actuel de l'icône de cœur
+            const isFavorited = heartIcon.classList.contains('fas');
+            
+            // On inverse immédiatement l'icône pour un retour visuel rapide
+            heartIcon.classList.toggle('fas');
+            heartIcon.classList.toggle('far');
+            icon.classList.toggle('active');
 
-        if (!token) {
-            console.error('Erreur: Jeton CSRF non trouvé.');
-            // Gérer l'erreur, par exemple, en affichant un message à l'utilisateur
-            return;
-        }
+            // On construit l'URL et la méthode de la requête en fonction de l'état
+            // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
+            // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
+            // ou DELETE pour ces actions.
+            const url = isFavorited
+                ? `/favorites/remove/${residenceId}`
+                : `/favorites/add/${residenceId}`;
+            const method = isFavorited ? 'DELETE' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                });
+
+                // Gérer les cas de réponse d'erreur HTTP
+                if (!response.ok) {
+                    // Si la requête échoue, on annule l'effet visuel immédiat
+                    heartIcon.classList.toggle('fas');
+                    heartIcon.classList.toggle('far');
+                    icon.classList.toggle('active');
+
+                    // On affiche le message d'erreur du serveur, si disponible
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Erreur de la requête.');
+                }
+
+                const result = await response.json();
+                console.log(result.message);
+
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des favoris.', error);
+                
+                // On annule le changement d'interface utilisateur en cas d'erreur
+                heartIcon.classList.toggle('fas');
+                heartIcon.classList.toggle('far');
+                icon.classList.toggle('active');
+
+                // On affiche un message d'erreur à l'utilisateur
+                // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
+                // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
+                const errorModal = document.getElementById('error-modal');
+                const errorModalMessage = document.getElementById('error-modal-message');
+                if (errorModal && errorModalMessage) {
+                    errorModalMessage.textContent = `Erreur : ${error.message}`;
+                    errorModal.style.display = 'block';
+                } else {
+                    console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
+                }
+            }
+        });
+    });
+}
+
+
+// Lancer la configuration des écouteurs au chargement initial
+setupWishlistListeners();
+
 
         try {
             const response = await fetch(`/toggle-favori/${residenceId}`, {

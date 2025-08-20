@@ -29,7 +29,7 @@ class User extends Authenticatable
         'role',
         'profile_picture',
         'phone_number',
-        'address',
+        'address',   // NOUVEAU
         'description',
     ];
 
@@ -78,6 +78,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Favorite::class);
     }
+
+
 
     /**
      * Un utilisateur peut avoir plusieurs messages.

@@ -69,15 +69,19 @@
                     {{-- Favoris Gérés par JS --}}
                     @auth
                     @php
-                    $isFavorited = Auth::user()->favorites->contains('favoritable_id', $featuredResidence->id);
+
+                    $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
+                    $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+                    // Check if the user has favorited this residence
+                    $isFavorited = auth()->check() ? auth()->user()->favorites->contains('residence_id', $featuredResidence->id) : false;
                     @endphp
-                    <span class="wishlist-icon" data-residence-id="{{ $featuredResidence->id }}">
-                        <i class="{{ $isFavorited ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
+                    {{-- Ajout d'attributs de données pour le JS et une classe pour l'état initial --}}
+                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest {{ $isFavorited ? 'active' : '' }}" data-residence-id="{{ $featuredResidence->id }}">
+                        {{-- Utilisation de l'icône appropriée selon l'état --}}
+                        <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
                     </span>
-                    @else
-                    <span class="wishlist-icon open-login-modal-trigger">
-                        <i class="far fa-heart"></i>
-                    </span>
+                    
                     @endauth
                 </div>
                 <div class="property-details">

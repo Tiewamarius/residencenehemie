@@ -68,7 +68,7 @@ class Residence extends Model
     /**
      * Une résidence peut être ajoutée aux favoris (relation polymorphe).
      */
-    public function favorites()
+    public function favoritedBy()
     {
         return $this->morphMany(Favorite::class, 'favoritable');
     }

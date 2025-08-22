@@ -649,100 +649,139 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
         }
     });
-// ======================================
-// --- SCRIPT DE GESTION DES FAVORIS ---
-// ======================================
-// Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
-function setupWishlistListeners() {
-    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    // ======================================
+    // --- SCRIPT DE GESTION DES FAVORIS ---
+    // ======================================
+    // Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
+    function setupWishlistListeners() {
+        const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-    wishlistIcons.forEach(icon => {
-        icon.addEventListener('click', async (event) => {
-            event.preventDefault();
-            event.stopPropagation();
+        wishlistIcons.forEach(icon => {
+            icon.addEventListener('click', async (event) => {
+                event.preventDefault();
+                event.stopPropagation();
 
-            const residenceId = icon.dataset.residenceId;
-            const heartIcon = icon.querySelector('i.fa-heart');
+                const residenceId = icon.dataset.residenceId;
+                const heartIcon = icon.querySelector('i.fa-heart');
 
-            // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
-            if (icon.classList.contains('open-login-modal-trigger')) {
-                console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
-                // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
-                const loginModal = document.getElementById('loginModal');
-                if (loginModal) {
-                    loginModal.style.display = 'block';
-                }
-                return;
-            }
-
-            // Déterminer l'état actuel de l'icône de cœur
-            const isFavorited = heartIcon.classList.contains('fas');
-            
-            // On inverse immédiatement l'icône pour un retour visuel rapide
-            heartIcon.classList.toggle('fas');
-            heartIcon.classList.toggle('far');
-            icon.classList.toggle('active');
-
-            // On construit l'URL et la méthode de la requête en fonction de l'état
-            // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
-            // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
-            // ou DELETE pour ces actions.
-            const url = isFavorited
-                ? `/favorites/remove/${residenceId}`
-                : `/favorites/add/${residenceId}`;
-            const method = isFavorited ? 'DELETE' : 'POST';
-
-            try {
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                });
-
-                // Gérer les cas de réponse d'erreur HTTP
-                if (!response.ok) {
-                    // Si la requête échoue, on annule l'effet visuel immédiat
-                    heartIcon.classList.toggle('fas');
-                    heartIcon.classList.toggle('far');
-                    icon.classList.toggle('active');
-
-                    // On affiche le message d'erreur du serveur, si disponible
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || 'Erreur de la requête.');
+                // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
+                if (icon.classList.contains('open-login-modal-trigger')) {
+                    console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
+                    // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
+                    const loginModal = document.getElementById('loginModal');
+                    if (loginModal) {
+                        loginModal.style.display = 'block';
+                    }
+                    return;
                 }
 
-                const result = await response.json();
-                console.log(result.message);
+                // Déterminer l'état actuel de l'icône de cœur
+                const isFavorited = heartIcon.classList.contains('fas');
 
-            } catch (error) {
-                console.error('Erreur lors de la mise à jour des favoris.', error);
-                
-                // On annule le changement d'interface utilisateur en cas d'erreur
+                // On inverse immédiatement l'icône pour un retour visuel rapide
                 heartIcon.classList.toggle('fas');
                 heartIcon.classList.toggle('far');
                 icon.classList.toggle('active');
 
-                // On affiche un message d'erreur à l'utilisateur
-                // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
-                // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
-                const errorModal = document.getElementById('error-modal');
-                const errorModalMessage = document.getElementById('error-modal-message');
-                if (errorModal && errorModalMessage) {
-                    errorModalMessage.textContent = `Erreur : ${error.message}`;
-                    errorModal.style.display = 'block';
+                // On construit l'URL et la méthode de la requête en fonction de l'état
+                // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
+                // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
+                // ou DELETE pour ces actions.
+                const url = isFavorited
+                    ? `/favorites/remove/${residenceId}`
+                    : `/favorites/add/${residenceId}`;
+                const method = isFavorited ? 'DELETE' : 'POST';
+
+                try {
+                    const response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                    });
+
+                    // Gérer les cas de réponse d'erreur HTTP
+                    if (!response.ok) {
+                        // Si la requête échoue, on annule l'effet visuel immédiat
+                        heartIcon.classList.toggle('fas');
+                        heartIcon.classList.toggle('far');
+                        icon.classList.toggle('active');
+
+                        // On affiche le message d'erreur du serveur, si disponible
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Erreur de la requête.');
+                    }
+
+                    const result = await response.json();
+                    console.log(result.message);
+
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour des favoris.', error);
+
+                    // On annule le changement d'interface utilisateur en cas d'erreur
+                    heartIcon.classList.toggle('fas');
+                    heartIcon.classList.toggle('far');
+                    icon.classList.toggle('active');
+
+                    // On affiche un message d'erreur à l'utilisateur
+                    // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
+                    // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
+                    const errorModal = document.getElementById('error-modal');
+                    const errorModalMessage = document.getElementById('error-modal-message');
+                    if (errorModal && errorModalMessage) {
+                        errorModalMessage.textContent = `Erreur : ${error.message}`;
+                        errorModal.style.display = 'block';
+                    } else {
+                        console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
+                    }
+                }
+            });
+        });
+    }
+
+    // Lancer la configuration des écouteurs au chargement initial
+    setupWishlistListeners();
+
+
+    // Sélectionne tous les liens avec la classe "nav_link"
+    const navLinks = document.querySelectorAll('.nav_link');
+
+    // Définit l'URL de la page principale (par exemple, 'index.html')
+    // C'est la page qui contient la section #appartements.
+    const mainPagePath = '/'; // ou '/index.html', '/accueil.html', etc.
+
+    // Boucle sur chaque lien
+    navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            const href = link.getAttribute('href');
+
+            // Vérifie si le href est une ancre (commence par '#')
+            if (href && href.startsWith('#')) {
+                // Empêche le comportement par défaut du lien pour le gérer manuellement
+                event.preventDefault();
+                const targetId = href.substring(1); // Enlève le '#'
+
+                // Récupère le chemin de la page actuelle
+                const currentPath = window.location.pathname;
+                const currentOrigin = window.location.origin;
+
+                // Si on n'est pas sur la page principale...
+                if (currentPath !== mainPagePath && currentPath !== mainPagePath + '/') {
+                    // ...on redirige vers la page principale en ajoutant l'ancre
+                    window.location.href = `${currentOrigin}${mainPagePath}${href}`;
                 } else {
-                    console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
+                    // Si on est déjà sur la page principale, on fait défiler la page
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        // Fait défiler la page de manière fluide vers la section
+                        targetSection.scrollIntoView({ behavior: 'smooth' });
+                    }
                 }
             }
         });
     });
-}
-
-// Lancer la configuration des écouteurs au chargement initial
-setupWishlistListeners();
 
 });

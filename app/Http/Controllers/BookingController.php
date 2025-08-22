@@ -9,6 +9,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail; // Pour l'envoi d'emails
+use Illuminate\Support\Facades\Notification; // Pour l'envoi de notifications (SMS)
+use Illuminate\Support\Facades\Log; // Pour l'enregistrement des erreurs
+
+// Assurez-vous d'importer les classes Mailable et Notification nécessaires
+use App\Mail\ConfirmationEmail;
+// use App\Mail\ManagerBookingEmail;
+// use App\Notifications\ManagerSmsNotification;
 
 class BookingController extends Controller
 {
@@ -49,7 +57,6 @@ class BookingController extends Controller
             ];
 
             // 4. Créer et sauvegarder la nouvelle réservation
-            // Assurez-vous de stocker l'objet Booking créé
             $booking = Booking::create([
                 'user_id' => Auth::id(),
                 'residence_id' => $validatedData['residence_id'],
@@ -61,14 +68,45 @@ class BookingController extends Controller
                 'statut' => 'pending',
                 'total_price' => $totalPrice,
                 'numero_reservation' => $reservationNumber,
-                'details_client' => json_encode($detailsClient), // Important: convert to JSON for database
+                'details_client' => json_encode($detailsClient),
                 'note_client' => $validatedData['note_client'] ?? null,
             ]);
 
-            // 5. Rediriger vers la page de paiement en utilisant l'ID de la réservation
+            // 5. Envoi d'un e-mail de confirmation à l'utilisateur
+            // Remarque : Assurez-vous que la classe ConfirmationEmail existe.
+            try {
+                Mail::to(Auth::user()->email)->send(new \App\Mail\ConfirmationEmail($booking));
+            } catch (\Exception $e) {
+                Log::error('Erreur lors de l\'envoi de l\'e-mail de confirmation au client: ' . $e->getMessage());
+            }
+
+            // 6. Définir les informations du manager (idéalement via un fichier de configuration ou des variables d'environnement)
+            $managerEmail = 'info@odedis.com'; // Remplacez par le vrai email du manager
+            $managerPhoneNumber = '+2250707646363'; // Remplacez par le vrai numéro de téléphone du manager
+
+            // 7. Envoi d'un e-mail de notification au manager
+            // Remarque : Assurez-vous que la classe ManagerBookingEmail existe.
+            try {
+                Mail::to($managerEmail)->send(new ConfirmationEmail($booking));
+            } catch (\Exception $e) {
+                Log::error('Erreur lors de l\'envoi de l\'e-mail de notification au manager: ' . $e->getMessage());
+            }
+
+            // 8. Envoi d'un SMS de notification au manager
+            // Remarque : Assurez-vous d'avoir configuré un service SMS (comme Vonage) et que la classe ManagerSmsNotification existe.
+            try {
+                // Utilisation de la facade Notification pour envoyer un SMS.
+                // Le premier paramètre de la méthode 'route' dépend de votre service SMS (ex: 'vonage', 'twilio').
+                Notification::route('vonage', $managerPhoneNumber)->notify(new \App\Notifications\ManagerSmsNotification($booking));
+            } catch (\Exception $e) {
+                Log::error('Erreur lors de l\'envoi du SMS de notification au manager: ' . $e->getMessage());
+            }
+
+            // 9. Rediriger vers la page de paiement en utilisant l'ID de la réservation
             return redirect()->route('paiements.show', ['booking' => $booking->id]);
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
+            Log::error('Erreur de réservation: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la réservation. Veuillez réessayer.')->withInput();
         }
     }

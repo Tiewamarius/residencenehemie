@@ -11,13 +11,25 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    // User Home
+    /**
+     * Affiche la page d'accueil de l'utilisateur avec ses réservations.
+     */
     public function homeUser(Request $request): View
     {
+        // Récupérer l'utilisateur connecté
+        $user = $request->user();
+
+        // Vérifier si l'utilisateur est authentifié et charger ses réservations
+        // Si la relation n'existe pas ou qu'il n'y a pas de réservations,
+        // on retourne une collection vide pour éviter les erreurs.
+        $reservations = $user ? $user->bookings : collect();
+
         return view('profile.homeUser', [
-            'user' => $request->user(),
+            'user' => $user,
+            'reservations' => $reservations, // Passer les réservations (ou la collection vide) à la vue
         ]);
     }
+
     /**
      * Display the user's profile form.
      */

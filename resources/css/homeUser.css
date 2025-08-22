@@ -16,6 +16,7 @@
     --border-radius-small: 8px;
     --border-radius-medium: 12px;
     --border-radius-large: 16px;
+    --border-radius-xl: 16px;
 }
 
 /* Global body styles for consistent font and background */
@@ -541,3 +542,61 @@ footer {
         padding: 1rem; /* Smaller footer padding */
     }
 }
+
+/* --- Table Styling (New) --- */
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+#reservations-table {
+    min-width: 100%;
+}
+
+#reservations-table thead {
+    background-color: var(--background-light);
+}
+
+#reservations-table th,
+#reservations-table td {
+    padding: 1rem 1.5rem; /* px-6 py-4 */
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+#reservations-table th {
+    font-size: 0.75rem; /* text-xs */
+    font-weight: 500; /* font-medium */
+    color: var(--text-color-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.05em; /* tracking-wider */
+}
+
+#reservations-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+#reservations-table tbody tr:hover {
+    background-color: #fcfcfc;
+}
+
+#reservations-table td {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--text-color-dark);
+    white-space: nowrap;
+}
+
+/* Styles for status badges */
+.px-2.inline-flex {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    display: inline-flex;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    border-radius: 9999px;
+}
+
+.bg-yellow-100 { background-color: #fffbeb; color: #a16207; } /* pending */
+.bg-green-100 { background-color: #f0fdf4; color: #166534; } /* confirmed */
+.bg-red-100 { background-color: #fef2f2; color: #b91c1c; } /* cancelled */
+.bg-blue-100 { background-color: #eff6ff; color: #1e40af; } /* completed */

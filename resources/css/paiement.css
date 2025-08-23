@@ -1,9 +1,14 @@
-/* Styles pour le conteneur principal et la mise en page */
+/* === CONTENEUR PRINCIPAL === */
 .payment-main-content {
+    margin-top: 60px;
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center;
     padding: 2rem 1rem;
 }
 
 .payment-container {
+    /* text-align: center; */
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -11,37 +16,26 @@
     margin: 0 auto;
 }
 
-/* Version desktop : Colonnes côte à côte */
-@media (min-width: 1024px) {
-    .payment-container {
-        flex-direction: row;
-        gap: 3rem;
-    }
-}
-
+/* === COLONNES === */
 .payment-left-column,
 .payment-right-column {
-    background-color: #ffffff;
+    background-color: #fff;
     padding: 2rem;
     border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+.payment-left-column { flex: 2; }
+.payment-right-column { flex: 2; }
 
-.payment-left-column {
-    flex: 2;
-}
-
-.payment-right-column {
-    flex: 1;
-}
-
-/* Styles pour les titres et les liens */
+/* === TITRES & LIENS === */
 .back-link {
     color: #4b5563;
     font-size: 1rem;
     margin-bottom: 2rem;
     display: inline-block;
+    transition: color 0.2s;
 }
+.back-link:hover { color: #111827; }
 
 .payment-left-column h1 {
     font-size: 2rem;
@@ -56,66 +50,85 @@
     margin-bottom: 1.5rem;
 }
 
-/* Styles pour les options de paiement */
+/* === OPTIONS DE PAIEMENT === */
 .payment-option {
     border: 1px solid #e5e7eb;
     border-radius: 0.75rem;
     padding: 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    position: relative;
 }
-
-.payment-option:hover {
-    border-color: #4f46e5;
-}
+.payment-option:hover { border-color: #05f092; }
 
 .payment-option:has(input:checked) {
-    border-color: #4f46e5;
-    background-color: #eff6ff;
+    border-color: #05f092;
+    background-color: #eef2ff;
+    box-shadow: 0 0 12px rgba(79,70,229,0.25);
 }
 
 .payment-label {
     display: flex;
     align-items: center;
+    gap: 0.75rem;
     font-weight: 500;
     color: #374151;
 }
-
 .payment-label input {
-    margin-right: 1rem;
-    accent-color: #4f46e5;
+    margin-right: 0.75rem;
+    accent-color: #05f092;
+}
+.payment-logo {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
 }
 
-/* Styles pour les détails des options de paiement */
+/* === DÉTAILS DE PAIEMENT (DÉPLIABLES) === */
 .payment-details {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding: 0;
+    border-left: 3px solid #05f092;
+    background: #f9fafb;
+    border-radius: 0.5rem;
+    margin-top: 0.5rem;
+    transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.3s ease;
+}
+.payment-details.expanded {
+    max-height: 400px; /* Assez grand pour n'importe quel champ */
+    opacity: 1;
+    padding: 0.75rem;
+}
+
+/* === OPTIONS DÉSACTIVÉES === */
+.disabled-option {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+.unavailable-message {
+    margin-top: 8px;
+    padding: 0.75rem 1rem;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid #fca5a5;
+    border-radius: 0.5rem;
+    width: fit-content;
+    max-width: 300px;
     animation: fadeIn 0.3s ease-in-out;
 }
-
-.hidden {
-    display: none;
-}
-
-/* Animation d'apparition en douceur */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-/* Styles pour les champs du formulaire */
-.form-group {
-    margin-bottom: 1rem;
-}
-
+/* === FORMULAIRE === */
+.form-group { margin-bottom: 1rem; }
 .form-group label {
     display: block;
     font-size: 0.875rem;
@@ -123,7 +136,6 @@
     margin-bottom: 0.5rem;
     color: #4b5563;
 }
-
 .form-group input,
 .form-group select {
     width: 100%;
@@ -131,48 +143,39 @@
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     font-size: 1rem;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
-
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    border-color: #05f092;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.2);
 }
+.form-row { display: flex; gap: 1rem; }
+.form-row .form-group { flex: 1; }
 
-.form-row {
-    display: flex;
-    gap: 1rem;
-}
-
-.form-row .form-group {
-    flex: 1;
-}
-
-/* Styles pour le bouton de soumission */
+/* === BOUTON === */
 .submit-payment-btn {
     width: 100%;
     padding: 1rem;
-    background-color: #4f46e5;
-    color: #ffffff;
+    background-color: #05f092;
+    color: #fff;
     font-weight: 600;
     font-size: 1.125rem;
     border: none;
     border-radius: 0.75rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.25s;
     margin-top: 2rem;
 }
-
-.submit-payment-btn:hover {
-    background-color: #4338ca;
+.submit-payment-btn:hover:not(:disabled) { background-color: #05f092; }
+.submit-payment-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
 }
 
-/* Styles pour la colonne de récapitulatif */
-.booking-summary-card {
-    border-radius: 1rem;
-}
+/* === RÉSUMÉ RÉSERVATION === */
+.booking-summary-card { border-radius: 1rem; }
 
 .residence-summary {
     display: flex;
@@ -181,20 +184,17 @@
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #e5e7eb;
 }
-
 .residence-summary img {
     width: 80px;
     height: 80px;
     object-fit: cover;
     border-radius: 0.75rem;
 }
-
 .residence-summary h4 {
     font-size: 1.125rem;
     font-weight: 600;
     color: #1f2937;
 }
-
 .residence-summary .rating {
     display: block;
     color: #f59e0b;
@@ -204,14 +204,9 @@
 
 .travel-info,
 .price-details {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 1.5rem 0;
 }
-
-.travel-info {
-    border-bottom: 1px solid #e5e7eb;
-}
-
+.travel-info { border-bottom: 1px solid #e5e7eb; }
 .travel-info h3,
 .price-details h3 {
     font-size: 1.125rem;
@@ -219,7 +214,6 @@
     margin-bottom: 1rem;
     color: #1f2937;
 }
-
 .travel-info p,
 .price-details p {
     display: flex;
@@ -228,7 +222,6 @@
     margin-bottom: 0.5rem;
     color: #4b5563;
 }
-
 .price-details .total {
     font-weight: 700;
     font-size: 1.25rem;
@@ -236,4 +229,17 @@
     margin-top: 1rem;
     border-top: 1px solid #e5e7eb;
     padding-top: 1rem;
+}
+
+/* === RESPONSIVE === */
+@media (min-width: 1024px) {
+    .payment-container { flex-direction: row; gap: 3rem; }
+}
+@media (max-width: 640px) {
+    .payment-left-column,
+    .payment-right-column { padding: 1rem; }
+    .submit-payment-btn {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
 }

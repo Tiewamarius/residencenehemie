@@ -103,6 +103,15 @@
     padding: 0.75rem;
 }
 
+/* bouton procederPaiement */
+.btnPaiement{
+    padding: .35rem .6rem;
+    border-radius: 1rem;
+    font-size: .75rem;
+    font-weight: 600;
+    background-color: #05f092;
+}
+
 /* === OPTIONS DÉSACTIVÉES === */
 .disabled-option {
     opacity: 0.6;

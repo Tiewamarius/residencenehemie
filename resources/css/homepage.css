@@ -1355,7 +1355,7 @@ button {
 
     /* Cache la barre de recherche mobile sur les grands écrans */
     .mobile-search-bar {
-        display: none;
+        display: noneh;
     }
 
     /* Ajustements de la navigation pour les grands écrans */
@@ -1375,7 +1375,7 @@ button {
     }
 
     /* Le formulaire de recherche principal est affiché sur les petits écrans */
-    .banner-search-form {
+    #search-form-opens {
 
         display: none; /* Rendre le formulaire principal visible */
         flex-direction: column; /* Empile les éléments */
@@ -1527,17 +1527,20 @@ button {
 .why-choose-us-content {
     position: relative;
     z-index: 2;
-    display: flex; /* Utilisation de flexbox pour une meilleure réactivité */
-    flex-direction: column; /* Par défaut, les éléments s'empilent sur mobile */
+    /* --- MODIFICATIONS CLÉS POUR L'ALIGNEMENT HORIZONTAL --- */
+    display: flex;
+    flex-direction: row; /* MODIFICATION: Aligne les éléments horizontalement */
+    justify-content: space-between; /* MODIFICATION: Distribue l'espace entre les conteneurs */
+    align-items: center; /* MODIFICATION: Aligne les conteneurs verticalement au centre */
+    /* -------------------------------------------------------- */
     gap: 30px; /* Espacement entre les deux colonnes */
     max-width: 1200px;
-    margin: 10px auto 0; /* Marge supérieure pour séparer du titre de section */
-    align-items: flex-start; /* Aligne les éléments au début */
-    padding: 10px; /* Padding interne */
+    margin: 10px auto 0;
+    padding: 10px;
     border-radius: var(--border-radius-large);
-    /*box-shadow: 0 10px 30px rgba(0,0,0,0.3);  Ombre pour le conteneur principal */
-    backdrop-filter: blur(2px); /* Effet de flou sur l'arrière-plan du conteneur */
+    backdrop-filter: blur(2px);
 }
+
 
 @media (min-width: 992px) { /* Pour les tablettes et ordinateurs */
     .why-choose-us-content {
@@ -1872,3 +1875,4 @@ button {
         font-size: 0.9em; /* Réduit la taille du paragraphe */
     }
 }
+

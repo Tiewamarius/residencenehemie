@@ -6,7 +6,7 @@
         </a>
         <ul class="nav_item">
             <li><a href="{{ url('/') }}" class="nav_link">Accueil</a></li>
-            <li><a href="#appartements" class="nav_link">Appartements</a></li>
+            <li><a href="/#appartements" class="nav_link">Appartements</a></li>
             <li><a href="#" class="nav_link" id="contact_open_btn">Contact</a></li>
             <!-- <li><a href="#" class="nav_link" id="search-toggle-btn-desktop"><i class="fas fa-search"></i></a></li> -->
 

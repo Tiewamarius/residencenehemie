@@ -55,6 +55,21 @@ Route::middleware('auth')->group(function () {
     // Nouvelle route pour traiter le paiement
     Route::post('/paiement/process', [PaiementController::class, 'process'])->name('paiements.process');
 
+
+    // Details
+    Route::get('/bookings/{booking}', [BookingController::class, 'details'])->name('bookings.details');
+    // Facture : page HTML ou PDF
+    Route::get('/bookings/{id}/invoice', [BookingController::class, 'invoice'])
+        ->name('bookings.invoice');
+
+    // Annulation de réservation
+    Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel'])
+        ->name('bookings.cancel');
+
+    // Check-in
+    Route::get('/bookings/{id}/checkin', [BookingController::class, 'checkin'])
+        ->name('bookings.checkin');
+
     // Route pour la page de confirmation de succès
     Route::get('/paiement/success', function () {
         return view('Pages.success'); // Créez une vue 'success.blade.php' pour cette page

@@ -1,31 +1,3 @@
-/*
- * Revised CSS for the apartment detail page.
- *
- * This version consolidates media queries, improves readability with consistent
- * comments and variable usage, and refines the responsiveness of key sections.
- */
-
-/* ========================================================================== */
-/* --- CSS Variables & General Styles --- */
-/* ========================================================================== */
-/*
- * Note: Assuming these variables are defined elsewhere in a global stylesheet.
- * I've used them consistently where applicable.
- * --primary-color
- * --primary-color-hover
- * --text-color-dark
- * --text-color-medium
- * --text-color-light
- * --border-color
- * --white
- * --background-light
- * --border-radius-small
- * --border-radius-medium
- * --border-radius-large
- * --shadow-light
- * --shadow-medium
- */
-
 body.modal-open {
   overflow: hidden; /* Prevent body scroll when modal is open */
 }

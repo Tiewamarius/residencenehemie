@@ -218,11 +218,29 @@
     color: #92400e;      /* texte brun foncé */
     border: 1px solid #fcd34d;
 }
+.link-btn {
+    background: #2563eb;
+    color: white;
+    padding: 0.35rem 0.9rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+}
+
+.link-btn:hover {
+    background: #1e40af;
+}
 
 .status.confirmed {
     background: #d1fae5; /* vert clair */
     color: #065f46;      /* texte vert foncé */
     border: 1px solid #10b981;
+}
+.status.paid {
+    background: #d1fae5; /* vert clair */
+    color: #0bef31;      /* texte vert foncé */
+    border: 1px solid #0bef31;
 }
 
 .status.cancelled {

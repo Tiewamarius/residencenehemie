@@ -18,8 +18,6 @@ class PaiementController extends Controller
      */
     public function showPaymentPage(Booking $booking)
     {
-        // Charge les relations nécessaires pour la vue afin d'éviter le problème N+1
-        // REMARQUE: Assurez-vous d'avoir une relation 'type' dans votre modèle Booking.
         $booking->load('residence.images', 'residence.reviews', 'type');
 
         return view('Pages.paiement', compact('booking'));
@@ -47,20 +45,30 @@ class PaiementController extends Controller
             // 2. Récupérer la réservation
             $booking = Booking::findOrFail($validatedData['booking_id']);
 
-            // 3. Déterminer le statut de la réservation et du paiement en fonction de la méthode
-            $bookingStatus = 'paid';
-            $paymentStatus = 'completed';
+            // 3. Empêcher les doublons de paiement. On vérifie s'il existe déjà un paiement
+            // pour cette réservation, quelle que soit la méthode ou le statut.
+            $existingPayment = Payment::where('booking_id', $booking->id)->first();
 
-            // Si la méthode de paiement est 'espece', la réservation est confirmée, mais le paiement est en attente
-            if ($validatedData['payment_method'] === 'espece') {
-                $bookingStatus = 'confirmed';
-                $paymentStatus = 'pending';
+            // Si un paiement existe déjà pour cet ID de réservation, on annule la transaction
+            // et on redirige avec le message d'erreur souhaité.
+            if ($existingPayment) {
+                $infoMessage = "Proceder au paiement";
+                return redirect()->route('bookings.details', ['booking' => $booking])->with('success', $infoMessage);
             }
 
-            // 4. Simuler le processus de paiement (remplacé par l'API de paiement dans un environnement réel)
+            // 4. Déterminer le statut de la réservation et du paiement en fonction de la méthode
+            $bookingStatus = 'confirmed';
+            $paymentStatus = 'paid';
+
+            if ($validatedData['payment_method'] === 'espece') {
+                $bookingStatus = 'pending';
+                $paymentStatus = 'Unpaid';
+            }
+
+            // 5. Simuler le processus de paiement (à remplacer par une API de paiement réelle)
             $transactionId = 'TRANS-' . time();
 
-            // 5. Créer l'enregistrement de paiement
+            // 6. Créer l'enregistrement de paiement
             Payment::create([
                 'booking_id' => $booking->id,
                 'transaction_id' => $transactionId,
@@ -70,26 +78,25 @@ class PaiementController extends Controller
                 'date_paiement' => now(),
             ]);
 
-            // 6. Mettre à jour le statut de la réservation
+            // 7. Mettre à jour le statut de la réservation
             $booking->statut = $bookingStatus;
             $booking->save();
 
-            // 7. Confirmer la transaction
+            // 8. Confirmer la transaction
             DB::commit();
 
-            // 8. Rediriger avec un message de succès
-            // Le message a été rendu plus générique pour s'adapter à toutes les méthodes de paiement
+            // 9. Rediriger avec un message de succès
             $successMessage = $validatedData['payment_method'] === 'espece'
                 ? 'Votre réservation a été confirmée ! Un agent vous contactera pour finaliser le paiement.'
                 : 'Paiement et réservation confirmés !';
 
-            return redirect()->route('/')->with('success', $successMessage);
+            return redirect()->route('bookings.details', ['booking' => $booking])->with('success', $successMessage);
         } catch (\Exception $e) {
-            // 9. En cas d'erreur, annuler la transaction
+            // 10. En cas d'erreur, annuler la transaction
             DB::rollBack();
             Log::error('Erreur lors du traitement du paiement: ' . $e->getMessage());
 
-            // 10. Rediriger avec un message d'erreur
+            // 11. Rediriger avec un message d'erreur
             return redirect()->back()->with('error', 'Une erreur est survenue lors du paiement. Veuillez réessayer.')->withInput();
         }
     }

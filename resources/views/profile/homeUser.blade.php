@@ -115,15 +115,21 @@
                             <td>{{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</td>
                             <td>
                                 <span class="status 
-                                    @if($reservation->statut === 'En attente') pending 
-                                    @elseif($reservation->statut === 'Confirmée') confirmed 
-                                    @elseif($reservation->statut === 'Annulée') cancelled 
-                                    @elseif($reservation->statut === 'Terminée') completed 
+                                    @if($reservation->statut === 'pending') pending 
+                                    @elseif($reservation->statut === 'confirmed') confirmed 
+                                    @elseif($reservation->statut === 'cancelled') cancelled 
+                                    @elseif($reservation->statut === 'paid') paid 
+                                    @elseif($reservation->statut === 'completed') completed 
                                     @endif">
                                     {{ $reservation->statut }}
                                 </span>
                             </td>
-                            <td><a href="{{ route('bookings.show', $reservation->id) }}" class="link">Détails</a></td>
+                            <td>
+                                <a href=" {{ route('bookings.details', $reservation->id) }}" class="link-btn">
+                                    détails
+                                </a>
+                            </td>
+
                         </tr>
                         @endforeach
                         @else

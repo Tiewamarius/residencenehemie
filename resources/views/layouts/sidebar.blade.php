@@ -9,15 +9,15 @@
         <li><a href="#appartements" class="sidebar_nav_link">Appartements</a></li>
         <li><a href="#" class="sidebar_nav_link" id="contact-open-sidebar-btn">Contact</a></li>
         @guest
-        {{-- <li><a href="{{ route('register') }}" class="sidebar_nav_link"><i class="fas fa-user-plus"></i> S'inscrire</a></li> --}}
-        {{-- <li><a href="{{ route('login') }}" class="sidebar_nav_link"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li> --}}
+        <li><a href="{{ route('register') }}" class="sidebar_nav_link"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
+        <li><a href="{{ route('login') }}" class="sidebar_nav_link"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>
         @else
-        <li><a href="{{ route('favorites.index') }}" class="sidebar_nav_link"><i class="fas fa-heart"></i> Favoris</a></li>
-        <li><a href="{{ route('dashboards') }}" class="sidebar_nav_link"><i class="fas fa-user-circle"></i> Mon Compte</a></li>
+        <!-- <li><a href="{{ route('favorites.index') }}" class="sidebar_nav_link"><i class="fas fa-heart"></i> Favoris</a></li> -->
+        <li><a href="{{ route('profile.homeUser') }}" class="sidebar_nav_link"><i class="fas fa-user-circle"></i> Mon Compte</a></li>
         <li><a href="#" class="sidebar_nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-sidebar').submit();">
                 <i class="fas fa-sign-out-alt"></i> Déconnexion
             </a></li>
-        <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="d-none">
+        <form id="logout-form-sidebar" action="{{ route('logout') }}" method="POST" class="d-non">
             @csrf
         </form>
         @endguest

@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const detailsMap = {
         "payment-mm": "mobile-money-details",
         "payment-wave": "wave-details",
-        "payment-espece": "espece-details",
+        "payment-espece": "espece-details", // on garde uniquement ça
     };
 
     radios.forEach(radio => {
@@ -23,28 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
 
-            // Activer bouton
+            // Si c'est le paiement en espèce et qu'il est bloqué
+            if (radio.id === "payment-espece" && radio.disabled) {
+                const warning = document.getElementById("warning-message");
+                if (warning) {
+                    warning.style.display = "block"; // le rendre visible
+                }
+                btn.disabled = true; // on empêche la validation
+                return;
+            }
+
+            // Activer bouton si choix valide
             btn.disabled = false;
         });
     });
 
-    // Gérer les options désactivées
-    document.querySelectorAll(".disabled-option").forEach(opt => {
-        opt.addEventListener("click", (e) => {
-            e.preventDefault();
-            const oldMsg = opt.querySelector(".unavailable-message");
-            if (oldMsg) oldMsg.remove();
-
-            const msg = document.createElement("div");
-            msg.className = "unavailable-message";
-            msg.innerText = opt.dataset.message;
-            opt.appendChild(msg);
-
-            setTimeout(() => {
-                msg.style.opacity = "0";
-                msg.style.transition = "opacity 0.5s ease";
-                setTimeout(() => msg.remove(), 500);
-            }, 2500);
-        });
-    });
+    // Masquer le warning par défaut
+    const warning = document.getElementById("warning-message");
+    if (warning) {
+        warning.style.display = "nonce"; // masqué au chargement
+    }
 });

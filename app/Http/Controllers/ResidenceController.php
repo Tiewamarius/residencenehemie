@@ -42,35 +42,36 @@ class ResidenceController extends Controller
      */
     public function detailsAppart(Residence $residence)
     {
-        // Charge toutes les relations nécessaires pour cette résidence unique.
-        // C'est plus efficace que de charger TOUTES les résidences puis filtrer.
+        // Charger les données utiles pour la page
         $residences = Residence::with(['images', 'types'])->get();
-        // 1. Charge toutes les relations nécessaires pour la vue
+
         $residence->load([
-            'images',        // Pour la galerie d'images
-            // 'nombre_chambres',
-            'types',         // Pour les infos sur les chambres, lits, salles de bain, prix
-            'Equipment',     // Pour la liste des équipements
-            'reviews.user',  // Pour les avis et l'utilisateur qui les a postés
-            'user'           // Pour les informations sur l'hôte de la résidence
+            'images',
+            'types',
+            'Equipment',        // conserve la casse telle qu'utilisée dans ta vue
+            'reviews.user',
+            'user'
         ]);
 
-        // 2. Récupère les réservations confirmées ou payées pour cette résidence
-        // Récupération des réservations existantes pour ce logement
-        $bookedDates = $residence->bookings()
-            ->where('statut', 'confirmed') // uniquement les réservations validées
+        // Récupération des réservations confirmées ou payées pour cette résidence
+        // On prépare des ranges {from, to} au format Y-m-d
+        // Note: côté JS, on désactive [from, to-1] pour permettre une arrivée le jour du départ précédent
+        $bookedDateRanges = $residence->bookings()
+            ->whereIn('statut', ['confirmed', 'paid'])
             ->get(['date_arrivee', 'date_depart'])
-            ->map(function ($res) {
+            ->map(function ($b) {
+                $from = \Carbon\Carbon::parse($b->date_arrivee)->format('Y-m-d');
+                $to   = \Carbon\Carbon::parse($b->date_depart)->format('Y-m-d');
                 return [
-                    'start' => $res->date_arrivee,
-                    'end'   => $res->date_depart,
+                    'from' => $from,
+                    'to'   => $to,
                 ];
-            });
+            })
+            ->values();
 
-
-        // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
-        return view('Pages.detailsAppart', compact('residence', 'residences', 'bookedDates'));
+        return view('Pages.detailsAppart', compact('residence', 'residences', 'bookedDateRanges'));
     }
+
 
     /**
      * Affiche la page des favoris.

@@ -20,8 +20,25 @@ class PaiementController extends Controller
     {
         $booking->load('residence.images', 'residence.reviews', 'type');
 
-        return view('Pages.paiement', compact('booking'));
+        // Vérification s'il existe une réservation pending d'un AUTRE utilisateur qui chevauche les dates
+        $hasUnpaidBooking = $booking->residence
+            ->bookings()
+            ->where('statut', 'pending')
+            ->where('user_id', '!=', $booking->user_id) // 🔥 exclure le même utilisateur
+            ->where(function ($query) use ($booking) {
+                $query->whereBetween('date_arrivee', [$booking->date_arrivee, $booking->date_depart])
+                    ->orWhereBetween('date_depart', [$booking->date_arrivee, $booking->date_depart])
+                    ->orWhere(function ($sub) use ($booking) {
+                        $sub->where('date_arrivee', '<=', $booking->date_arrivee)
+                            ->where('date_depart', '>=', $booking->date_depart);
+                    });
+            })
+            ->exists();
+
+
+        return view('Pages.paiement', compact('booking', 'hasUnpaidBooking'));
     }
+
 
     /**
      * Traite le paiement et met à jour les statuts de la réservation et du paiement.

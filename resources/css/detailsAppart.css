@@ -649,3 +649,15 @@ body.modal-open .apartment-main-content {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+
+/* Apparence des dates désactivées (Flatpickr ajoute .flatpickr-disabled) */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Optionnel: forcer le calendrier à apparaître au-dessus si carte sticky */
+.flatpickr-calendar {
+  z-index: 3000;
+}

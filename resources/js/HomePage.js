@@ -461,7 +461,15 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         'accessibility': {
             title: "Emplacement idéal",
-            text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores. Environnement Verdoyant : La présence d’espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Qualité de Vie Supérieure : Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
+            text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores."
+            },
+        'Environnement_Verdoyant': {
+            title: "Environnement Verdoyant",
+            text: "La présence d'espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
+        },
+        'Qualité_de_Vie_Supérieure': {
+            title: "Qualité de Vie Supérieure :",
+            text: "Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
         }
     };
 
@@ -594,66 +602,68 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    searchForms.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // searchForms.addEventListener('submit', async (e) => {
+    //     e.preventDefault();
 
-        // Récupération des valeurs du formulaire
-        const address = document.getElementById('address').value;
-        const arrivee = document.getElementById('arrivee').value;
-        const depart = document.getElementById('depart').value;
-        const adultes = document.getElementById('adultes').value;
-        const enfants = document.getElementById('enfants').value;
+    //     // Récupération des valeurs du formulaire
+    //     const address = document.getElementById('address').value;
+    //     const arrivee = document.getElementById('arrivee').value;
+    //     const depart = document.getElementById('depart').value;
+    //     const adultes = document.getElementById('adultes').value;
+    //     const enfants = document.getElementById('enfants').value;
 
-        // Afficher l'état de chargement
-        propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
-        resultsHeaderContainer.innerHTML = `
-            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
-            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
-        `;
+    //     // Afficher l'état de chargement
+    //     propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
+    //     resultsHeaderContainer.innerHTML = `
+    //         <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
+    //         <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
+    //     `;
 
-        // Construire l'objet de données à envoyer
-        const searchData = {
-            address: address,
-            arrivee: arrivee,
-            depart: depart,
-            adultes: adultes,
-            enfants: enfants
-        };
+    //     // Construire l'objet de données à envoyer
+    //     const searchData = {
+    //         address: address,
+    //         arrivee: arrivee,
+    //         depart: depart,
+    //         adultes: adultes,
+    //         enfants: enfants
+    //     };
 
-        try {
-            // Effectuer une requête POST vers votre API
-            const response = await fetch('/api/search-apartments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify(searchData)
-            });
+    //     try {
+    //         // Effectuer une requête POST vers votre API
+    //         const response = await fetch('/api/search-apartments', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+    //             },
+    //             body: JSON.stringify(searchData)
+    //         });
 
-            // Vérifier si la réponse est OK
-            if (!response.ok) {
-                throw new Error('Erreur réseau ou réponse de l\'API non valide.');
-            }
+    //         // Vérifier si la réponse est OK
+    //         if (!response.ok) {
+    //             throw new Error('Erreur réseau ou réponse de l\'API non valide.');
+    //         }
 
-            // Récupérer les données JSON de la réponse
-            const apartments = await response.json();
+    //         // Récupérer les données JSON de la réponse
+    //         const apartments = await response.json();
 
-            // Afficher les résultats
-            renderProperties(apartments);
+    //         // Afficher les résultats
+    //         renderProperties(apartments);
 
-        } catch (error) {
-            // Gérer les erreurs de la requête
-            console.error('Erreur lors de la recherche des appartements :', error);
-            propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
-            resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
-        }
-    });
-    // ======================================
-    // --- SCRIPT DE GESTION DES FAVORIS ---
-    // ======================================
-    // Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
-    function setupWishlistListeners() {
+    //     } catch (error) {
+    //         // Gérer les erreurs de la requête
+    //         console.error('Erreur lors de la recherche des appartements :', error);
+    //         propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
+    //         resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
+    //     }
+    // });
+
+
+// ======================================
+// --- SCRIPT DE GESTION DES FAVORIS ---
+// ======================================
+// Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
+function setupWishlistListeners() {
         const wishlistIcons = document.querySelectorAll('.wishlist-icon');
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 

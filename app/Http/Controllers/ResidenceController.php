@@ -143,10 +143,10 @@ class ResidenceController extends Controller
             // 1. Validation des données du formulaire
             $validated = $request->validate([
                 'address' => 'nullable|string|max:255',
-                'arrivee' => 'nullable|date',
-                'depart' => 'nullable|date|after_or_equal:arrivee',
-                'adultes' => 'required|integer|min:1',
-                'enfants' => 'required|integer|min:0',
+                'arrivee' => 'required|date',
+                'depart' => 'required|date|after_or_equal:arrivee',
+                'adultes' => 'nullable|integer|min:1',
+                'enfants' => 'nullable|integer|min:0',
             ]);
 
             // 2. Début de la requête pour trouver les résidences

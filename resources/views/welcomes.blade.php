@@ -26,14 +26,13 @@
 
     <div class="hero-content-wrapper">
         <div class="hero-card-container">
-            <h3>Bingerville: Fehkesse</h3>
-            <p class="hero-card-description">Cherche les hébergements Disponible</p>
-
+            <h3>BIENVENUE À LA RÉSIDENCE NÉHÉMIE</h3>
+            <p class="hero-card-description">Renseigner ci dessous votre periode de séjour</p>
             <button class="button" id="button-opens">CHERCHER</button>
             <button class="button" id="close-buttons" style="display:none;margin-bottom: 10px; background-color: gray;color:whitesmoke;">REDUIR</button>
 
-            <form class="booking-form" action=" " method="POST" id="search-form-opens" class="banner-search-form">
-                @csrf {{-- Protection CSRF si la form est soumise --}}
+            <form class="booking-form" action="{{ route('residences.search') }}" method="POST" id="search-form-opens" class="banner-search-form">
+                @csrf
                 <div class="form-group date-selection">
                     <div class="date-input-group">
                         <label for="check_in_date">ARRIVÉE</label>
@@ -118,14 +117,6 @@
                 <span>Votre Bien-Être</span>
                 <img src="images/imageSecurité.jpg" alt="" style='display:none;'>
             </button>
-            <!-- Bouton pour la flexibilité -->
-            <!-- <button class="feature-button"
-                data-feature="flexibility"
-                data-image-display=" "
-                data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
-                <i class="fas fa-calendar-alt"></i>
-                <span>La Flexibilité</span>
-            </button> -->
             <!-- Bouton pour la sécurité -->
             <button class="feature-button"
                 data-feature="security_optimal"
@@ -151,6 +142,22 @@
                 <i class="fas fa-map-marker-alt"></i>
                 <span>Emplacement idéal</span>
                 <img src="images/bckgEmplacement.jpg" alt="" style='display:none;'>
+            </button>
+            <!-- Bouton pour Environnement Verdoyant -->
+            <button class="feature-button"
+                data-feature="Environnement_Verdoyant"
+                data-image-display=" "
+                data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Environnement Verdoyant</span>
+            </button>
+            <!-- Bouton pour Environnement Verdoyant -->
+            <button class="feature-button"
+                data-feature="Qualité_de_Vie_Supérieure"
+                data-image-display=" "
+                data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Qualité de Vie Supérieure</span>
             </button>
         </div>
         <div class="feature-display-area">

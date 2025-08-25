@@ -7,7 +7,7 @@
     <ul class="sidebar_nav_items">
         <li><a href="{{ url('/') }}" class="sidebar_nav_link">Accueil</a></li>
         <li><a href="#appartements" class="sidebar_nav_link">Appartements</a></li>
-        <li><a href="#" class="sidebar_nav_link" id="contact-open-sidebar-btn">Contact</a></li>
+        <li><a href="#" class="sidebar_nav_link" id="contact-open-sidebar-btn">Contactez-nous</a></li>
         @guest
         <li><a href="{{ route('register') }}" class="sidebar_nav_link"><i class="fas fa-user-plus"></i> S'inscrire</a></li>
         <li><a href="{{ route('login') }}" class="sidebar_nav_link"><i class="fas fa-sign-in-alt"></i> Se connecter</a></li>

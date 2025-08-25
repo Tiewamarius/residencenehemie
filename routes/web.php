@@ -39,8 +39,10 @@ Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppar
 Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'bookguest']);
 
 
-// Route pour la recherche d'appartements via une API (requête POST)
-Route::post('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
+// Route pour la recherche d'appartements via une (requête POST)
+Route::get('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
+
+Route::post('/residences/search', [ResidenceController::class, 'search'])->name('residences.search');
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {

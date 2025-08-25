@@ -12,11 +12,11 @@
                     <i class="fas fa-phone-alt"></i> +225 07 07 64 63 63
                 </a>
             </li>
-            <li>
+            <!-- <li>
                 <a href="#" class="contact-link" onclick="alert('Fonctionnalité de chat à implémenter.')">
                     <i class="fas fa-comments"></i> Discuter avec un conseiller (Disponible)
                 </a>
-            </li>
+            </li> -->
             <li>
                 <a href="mailto:info@odedis.com" class="contact-link">
                     <i class="fas fa-envelope"></i> Envoyer un e-mail
@@ -33,7 +33,7 @@
                 </a>
             </li>
         </ul>
-        <p class="help-text">Besoin d'aide ?</p>
-        <button class="button contactsidebar_help_btn" onclick="alert('Redirection vers la FAQ à implémenter.')">FAQ</button>
+        <!-- <p class="help-text">Besoin d'aide ?</p>
+        <button class="button contactsidebar_help_btn" onclick="alert('Redirection vers la FAQ à implémenter.')">FAQ</button> -->
     </div>
 </div>

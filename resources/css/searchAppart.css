@@ -1,0 +1,43 @@
+/* Custom CSS pour la page d'accueil */
+
+/* Assurez-vous d'avoir une police moderne comme Inter, si non importée ailleurs */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f7f7f7;
+    color: #2c3e50;
+}
+
+/* Styles pour le coeur de la liste de souhaits */
+.wishlist-icon {
+    transition: color 0.3s ease-in-out;
+}
+
+.wishlist-icon .fa-heart.far {
+    /* Style par défaut du cœur vide (transparent) */
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.wishlist-icon:hover .fa-heart.far {
+    color: #f87171; /* Rouge clair au survol */
+}
+
+.wishlist-icon .fa-heart.fas {
+    color: #ef4444; /* Rouge vif pour le cœur rempli */
+}
+
+/* Styles pour le bouton de recherche */
+.search-form-container button.bg-red-500 {
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.25);
+}
+
+/* Ajustements pour les cartes de propriétés */
+.property-card-link .group:hover .property-image img {
+    transform: scale(1.05);
+}
+
+.property-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}

@@ -24,7 +24,7 @@
             </form>
             @endguest
         </ul>
-        <button class="button" id="form-open">Assistant</button>
+        <button class="button" id="form-open">Parler à un conseiller</button>
         <button class="menu_toggle_btn" id="menu-toggle-btn">
             <i class="fas fa-bars"></i>
         </button>

@@ -40,7 +40,7 @@ Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'b
 
 
 // Route pour la recherche d'appartements via une (requête POST)
-Route::get('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
+Route::get('search-apartments', [ResidenceController::class, 'searchAppart'])->name('search-apartments.search');
 
 Route::post('/residences/search', [ResidenceController::class, 'search'])->name('residences.search');
 

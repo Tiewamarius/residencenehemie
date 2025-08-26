@@ -208,4 +208,11 @@ class ResidenceController extends Controller
             ], 500);
         }
     }
+    public function searchAppart()
+    {
+        // On charge les résidences avec les images et types pour éviter les requêtes N+1
+        $residences = Residence::with(['images', 'types'])->get();
+
+        return  view('searchAppart', compact('residences'));
+    }
 }

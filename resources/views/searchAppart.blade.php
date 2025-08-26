@@ -2,10 +2,6 @@
 
 @section('content')
 <section class="search-results">
-    <h2 class="section-title">Résultats de votre recherche</h2>
-    <p class="section-description">
-        Voici les appartements disponibles pour vos dates sélectionnées.
-    </p>
 
     {{--Formulaire de recherche sticky--}}
     <div class="search-bar-wrapper">
@@ -15,21 +11,21 @@
                 {{-- Destination --}}
                 <div class="search-bar-item">
                     <label for="destination"></label>
-                    <input type="text" id="destination" name="destination" placeholder="Rechercher une destination"
+                    <input type="text" id="destination" name="destination" placeholder="Bingerville-Fekesse"
                         value="{{ request('destination') }}">
                 </div>
 
                 {{-- Arrivée --}}
                 <div class="search-bar-item">
                     <label for="check_in_date">Arrivée</label>
-                    <input type="text" id="check_in_date" name="date_arrivee" readonly placeholder="Quand ?"
+                    <input type="text" id="check_in_date" name="date_arrivee" readonly placeholder=" "
                         value="{{ request('date_arrivee') }}">
                 </div>
 
                 {{-- Départ --}}
                 <div class="search-bar-item">
                     <label for="check_out_date">Départ</label>
-                    <input type="text" id="check_out_date" name="date_depart" readonly placeholder="Quand ?"
+                    <input type="text" id="check_out_date" name="date_depart" readonly placeholder=" "
                         value="{{ request('date_depart') }}">
                 </div>
 
@@ -69,8 +65,8 @@
 
                 {{-- Bouton recherche --}}
                 <div class="search-bar-button">
-                    <button type="submit">
-                        <i class="fas fa-search"></i> Rechercher
+                    <button type="button" id="reset-btn">
+                        <i class="fas fa-search"></i> Réinitialiser
                     </button>
                 </div>
             </div>
@@ -78,6 +74,11 @@
     </div>
 
     {{-- Résultats --}}
+    <br><br><br><br>
+
+    <p class="section-description">
+        Voici les appartements disponibles pour vos dates sélectionnées.
+    </p>
     @if($residences->isEmpty())
     <div class="no-results">
         <p>Aucun appartement disponible pour les dates choisies.</p>
@@ -104,7 +105,7 @@
                     <p class="property-price">
                         À partir de
                         <strong>{{ number_format($residence->types->min('prix_base') ?? 0, 0, ',', ' ') }}</strong>
-                        XOF / nuit
+                        XOF
                     </p>
                 </div>
             </div>
@@ -223,10 +224,79 @@
     .voyageurs-dropdown:hover .voyageurs-pop {
         display: block;
     }
+
+    /* responsive */
+
+    /* --- Responsive --- */
+    @media (max-width: 992px) {
+        .search-bar-container {
+            flex-wrap: wrap;
+            border-radius: 20px;
+            padding: 0.5rem;
+        }
+
+        .search-bar-item {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+            min-width: 100%;
+            text-align: left;
+            padding: 0.8rem 0.5rem;
+        }
+
+        .search-bar-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .search-bar-button {
+            width: 100%;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .search-bar-button button {
+            width: 90%;
+            border-radius: 12px;
+        }
+
+        .voyageurs-pop {
+            width: 100%;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .search-bar-wrapper {
+            top: 60px;
+            /* header plus petit sur mobile */
+            padding: 0.3rem;
+        }
+
+        .search-bar-item label {
+            font-size: 0.8rem;
+        }
+
+        .search-bar-item input {
+            font-size: 0.9rem;
+        }
+
+        .search-bar-button button {
+            font-size: 1rem;
+            padding: 0.7rem;
+        }
+
+        .voyageurs-pop {
+            font-size: 0.9rem;
+            padding: 0.8rem;
+        }
+    }
 </style>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        /** ==========================
+         *  Gestion des voyageurs
+         * ========================== */
         const counters = document.querySelectorAll(".counter");
         counters.forEach(counter => {
             const minus = counter.querySelector(".minus");
@@ -251,6 +321,42 @@
             document.querySelectorAll(".count").forEach(c => total += parseInt(c.textContent));
             document.getElementById("voyageurs").value = total > 0 ? total + " voyageurs" : "";
         }
+
+        /** ==========================
+         *  Auto-submit après choix de dates
+         * ========================== */
+        const checkIn = document.getElementById("check_in_date");
+        const checkOut = document.getElementById("check_out_date");
+        const form = document.querySelector(".search-bar");
+
+        function trySubmit() {
+            if (checkIn.value && checkOut.value) {
+                form.submit();
+            }
+        }
+
+        checkIn.addEventListener("change", trySubmit);
+        checkOut.addEventListener("change", trySubmit);
+
+
+        /** ==========================
+         *  Bouton reset (vider champs)
+         * ========================== */
+        const resetBtn = document.getElementById("reset-btn");
+        resetBtn.addEventListener("click", () => {
+            // Vider les champs
+            document.getElementById("destination").value = "";
+            checkIn.value = "";
+            checkOut.value = "";
+            document.getElementById("voyageurs").value = "";
+
+            // Réinitialiser les compteurs voyageurs
+            document.querySelectorAll(".count").forEach(c => c.textContent = 0);
+
+            // Option : recharger la page avec résultats initiaux
+            window.location.href = "{{ url('/search-apartments') }}";
+        });
     });
 </script>
+
 @endsection

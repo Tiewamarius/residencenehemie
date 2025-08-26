@@ -148,7 +148,7 @@
                 data-feature="Environnement_Verdoyant"
                 data-image-display=" "
                 data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
-                <i class="fas fa-calendar-alt"></i>
+                <i class="fa-solid fa-tree"></i>
                 <span>Environnement Verdoyant</span>
             </button>
             <!-- Bouton pour Environnement Verdoyant -->
@@ -156,7 +156,7 @@
                 data-feature="Qualité_de_Vie_Supérieure"
                 data-image-display=" "
                 data-image-section="http://127.0.0.1:8000/img/residences/YQ8cnG86nw_RN2_APPART.jpg">
-                <i class="fas fa-calendar-alt"></i>
+                <i class="fa-solid fa-star"></i>
                 <span>Qualité de Vie Supérieure</span>
             </button>
         </div>

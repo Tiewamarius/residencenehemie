@@ -437,76 +437,104 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ==================================================
-    // --- Gestion des boutons de fonctionnalités ---
-    // ==================================================
-    const buttons = document.querySelectorAll('.feature-button');
-    const featureDisplayArea = document.querySelector('.feature-display-area');
-    const featureDisplayTitle = document.getElementById('feature-display-title');
-    const featureDisplayText = document.getElementById('feature-display-text');
-    const whyChooseUsSection = document.querySelector('.why-choose-us');
+// ==================================================
+// --- Gestion des boutons de fonctionnalités ---
+// ==================================================
+const buttons = document.querySelectorAll('.feature-button');
+const featureDisplayArea = document.querySelector('.feature-display-area');
+const featureDisplayTitle = document.getElementById('feature-display-title');
+const featureDisplayText = document.getElementById('feature-display-text');
+const whyChooseUsSection = document.querySelector('.why-choose-us');
 
-    const featuresData = {
-        'quality': {
-            title: "Votre Bien-Être",
-            text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
+const featuresData = {
+    'quality': {
+        title: "Votre Bien-Être",
+        text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
+    },
+    'security_optimal': {
+        title: "Sécurité Optimale",
+        text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
+    },
+    'amenities_comfort': {
+        title: "Commodités & Confort",
+        text: "Profitez d'un environnement équipé pour faciliter votre quotidien. La résidence dispose de : un parking sécurisé, un groupe électrogène pour une alimentation électrique stable, des connexions internet illimitées, une réserve d'eau pour votre confort et votre autonomie."
+    },
+    'accessibility': {
+        title: "Emplacement idéal",
+        text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores."
         },
-        'security_optimal': {
-            title: "Sécurité Optimale",
-            text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
-        },
-        'amenities_comfort': {
-            title: "Commodités & Confort",
-            text: "Profitez d'un environnement équipé pour faciliter votre quotidien. La résidence dispose de : un parking sécurisé, un groupe électrogène pour une alimentation électrique stable, des connexions internet illimitées, une réserve d'eau pour votre confort et votre autonomie."
-        },
-        'accessibility': {
-            title: "Emplacement idéal",
-            text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores."
-            },
-        'Environnement_Verdoyant': {
-            title: "Environnement Verdoyant",
-            text: "La présence d'espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
-        },
-        'Qualité_de_Vie_Supérieure': {
-            title: "Qualité de Vie Supérieure :",
-            text: "Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
+    'Environnement_Verdoyant': {
+        title: "Environnement Verdoyant",
+        text: "La présence d'espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
+    },
+    'Qualité_de_Vie_Supérieure': {
+        title: "Qualité de Vie Supérieure :",
+        text: "Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
+    }
+};
+
+function updateFeatureDisplay(featureKey, imageDisplay, imageSection) {
+    const data = featuresData[featureKey];
+    if (data) {
+        featureDisplayTitle.textContent = data.title;
+        featureDisplayText.textContent = data.text;
+        if (imageDisplay) {
+            featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
         }
-    };
-
-    function updateFeatureDisplay(featureKey, imageDisplay, imageSection) {
-        const data = featuresData[featureKey];
-        if (data) {
-            featureDisplayTitle.textContent = data.title;
-            featureDisplayText.textContent = data.text;
-            if (imageDisplay) {
-                featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
-            }
-            if (imageSection) {
-                whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
-            }
+        if (imageSection) {
+            whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
         }
     }
+}
 
-    function handleInteraction(button) {
-        buttons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
+function handleInteraction(button) {
+    // Réinitialise le timer de diaporama automatique lors d'une interaction
+    resetAutoSlide();
 
-        const featureKey = button.dataset.feature;
-        const imageDisplay = button.dataset.imageDisplay;
-        const imageSection = button.dataset.imageSection;
-        updateFeatureDisplay(featureKey, imageDisplay, imageSection);
-    }
+    buttons.forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            handleInteraction(button);
-        });
+    const featureKey = button.dataset.feature;
+    const imageDisplay = button.dataset.imageDisplay;
+    const imageSection = button.dataset.imageSection;
+    updateFeatureDisplay(featureKey, imageDisplay, imageSection);
+}
 
-        button.addEventListener('mouseenter', () => {
-            handleInteraction(button);
-        });
+buttons.forEach(button => {
+    button.addEventListener('click', () => {
+        handleInteraction(button);
     });
 
+    button.addEventListener('mouseenter', () => {
+        handleInteraction(button);
+    });
+});
+
+// --- Ajout du diaporama automatique ---
+let currentFeatureIndex = 0;
+let autoSlideInterval;
+const slideDuration = 3000; // Durée en millisecondes pour chaque slide (3 secondes)
+
+function startAutoSlide() {
+    autoSlideInterval = setInterval(() => {
+        // Incrémente l'index, ou revient à 0 si on est à la fin
+        currentFeatureIndex = (currentFeatureIndex + 1) % buttons.length;
+        // Sélectionne le bouton correspondant au nouvel index
+        const nextButton = buttons[currentFeatureIndex];
+        // Simule une interaction pour mettre à jour l'affichage
+        handleInteraction(nextButton);
+    }, slideDuration);
+}
+
+function resetAutoSlide() {
+    // Arrête le diaporama actuel
+    clearInterval(autoSlideInterval);
+    // Redémarre le diaporama après un court délai pour éviter un changement immédiat
+    setTimeout(startAutoSlide, slideDuration);
+}
+
+// Initialise le diaporama automatique au chargement de la page
+window.addEventListener('DOMContentLoaded', () => {
     const initialActiveButton = document.querySelector('.feature-button.active');
     if (initialActiveButton) {
         const featureKey = initialActiveButton.dataset.feature;
@@ -514,6 +542,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const imageSection = initialActiveButton.dataset.imageSection;
         updateFeatureDisplay(featureKey, imageDisplay, imageSection);
     }
+    startAutoSlide();
+});
+
 
     // ===========================================================
     // --- NOUVEAU : Ouverture de la modale via l'URL ---

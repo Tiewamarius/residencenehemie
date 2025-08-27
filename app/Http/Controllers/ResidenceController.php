@@ -172,4 +172,11 @@ class ResidenceController extends Controller
 
         return  view('searchAppart', compact('residences'));
     }
+
+    public function guestForm($residenceId)
+    {
+        $residence = Residence::with('types')->findOrFail($residenceId);
+
+        return view('Pages.bookingGuest', compact('residence'));
+    }
 }

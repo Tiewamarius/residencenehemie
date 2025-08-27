@@ -28,6 +28,9 @@ class BookingController extends Controller
      * @param  \App\Models\Residence  $residence
      * @return \Illuminate\Http\Response
      */
+
+
+    // user connecté
     public function reserver(Request $request, Residence $residence)
     {
         // 1. Valider les données du formulaire
@@ -104,7 +107,7 @@ class BookingController extends Controller
             }
 
             // 9. Rediriger vers la page de paiement en utilisant l'ID de la réservation
-            return redirect()->route('paiements.show', ['booking' => $booking->id])->with('message', 'Réservation effectuée avec succès !');;
+            return redirect()->route('paiements.show', ['booking' => $booking->id]);
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
             Log::error('Erreur de réservation: ' . $e->getMessage());

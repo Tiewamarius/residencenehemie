@@ -182,6 +182,8 @@ $amenityIcons = [
                         </span>
                     </div>
 
+                    {{-- Formulaire pour les utilisateurs connectés --}}
+                    @auth
                     <form class="booking-form" action="{{ route('residences.reserver', $residence->id) }}" method="POST">
                         @csrf
                         <input type="hidden" name="residence_id" value="{{ $residence->id }}">
@@ -190,18 +192,18 @@ $amenityIcons = [
 
                         <div class="form-group date-selection">
                             <div class="date-input-group">
-                                <label for="check_in_date">ARRIVÉE</label>
-                                <input type="text" id="check_in_date" name="date_arrivee" placeholder="Ajouter une date" readonly>
+                                <label for="check_in_date_auth">ARRIVÉE</label>
+                                <input type="text" id="check_in_date_auth" name="date_arrivee" placeholder="Ajouter une date" readonly>
                             </div>
                             <div class="date-input-group">
-                                <label for="check_out_date">DÉPART</label>
-                                <input type="text" id="check_out_date" name="date_depart" placeholder="Ajouter une date" readonly>
+                                <label for="check_out_date_auth">DÉPART</label>
+                                <input type="text" id="check_out_date_auth" name="date_depart" placeholder="Ajouter une date" readonly>
                             </div>
                         </div>
 
                         <div class="form-group guests-selection">
-                            <label for="adults">PERSONNES ADULTES</label>
-                            <select id="adults" name="nombre_adultes" required>
+                            <label for="adults_auth">PERSONNES ADULTES</label>
+                            <select id="adults_auth" name="nombre_adultes" required>
                                 @for($i = 1; $i <= $maxGuests; $i++)
                                     <option value="{{ $i }}">{{ $i }} Adulte(s)</option>
                                     @endfor
@@ -209,8 +211,8 @@ $amenityIcons = [
                         </div>
 
                         <div class="form-group guests-selection">
-                            <label for="children">PERSONNES ENFANTS</label>
-                            <select id="children" name="nombre_enfants" required>
+                            <label for="children_auth">PERSONNES ENFANTS</label>
+                            <select id="children_auth" name="nombre_enfants" required>
                                 @for($i = 0; $i <= $maxEnfants; $i++)
                                     <option value="{{ $i }}">{{ $i }} Enfant(s)</option>
                                     @endfor
@@ -219,6 +221,48 @@ $amenityIcons = [
 
                         <button type="submit" class="check-availability-btn" disabled>RÉSERVER</button>
                     </form>
+                    @endauth
+
+                    {{-- Formulaire pour les invités (non connectés) --}}
+                    @guest
+                    <form class="booking-form" action="{{ route('reservations.guest.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="residence_id" value="{{ $residence->id }}">
+                        <input type="hidden" name="total_price" id="total-price-input">
+                        <input type="hidden" name="type_id" value="{{ $firstType->id ?? '' }}">
+
+                        <div class="form-group date-selection">
+                            <div class="date-input-group">
+                                <label for="check_in_date_guest">ARRIVÉE</label>
+                                <input type="text" id="check_in_date_guest" name="date_arrivee" placeholder="Ajouter une date" readonly>
+                            </div>
+                            <div class="date-input-group">
+                                <label for="check_out_date_guest">DÉPART</label>
+                                <input type="text" id="check_out_date_guest" name="date_depart" placeholder="Ajouter une date" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group guests-selection">
+                            <label for="adults_guest">PERSONNES ADULTES</label>
+                            <select id="adults_guest" name="nombre_adultes" required>
+                                @for($i = 1; $i <= $maxGuests; $i++)
+                                    <option value="{{ $i }}">{{ $i }} Adulte(s)</option>
+                                    @endfor
+                            </select>
+                        </div>
+
+                        <div class="form-group guests-selection">
+                            <label for="children_guest">PERSONNES ENFANTS</label>
+                            <select id="children_guest" name="nombre_enfants" required>
+                                @for($i = 0; $i <= $maxEnfants; $i++)
+                                    <option value="{{ $i }}">{{ $i }} Enfant(s)</option>
+                                    @endfor
+                            </select>
+                        </div>
+
+                        <button type="submit" class="check-availability-btn" disabled>RÉSERVER</button>
+                    </form>
+                    @endguest
 
                     <div class="price-breakdown">
                         <p>

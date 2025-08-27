@@ -36,8 +36,11 @@ Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppar
     ->name('residences.detailsAppart');
 
 // Route pour la page de réservation (qui affiche le formulaire,  )
-Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'bookguest']);
+Route::get('/residences/{residence}/guest-reservation', [ResidenceController::class, 'guestForm'])
+    ->name('reservations.guestForm');
 
+// Route pour la création d'une réservation par un invité
+Route::post('/reservations/guest/store', [BookingController::class, 'storeGuest'])->name('reservations.guest.store');
 
 // Route pour la recherche d'appartements via une (requête POST)
 Route::get('search-apartments', [ResidenceController::class, 'searchAppart'])->name('search-apartments.search');

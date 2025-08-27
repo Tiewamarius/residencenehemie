@@ -34,10 +34,10 @@
                     {{-- Zone pour afficher les messages de succès ou d'erreur --}}
                     <div class="form-message"></div>
                     <div class="form-group">
-                        <input type="text" id="register-name" name="name" placeholder="Entrez votre nom complet" required>
+                        <input type="text" id="register-name" name="name" placeholder="Entrez votre nom " required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="register-email" name="email" placeholder="Entrez votre email" required>
+                        <input type="tel" id="register-email" name="phone_number" placeholder="Entrez votre contact" required>
                     </div>
                     <div class="form-group">
                         <input type="email" id="register-email" name="email" placeholder="Entrez votre email" required>

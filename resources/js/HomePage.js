@@ -437,104 +437,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-// ==================================================
-// --- Gestion des boutons de fonctionnalités ---
-// ==================================================
-const buttons = document.querySelectorAll('.feature-button');
-const featureDisplayArea = document.querySelector('.feature-display-area');
-const featureDisplayTitle = document.getElementById('feature-display-title');
-const featureDisplayText = document.getElementById('feature-display-text');
-const whyChooseUsSection = document.querySelector('.why-choose-us');
+    // ==================================================
+    // --- Gestion des boutons de fonctionnalités ---
+    // ==================================================
+    const buttons = document.querySelectorAll('.feature-button');
+    const featureDisplayArea = document.querySelector('.feature-display-area');
+    const featureDisplayTitle = document.getElementById('feature-display-title');
+    const featureDisplayText = document.getElementById('feature-display-text');
+    const whyChooseUsSection = document.querySelector('.why-choose-us');
 
-const featuresData = {
-    'quality': {
-        title: "Votre Bien-Être",
-        text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
-    },
-    'security_optimal': {
-        title: "Sécurité Optimale",
-        text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
-    },
-    'amenities_comfort': {
-        title: "Commodités & Confort",
-        text: "Profitez d'un environnement équipé pour faciliter votre quotidien. La résidence dispose de : un parking sécurisé, un groupe électrogène pour une alimentation électrique stable, des connexions internet illimitées, une réserve d'eau pour votre confort et votre autonomie."
-    },
-    'accessibility': {
-        title: "Emplacement idéal",
-        text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores."
+    const featuresData = {
+        'quality': {
+            title: "Votre Bien-Être",
+            text: "Nous nous engageons à offrir des propriétés de la plus haute qualité, garantissant confort et satisfaction à chaque séjour."
         },
-    'Environnement_Verdoyant': {
-        title: "Environnement Verdoyant",
-        text: "La présence d'espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
-    },
-    'Qualité_de_Vie_Supérieure': {
-        title: "Qualité de Vie Supérieure :",
-        text: "Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
-    }
-};
-
-function updateFeatureDisplay(featureKey, imageDisplay, imageSection) {
-    const data = featuresData[featureKey];
-    if (data) {
-        featureDisplayTitle.textContent = data.title;
-        featureDisplayText.textContent = data.text;
-        if (imageDisplay) {
-            featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
+        'security_optimal': {
+            title: "Sécurité Optimale",
+            text: "Votre tranquillité est notre priorité absolue. La Résidence Néhémie est une enceinte entièrement sécurisée 24h/24 et 7j/7, avec un contrôle d’accès rigoureux et un personnel dédié à votre protection."
+        },
+        'amenities_comfort': {
+            title: "Commodités & Confort",
+            text: "Profitez d'un environnement équipé pour faciliter votre quotidien. La résidence dispose de : un parking sécurisé, un groupe électrogène pour une alimentation électrique stable, des connexions internet illimitées, une réserve d'eau pour votre confort et votre autonomie."
+        },
+        'accessibility': {
+            title: "Emplacement idéal",
+            text: "Loin du Brouhaha Urbain, Niché dans une zone paisible, l'emplacement est volontairement éloigné des nuisances sonores. Environnement Verdoyant : La présence d’espaces verts à proximité contribue à créer une atmosphère apaisante et offre des opportunités de détente, du style plein air.Qualité de Vie Supérieure : Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
         }
-        if (imageSection) {
-            whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
+    };
+
+    function updateFeatureDisplay(featureKey, imageDisplay, imageSection) {
+        const data = featuresData[featureKey];
+        if (data) {
+            featureDisplayTitle.textContent = data.title;
+            featureDisplayText.textContent = data.text;
+            if (imageDisplay) {
+                featureDisplayArea.style.setProperty('--current-feature-image', `url('${imageDisplay}')`);
+            }
+            if (imageSection) {
+                whyChooseUsSection.style.setProperty('--why-choose-us-background-image', `url('${imageSection}')`);
+            }
         }
     }
-}
 
-function handleInteraction(button) {
-    // Réinitialise le timer de diaporama automatique lors d'une interaction
-    resetAutoSlide();
+    function handleInteraction(button) {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
 
-    buttons.forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
+        const featureKey = button.dataset.feature;
+        const imageDisplay = button.dataset.imageDisplay;
+        const imageSection = button.dataset.imageSection;
+        updateFeatureDisplay(featureKey, imageDisplay, imageSection);
+    }
 
-    const featureKey = button.dataset.feature;
-    const imageDisplay = button.dataset.imageDisplay;
-    const imageSection = button.dataset.imageSection;
-    updateFeatureDisplay(featureKey, imageDisplay, imageSection);
-}
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            handleInteraction(button);
+        });
 
-buttons.forEach(button => {
-    button.addEventListener('click', () => {
-        handleInteraction(button);
+        button.addEventListener('mouseenter', () => {
+            handleInteraction(button);
+        });
     });
 
-    button.addEventListener('mouseenter', () => {
-        handleInteraction(button);
-    });
-});
-
-// --- Ajout du diaporama automatique ---
-let currentFeatureIndex = 0;
-let autoSlideInterval;
-const slideDuration = 3000; // Durée en millisecondes pour chaque slide (3 secondes)
-
-function startAutoSlide() {
-    autoSlideInterval = setInterval(() => {
-        // Incrémente l'index, ou revient à 0 si on est à la fin
-        currentFeatureIndex = (currentFeatureIndex + 1) % buttons.length;
-        // Sélectionne le bouton correspondant au nouvel index
-        const nextButton = buttons[currentFeatureIndex];
-        // Simule une interaction pour mettre à jour l'affichage
-        handleInteraction(nextButton);
-    }, slideDuration);
-}
-
-function resetAutoSlide() {
-    // Arrête le diaporama actuel
-    clearInterval(autoSlideInterval);
-    // Redémarre le diaporama après un court délai pour éviter un changement immédiat
-    setTimeout(startAutoSlide, slideDuration);
-}
-
-// Initialise le diaporama automatique au chargement de la page
-window.addEventListener('DOMContentLoaded', () => {
     const initialActiveButton = document.querySelector('.feature-button.active');
     if (initialActiveButton) {
         const featureKey = initialActiveButton.dataset.feature;
@@ -542,12 +506,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const imageSection = initialActiveButton.dataset.imageSection;
         updateFeatureDisplay(featureKey, imageDisplay, imageSection);
     }
-    startAutoSlide();
-});
-
 
     // ===========================================================
-    // --- Ouverture de la modale via l'URL ---
+    // --- NOUVEAU : Ouverture de la modale via l'URL ---
     // ===========================================================
     const currentPath = window.location.pathname;
 
@@ -571,9 +532,6 @@ window.addEventListener('DOMContentLoaded', () => {
         const isSuperhost = apartment.is_superhost ?
             `<span class="absolute top-2 left-2 bg-white text-gray-900 font-semibold px-2 py-1 rounded-full text-xs shadow-md">Superhôte</span>` : '';
 
-        // Déterminez si l'appartement est en favoris pour l'icône de cœur
-        const heartClass = apartment.is_favorited ? 'fas' : 'far';
-
         let stars = '';
         const fullStars = Math.floor(apartment.rating);
         const hasHalfStar = apartment.rating % 1 > 0;
@@ -594,7 +552,6 @@ window.addEventListener('DOMContentLoaded', () => {
                         ${isSuperhost}
                         <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
                         <span class="wishlist-icon ${isFavorited ? 'active' : ''}" data-residence-id="${apartment.id}"><i class="${isFavorited} fa-heart"></i></span>
-
                     </div>
                     <div class="property-details p-4">
                         <div class="property-review flex items-center mb-2">
@@ -637,236 +594,194 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    // searchForms.addEventListener('submit', async (e) => {
-    //     e.preventDefault();
+    searchForms.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-    //     // Récupération des valeurs du formulaire
-    //     const address = document.getElementById('address').value;
-    //     const arrivee = document.getElementById('arrivee').value;
-    //     const depart = document.getElementById('depart').value;
-    //     const adultes = document.getElementById('adultes').value;
-    //     const enfants = document.getElementById('enfants').value;
+        // Récupération des valeurs du formulaire
+        const address = document.getElementById('address').value;
+        const arrivee = document.getElementById('arrivee').value;
+        const depart = document.getElementById('depart').value;
+        const adultes = document.getElementById('adultes').value;
+        const enfants = document.getElementById('enfants').value;
 
-    //     // Afficher l'état de chargement
-    //     propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
-    //     resultsHeaderContainer.innerHTML = `
-    //         <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
-    //         <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
-    //     `;
+        // Afficher l'état de chargement
+        propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
+        resultsHeaderContainer.innerHTML = `
+            <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
+            <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
+        `;
 
-    //     // Construire l'objet de données à envoyer
-    //     const searchData = {
-    //         address: address,
-    //         arrivee: arrivee,
-    //         depart: depart,
-    //         adultes: adultes,
-    //         enfants: enfants
-    //     };
+        // Construire l'objet de données à envoyer
+        const searchData = {
+            address: address,
+            arrivee: arrivee,
+            depart: depart,
+            adultes: adultes,
+            enfants: enfants
+        };
 
-    //     try {
-    //         // Effectuer une requête POST vers votre API
-    //         const response = await fetch('/api/search-apartments', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-    //             },
-    //             body: JSON.stringify(searchData)
-    //         });
+        try {
+            // Effectuer une requête POST vers votre API
+            const response = await fetch('/api/search-apartments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify(searchData)
+            });
 
-    //         // Vérifier si la réponse est OK
-    //         if (!response.ok) {
-    //             throw new Error('Erreur réseau ou réponse de l\'API non valide.');
-    //         }
+            // Vérifier si la réponse est OK
+            if (!response.ok) {
+                throw new Error('Erreur réseau ou réponse de l\'API non valide.');
+            }
 
-    //         // Récupérer les données JSON de la réponse
-    //         const apartments = await response.json();
+            // Récupérer les données JSON de la réponse
+            const apartments = await response.json();
 
-    //         // Afficher les résultats
-    //         renderProperties(apartments);
+            // Afficher les résultats
+            renderProperties(apartments);
 
-    //     } catch (error) {
-    //         // Gérer les erreurs de la requête
-    //         console.error('Erreur lors de la recherche des appartements :', error);
-    //         propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
-    //         resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
-    //     }
-    // });
-
-
+        } catch (error) {
+            // Gérer les erreurs de la requête
+            console.error('Erreur lors de la recherche des appartements :', error);
+            propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
+            resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
+        }
+    });
 // ======================================
 // --- SCRIPT DE GESTION DES FAVORIS ---
 // ======================================
 // Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
 function setupWishlistListeners() {
-        const wishlistIcons = document.querySelectorAll('.wishlist-icon');
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    const wishlistIcons = document.querySelectorAll('.wishlist-icon');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
-        wishlistIcons.forEach(icon => {
-            icon.addEventListener('click', async (event) => {
-                event.preventDefault();
-                event.stopPropagation();
+    wishlistIcons.forEach(icon => {
+        icon.addEventListener('click', async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
 
-                const residenceId = icon.dataset.residenceId;
-                const heartIcon = icon.querySelector('i.fa-heart');
+            const residenceId = icon.dataset.residenceId;
+            const heartIcon = icon.querySelector('i.fa-heart');
 
-                // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
-                if (icon.classList.contains('open-login-modal-trigger')) {
-                    console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
-                    // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
-                    const loginModal = document.getElementById('loginModal');
-                    if (loginModal) {
-                        loginModal.style.display = 'block';
-                    }
-                    return;
+            // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter
+            if (icon.classList.contains('open-login-modal-trigger')) {
+                console.log('Veuillez vous connecter pour ajouter cet appartement à vos favoris.');
+                // Note : Assurez-vous que 'loginModal' est une variable globale ou accessible ici
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) {
+                    loginModal.style.display = 'block';
                 }
+                return;
+            }
 
-                // Déterminer l'état actuel de l'icône de cœur
-                const isFavorited = heartIcon.classList.contains('fas');
+            // Déterminer l'état actuel de l'icône de cœur
+            const isFavorited = heartIcon.classList.contains('fas');
+            
+            // On inverse immédiatement l'icône pour un retour visuel rapide
+            heartIcon.classList.toggle('fas');
+            heartIcon.classList.toggle('far');
+            icon.classList.toggle('active');
 
-                // On inverse immédiatement l'icône pour un retour visuel rapide
-                heartIcon.classList.toggle('fas');
-                heartIcon.classList.toggle('far');
-                icon.classList.toggle('active');
+            // On construit l'URL et la méthode de la requête en fonction de l'état
+            // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
+            // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
+            // ou DELETE pour ces actions.
+            const url = isFavorited
+                ? `/favorites/remove/${residenceId}`
+                : `/favorites/add/${residenceId}`;
+            const method = isFavorited ? 'DELETE' : 'POST';
 
-                // On construit l'URL et la méthode de la requête en fonction de l'état
-                // ATTENTION : Le code ci-dessous est une solution TEMPORAIRE pour contourner l'erreur de méthode POST.
-                // La bonne pratique serait de corriger le serveur pour qu'il accepte la méthode POST
-                // ou DELETE pour ces actions.
-                const url = isFavorited
-                    ? `/favorites/remove/${residenceId}`
-                    : `/favorites/add/${residenceId}`;
-                const method = isFavorited ? 'DELETE' : 'POST';
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                });
 
-                try {
-                    const response = await fetch(url, {
-                        method: method,
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken, // Ajout du jeton CSRF dans l'en-tête
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                    });
-
-                    // Gérer les cas de réponse d'erreur HTTP
-                    if (!response.ok) {
-                        // Si la requête échoue, on annule l'effet visuel immédiat
-                        heartIcon.classList.toggle('fas');
-                        heartIcon.classList.toggle('far');
-                        icon.classList.toggle('active');
-
-                        // On affiche le message d'erreur du serveur, si disponible
-                        const errorData = await response.json();
-                        throw new Error(errorData.message || 'Erreur de la requête.');
-                    }
-
-                    const result = await response.json();
-                    console.log(result.message);
-
-                } catch (error) {
-                    console.error('Erreur lors de la mise à jour des favoris.', error);
-
-                    // On annule le changement d'interface utilisateur en cas d'erreur
+                // Gérer les cas de réponse d'erreur HTTP
+                if (!response.ok) {
+                    // Si la requête échoue, on annule l'effet visuel immédiat
                     heartIcon.classList.toggle('fas');
                     heartIcon.classList.toggle('far');
                     icon.classList.toggle('active');
 
-                    // On affiche un message d'erreur à l'utilisateur
-                    // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
-                    // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
-                    const errorModal = document.getElementById('error-modal');
-                    const errorModalMessage = document.getElementById('error-modal-message');
-                    if (errorModal && errorModalMessage) {
-                        errorModalMessage.textContent = `Erreur : ${error.message}`;
-                        errorModal.style.display = 'block';
-                    } else {
-                        console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
-                    }
+                    // On affiche le message d'erreur du serveur, si disponible
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Erreur de la requête.');
                 }
-            });
-        });
-    }
 
-    // Lancer la configuration des écouteurs au chargement initial
-    setupWishlistListeners();
+                const result = await response.json();
+                console.log(result.message);
 
+            } catch (error) {
+                console.error('Erreur lors de la mise à jour des favoris.', error);
+                
+                // On annule le changement d'interface utilisateur en cas d'erreur
+                heartIcon.classList.toggle('fas');
+                heartIcon.classList.toggle('far');
+                icon.classList.toggle('active');
 
-    // Sélectionne tous les liens avec la classe "nav_link"
-    const navLinks = document.querySelectorAll('.nav_link');
-
-    // Définit l'URL de la page principale (par exemple, 'index.html')
-    // C'est la page qui contient la section #appartements.
-    const mainPagePath = '/'; // ou '/index.html', '/accueil.html', etc.
-
-    // Boucle sur chaque lien
-    navLinks.forEach(link => {
-        link.addEventListener('click', (event) => {
-            const href = link.getAttribute('href');
-
-            // Vérifie si le href est une ancre (commence par '#')
-            if (href && href.startsWith('#')) {
-                // Empêche le comportement par défaut du lien pour le gérer manuellement
-                event.preventDefault();
-                const targetId = href.substring(1); // Enlève le '#'
-
-                // Récupère le chemin de la page actuelle
-                const currentPath = window.location.pathname;
-                const currentOrigin = window.location.origin;
-
-                // Si on n'est pas sur la page principale...
-                if (currentPath !== mainPagePath && currentPath !== mainPagePath + '/') {
-                    // ...on redirige vers la page principale en ajoutant l'ancre
-                    window.location.href = `${currentOrigin}${mainPagePath}${href}`;
+                // On affiche un message d'erreur à l'utilisateur
+                // J'ai remplacé l'alerte par une boîte de dialogue personnalisée pour une meilleure expérience utilisateur.
+                // Dans votre HTML, ajoutez une modale avec l'id 'error-modal' et 'error-modal-message'.
+                const errorModal = document.getElementById('error-modal');
+                const errorModalMessage = document.getElementById('error-modal-message');
+                if (errorModal && errorModalMessage) {
+                    errorModalMessage.textContent = `Erreur : ${error.message}`;
+                    errorModal.style.display = 'block';
                 } else {
-                    // Si on est déjà sur la page principale, on fait défiler la page
-                    const targetSection = document.getElementById(targetId);
-                    if (targetSection) {
-                        // Fait défiler la page de manière fluide vers la section
-                        targetSection.scrollIntoView({ behavior: 'smooth' });
-                    }
+                    console.error('Erreur: Impossible d\'afficher la modale d\'erreur. ' + error.message);
                 }
             }
         });
     });
+}
+
 // Lancer la configuration des écouteurs au chargement initial
 setupWishlistListeners();
 
 
+// Sélectionne tous les liens avec la classe "nav_link"
+            const navLinks = document.querySelectorAll('.nav_link');
 
-        try {
-            const response = await fetch(`/toggle-favori/${residenceId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({}) // Un corps vide peut être envoyé si le backend s'attend à du JSON
+            // Définit l'URL de la page principale (par exemple, 'index.html')
+            // C'est la page qui contient la section #appartements.
+            const mainPagePath = '/'; // ou '/index.html', '/accueil.html', etc.
+
+            // Boucle sur chaque lien
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    const href = link.getAttribute('href');
+
+                    // Vérifie si le href est une ancre (commence par '#')
+                    if (href && href.startsWith('#')) {
+                        // Empêche le comportement par défaut du lien pour le gérer manuellement
+                        event.preventDefault();
+                        const targetId = href.substring(1); // Enlève le '#'
+
+                        // Récupère le chemin de la page actuelle
+                        const currentPath = window.location.pathname;
+                        const currentOrigin = window.location.origin;
+
+                        // Si on n'est pas sur la page principale...
+                        if (currentPath !== mainPagePath && currentPath !== mainPagePath + 'index.html') {
+                            // ...on redirige vers la page principale en ajoutant l'ancre
+                            window.location.href = `${currentOrigin}${mainPagePath}${href}`;
+                        } else {
+                            // Si on est déjà sur la page principale, on fait défiler la page
+                            const targetSection = document.getElementById(targetId);
+                            if (targetSection) {
+                                // Fait défiler la page de manière fluide vers la section
+                                targetSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                        }
+                    }
+                });
             });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                if (result.status === 'added') {
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                    console.log(result.message);
-                } else if (result.status === 'removed') {
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                    console.log(result.message);
-                }
-            } else {
-                if (response.status === 401) {
-                    // Si l'utilisateur n'est pas connecté, on déclenche l'ouverture de la modale de connexion
-                    openLoginModal();
-                    console.warn('Vous devez être connecté pour ajouter des favoris.');
-                } else {
-                    console.error('Erreur du serveur:', result.message || 'Une erreur est survenue.');
-                }
-            }
-        } catch (error) {
-            console.error('Erreur lors de la requête de favoris:', error);
-        }
-    });
+        
 });

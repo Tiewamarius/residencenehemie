@@ -66,7 +66,7 @@
                 {{-- Bouton recherche --}}
                 <div class="search-bar-button">
                     <button type="button" id="reset-btn">
-                        <i class="fas fa-search"></i> Réinitialiser
+                        <i class="fas fa-times-circle"></i> Réinitialiser
                     </button>
                 </div>
             </div>

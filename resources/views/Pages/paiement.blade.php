@@ -4,6 +4,7 @@
 
 @section('content')
 <main class="payment-main-content">
+
     <div class="container mx-auto">
         <div class="payment-container">
             <!-- Colonne gauche -->

@@ -104,7 +104,7 @@ class BookingController extends Controller
             }
 
             // 9. Rediriger vers la page de paiement en utilisant l'ID de la réservation
-            return redirect()->route('paiements.show', ['booking' => $booking->id]);
+            return redirect()->route('paiements.show', ['booking' => $booking->id])->with('message', 'Réservation effectuée avec succès !');;
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
             Log::error('Erreur de réservation: ' . $e->getMessage());

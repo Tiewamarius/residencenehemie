@@ -1,31 +1,3 @@
-/*
- * Revised CSS for the apartment detail page.
- *
- * This version consolidates media queries, improves readability with consistent
- * comments and variable usage, and refines the responsiveness of key sections.
- */
-
-/* ========================================================================== */
-/* --- CSS Variables & General Styles --- */
-/* ========================================================================== */
-/*
- * Note: Assuming these variables are defined elsewhere in a global stylesheet.
- * I've used them consistently where applicable.
- * --primary-color
- * --primary-color-hover
- * --text-color-dark
- * --text-color-medium
- * --text-color-light
- * --border-color
- * --white
- * --background-light
- * --border-radius-small
- * --border-radius-medium
- * --border-radius-large
- * --shadow-light
- * --shadow-medium
- */
-
 body.modal-open {
   overflow: hidden; /* Prevent body scroll when modal is open */
 }
@@ -130,7 +102,7 @@ body.modal-open .apartment-main-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Flexible thumbnails */
   grid-template-rows: auto;
-  gap: 8px;
+  gap: 5px;
   height: auto;
 }
 
@@ -168,7 +140,7 @@ body.modal-open .apartment-main-content {
 .apartment-gallery .thumbnail-grid .show-all-photos-overlay span {
   font-weight: 600;
   text-align: center;
-  padding: 10px;
+  padding: 5px;
 }
 
 /* --- Media Queries for Larger Screens --- */
@@ -184,7 +156,7 @@ body.modal-open .apartment-main-content {
     grid-template-columns: 2.5fr 1.5fr;
     grid-template-rows: repeat(2, 1fr);
     height: 500px; /* Fixed height for desktop gallery */
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   .apartment-gallery .main-image {
@@ -203,7 +175,7 @@ body.modal-open .apartment-main-content {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
     height: 100%;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 }
 
@@ -676,4 +648,16 @@ body.modal-open .apartment-main-content {
   border-bottom: none;
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+/* Apparence des dates désactivées (Flatpickr ajoute .flatpickr-disabled) */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Optionnel: forcer le calendrier à apparaître au-dessus si carte sticky */
+.flatpickr-calendar {
+  z-index: 3000;
 }

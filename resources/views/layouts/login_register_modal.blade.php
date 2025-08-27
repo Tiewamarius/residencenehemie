@@ -37,6 +37,9 @@
                         <input type="text" id="register-name" name="name" placeholder="Entrez votre nom complet" required>
                     </div>
                     <div class="form-group">
+                        <input type="tel" id="register-email" name="email" placeholder="Entrez votre email" required>
+                    </div>
+                    <div class="form-group">
                         <input type="email" id="register-email" name="email" placeholder="Entrez votre email" required>
                     </div>
                     <div class="form-group">
@@ -49,10 +52,10 @@
                 </form>
             </div>
 
-            <div class="or-separator"><span>ou</span></div>
+            <!-- <div class="or-separator"><span>ou</span></div>
             <button class="social-login-btn google-btn">
                 <i class="fab fa-google"></i> Continuer avec Google
-            </button>
+            </button> -->
         </div>
     </div>
 </div>

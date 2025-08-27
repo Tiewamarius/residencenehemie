@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\Residence;
 use App\Models\Type;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -103,11 +104,65 @@ class BookingController extends Controller
             }
 
             // 9. Rediriger vers la page de paiement en utilisant l'ID de la réservation
-            return redirect()->route('paiements.show', ['booking' => $booking->id]);
+            return redirect()->route('paiements.show', ['booking' => $booking->id])->with('message', 'Réservation effectuée avec succès !');;
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
             Log::error('Erreur de réservation: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la réservation. Veuillez réessayer.')->withInput();
         }
+    }
+    public function details($id)
+    {
+        $reservation = Booking::with(['residence.images', 'type', 'Payment'])->findOrFail($id);
+        return view('Pages.details', compact('reservation'));
+    }
+
+    public function cancel($id)
+    {
+        $reservation = Booking::findOrFail($id);
+
+        if (in_array($reservation->statut, ['En attente', 'Confirmée'])) {
+            $reservation->statut = 'Annulée';
+            $reservation->save();
+
+            return redirect()
+                ->route('Pages.details', $reservation->id)
+                ->with('status', 'La réservation a bien été annulée.');
+        }
+
+        return redirect()
+            ->route('Pages.details', $reservation->id)
+            ->withErrors('Cette réservation ne peut pas être annulée.');
+    }
+
+    /**
+     * Effectuer le check-in
+     */
+    public function checkin($id)
+    {
+        $reservation = Booking::findOrFail($id);
+
+        if ($reservation->statut === 'paid') {
+            $reservation->statut = 'check-in';
+            $reservation->save();
+
+            return redirect()
+                ->route('bookings.details', $reservation->id)
+                ->with('status', 'Check-in effectué avec succès.');
+        }
+
+        return redirect()
+            ->route('bookings.details', $reservation->id)
+            ->withErrors('Impossible de faire le check-in pour cette réservation.');
+    }
+    public function invoice($id)
+    {
+        $reservation = Booking::with(['user', 'residence', 'type'])->findOrFail($id);
+
+        // Pour PDF :
+        // $pdf = \PDF::loadView('bookings.invoice', compact('reservation'));
+        // return $pdf->download("facture_{$reservation->numero_reservation}.pdf");
+
+        return view('Pages.invoice', compact('reservation'));
     }
 }

@@ -4,12 +4,7 @@
 
 @section('content')
 
-{{--
-    Consolidation de la logique PHP en haut pour une meilleure lisibilité.
-    Ces variables préparent les données pour les différentes sections de la page.
---}}
 @php
-// Utilisez des collections vides pour éviter les erreurs si les relations n'existent pas
 $allImages = $residence->images ?? collect();
 $mainImage = $allImages->where('est_principale', true)->first() ?? $allImages->first();
 $thumbnailImages = $allImages->filter(fn($image) => $image->id !== ($mainImage->id ?? null))->take(4);
@@ -24,7 +19,6 @@ $reviews = $residence->reviews ?? collect();
 $avgRating = $reviews->avg('note');
 $reviewCount = $reviews->count();
 
-// Map d'icônes pour les équipements, utile pour l'affichage dynamique
 $amenityIcons = [
 'wifi' => 'fas fa-wifi',
 'climatisation' => 'fas fa-snowflake',
@@ -86,7 +80,6 @@ $amenityIcons = [
                 @forelse($thumbnailImages as $thumb)
                 <img src="{{ asset($thumb->chemin_image) }}" alt="Miniature de {{ $residence->nom }}">
                 @empty
-                {{-- Placeholders si pas assez de miniatures --}}
                 <img src="https://placehold.co/500x300/C0C0C0/333333?text=Image+1" alt="Miniature 1">
                 <img src="https://placehold.co/500x300/C0C0C0/333333?text=Image+2" alt="Miniature 2">
                 <img src="https://placehold.co/500x300/C0C0C0/333333?text=Image+3" alt="Miniature 3">
@@ -100,13 +93,13 @@ $amenityIcons = [
                 <div class="overview-section">
                     <h2>Appartement entier : Hôte {{ $residence->user?->name ?? 'Inconnu' }}</h2>
                     <p class="guest-info">
-                        <i class="fas fa-users"></i> {{ $firstType->nb_voyageurs ?? 'N/A' }} Personnes{{ ($firstType->nb_voyageurs ?? 0) > 1 ? 's' : '' }}
+                        <i class="fas fa-users"></i> {{ $firstType->nb_voyageurs ?? 'N/A' }} Personne{{ ($firstType->nb_voyageurs ?? 0) > 1 ? 's' : '' }}
                         &bull; <i class="fas fa-bed"></i> {{ $firstType->nb_chambres ?? 'N/A' }} chambre{{ ($firstType->nb_chambres ?? 0) > 1 ? 's' : '' }}
                         &bull; <i class="fas fa-bed"></i> {{ $firstType->nombre_lits ?? 'N/A' }} lit{{ ($firstType->nombre_lits ?? 0) > 1 ? 's' : '' }}
                         &bull; <i class="fas fa-shower"></i> {{ $firstType->nb_salles_de_bain ?? 'N/A' }} salle{{ ($firstType->nb_salles_de_bain ?? 0) > 1 ? 's' : '' }} de bain
                     </p>
                     <div class="host-summary">
-                        <img src="{{ $residence->user?->profile_picture ? asset($residence->user->profile_picture) : 'https://placehold.co/50x50/B0B0B0/FFFFFF?text=H' }}" alt="Photo de l'hôte" class="host-profile_picture">
+                        <img src="{{ $residence->user?->profile_picture ? asset($residence->user->profile_picture) : 'https://placehold.co/50x50/B0B0B0/FFFFFF?text=H' }}" alt="Photo de l'hôte" class="host-profile-picture">
                         <p>Hôte : {{ $residence->user?->name ?? 'Inconnu' }}</p>
                     </div>
                 </div>
@@ -121,9 +114,9 @@ $amenityIcons = [
 
                 <hr>
 
-                <div class="Equipment-section">
+                <div class="equipment-section">
                     <h3>Ce que ce logement offre</h3>
-                    <ul class="Equipment-list">
+                    <ul class="equipment-list">
                         @forelse(($residence->Equipment ?? collect())->take(8) as $amenity)
                         @php
                         $icon = $amenityIcons[Str::slug($amenity->nom)] ?? 'fas fa-check-circle';
@@ -134,7 +127,7 @@ $amenityIcons = [
                         @endforelse
                     </ul>
                     @if(($residence->Equipment ?? collect())->count() > 8)
-                    <button class="show-all-Equipment" id="show-all-Equipment-btn">Afficher les {{ $residence->Equipment->count() }} équipements</button>
+                    <button class="show-all-equipment" id="show-all-equipment-btn">Afficher les {{ $residence->Equipment->count() }} équipements</button>
                     @endif
                 </div>
 
@@ -150,7 +143,7 @@ $amenityIcons = [
                         @forelse(($residence->reviews ?? collect())->take(2) as $review)
                         <div class="review-item">
                             <div class="reviewer-info">
-                                <img src="{{ $review->user?->profile_picture ? asset($review->user->profile_picture) : 'https://placehold.co/40x40/D0D0D0/FFFFFF?text=U' }}" alt="profile_picture utilisateur" class="reviewer-profile_picture">
+                                <img src="{{ $review->user?->profile_picture ? asset($review->user->profile_picture) : 'https://placehold.co/40x40/D0D0D0/FFFFFF?text=U' }}" alt="profile_picture utilisateur" class="reviewer-profile-picture">
                                 <span>{{ $review->user?->name ?? 'Anonyme' }}</span>
                             </div>
                             <p class="review-comment">"{{ $review->commentaire ?? 'Pas de commentaire.' }}"</p>
@@ -189,11 +182,8 @@ $amenityIcons = [
                         </span>
                     </div>
 
-                    {{-- Formulaire de réservation. Le formulaire est prêt à envoyer les données. --}}
-                    <!-- <form class="booking-form" action="{{ route(Auth::check() ? 'residences.reserver' : 'residences.bookguest', $residence->id) }}" method="POST"> -->
                     <form class="booking-form" action="{{ route('residences.reserver', $residence->id) }}" method="POST">
                         @csrf
-                        {{-- Champs cachés pour envoyer des données essentielles au serveur --}}
                         <input type="hidden" name="residence_id" value="{{ $residence->id }}">
                         <input type="hidden" name="total_price" id="total-price-input">
                         <input type="hidden" name="type_id" value="{{ $firstType->id ?? '' }}">
@@ -201,46 +191,39 @@ $amenityIcons = [
                         <div class="form-group date-selection">
                             <div class="date-input-group">
                                 <label for="check_in_date">ARRIVÉE</label>
-                                <input type="date" id="check_in_date" name=" date_arrivee" required>
+                                <input type="text" id="check_in_date" name="date_arrivee" placeholder="Ajouter une date" readonly>
                             </div>
                             <div class="date-input-group">
                                 <label for="check_out_date">DÉPART</label>
-                                <input type="date" id="check_out_date" name="date_depart" required>
+                                <input type="text" id="check_out_date" name="date_depart" placeholder="Ajouter une date" readonly>
                             </div>
                         </div>
+
                         <div class="form-group guests-selection">
                             <label for="adults">PERSONNES ADULTES</label>
-                            {{-- CORRECTION: L'ID a été changé en 'adults' pour être unique --}}
                             <select id="adults" name="nombre_adultes" required>
                                 @for($i = 1; $i <= $maxGuests; $i++)
                                     <option value="{{ $i }}">{{ $i }} Adulte(s)</option>
                                     @endfor
                             </select>
                         </div>
+
                         <div class="form-group guests-selection">
                             <label for="children">PERSONNES ENFANTS</label>
-                            {{-- CORRECTION: L'ID a été changé en 'children' pour être unique --}}
                             <select id="children" name="nombre_enfants" required>
-                                @for($i = 1; $i <= $maxEnfants; $i++)
+                                @for($i = 0; $i <= $maxEnfants; $i++)
                                     <option value="{{ $i }}">{{ $i }} Enfant(s)</option>
                                     @endfor
                             </select>
                         </div>
-                        <button type="submit" class="check-availability-btn">RESERVER</button>
-                    </form>
 
-                    @guest
-                    <!-- <div class="mt-4 text-center">
-                        <p class="text-gray-600 mb-2" style="color: orangered;">Vous n'êtes pas connecté ?</p>
-                        <a href="{{ route('socialite.google.redirect') }}" class="inline-block px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200">
-                            Continuer avec Google
-                        </a>
-                    </div> -->
-                    @endguest
+                        <button type="submit" class="check-availability-btn" disabled>RÉSERVER</button>
+                    </form>
 
                     <div class="price-breakdown">
                         <p>
-                            <span>{{ number_format($minPrice ?? 0, 0, ',', ' ') }} FCFA x <span id="nights-display-breakdown">0</span> nuit(s)</span> <span><span id="price-subtotal">0</span> FCFA</span>
+                            <span>{{ number_format($minPrice ?? 0, 0, ',', ' ') }} FCFA x <span id="nights-display-breakdown">0</span> nuit(s)</span>
+                            <span><span id="price-subtotal">0</span> FCFA</span>
                         </p>
                         <p><span>Frais de service</span> <span>10 000 FCFA</span></p>
                         <p class="total-price"><span>Total</span> <span><span id="price-total">0</span> FCFA</span></p>
@@ -251,8 +234,6 @@ $amenityIcons = [
     </div>
 </main>
 
-
-{{-- Section "Nos appartements en vedette" --}}
 <section class="featured-properties" id="appartements">
     <h2 class="section-title">Nos appartements en vedette</h2>
     <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
@@ -269,9 +250,7 @@ $amenityIcons = [
                     <span class="wishlist-icon @guest open-login-modal-trigger @endguest"><i class="fas fa-heart"></i></span>
                 </div>
                 <div class="property-details">
-                    @php
-                    $featuredAvgRating = $featuredResidence->reviews->avg('note');
-                    @endphp
+                    @php $featuredAvgRating = $featuredResidence->reviews->avg('note'); @endphp
                     <div class="property-review">
                         @for ($i = 1; $i <= 5; $i++)
                             @if ($i <=floor($featuredAvgRating ?? 0))
@@ -295,4 +274,10 @@ $amenityIcons = [
         @endforelse
     </div>
 </section>
+
+{{-- Injecte les périodes réservées pour Flatpickr --}}
+<script>
+    window.bookedDateRanges = @json($bookedDateRanges ?? []);
+</script>
+
 @endsection

@@ -8,6 +8,9 @@
     <title>@yield('title', 'Résidences Nehemie')</title> {{-- Titre dynamique --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Toastr CSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.22.5/sweetalert2.min.js" integrity="sha512-lEAhnSkDaa0XS4yP6nlJmfBbbe2p83qBt4KlVMXy7CGe2pAtNijskiu9lLs9jB+RpGoy97P62/HngyeGPIbK2w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -36,16 +39,40 @@
     {{-- Si vous utilisez des icônes Unicons (comme uil-times), assurez-vous d'inclure leur CDN --}}
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     @yield('head_extra') {{-- Pour des styles ou scripts supplémentaires spécifiques à une page --}}
     <style>
         html {
             scroll-behavior: smooth;
             /* Pour un défilement fluide */
         }
+
+        ul {
+            list-style-type: none;
+        }
     </style>
 </head>
 
 <body>
+    @if(Session::has('message'))
+    <script>
+        swal("Message", "{{ Session::get('message') }}", 'success', {
+            button: true,
+            button: "Ok",
+            timer: 2000
+        });
+    </script>
+    @elseif(Session::has('message'))
+    <script>
+        swal("Message", "{{ Session::get('message') }}", 'error', {
+            button: true,
+            button: "Ok",
+            timer: 2000,
+            dangerMode: true,
+        });
+    </script>
+    @endif
 
     {{-- Inclure la Sidebar (Menu Mobile) --}}
     @include('layouts.sidebar')

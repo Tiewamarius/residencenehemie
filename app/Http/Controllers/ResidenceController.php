@@ -42,42 +42,35 @@ class ResidenceController extends Controller
      */
     public function detailsAppart(Residence $residence)
     {
-        // Charge toutes les relations nécessaires pour cette résidence unique.
-        // C'est plus efficace que de charger TOUTES les résidences puis filtrer.
+        // Charger les données utiles pour la page
         $residences = Residence::with(['images', 'types'])->get();
-        // 1. Charge toutes les relations nécessaires pour la vue
+
         $residence->load([
-            'images',        // Pour la galerie d'images
-            // 'nombre_chambres',
-            'types',         // Pour les infos sur les chambres, lits, salles de bain, prix
-            'Equipment',     // Pour la liste des équipements
-            'reviews.user',  // Pour les avis et l'utilisateur qui les a postés
-            'user'           // Pour les informations sur l'hôte de la résidence
+            'images',
+            'types',
+            'Equipment',        // conserve la casse telle qu'utilisée dans ta vue
+            'reviews.user',
+            'user'
         ]);
 
-        // 2. Récupère les réservations confirmées ou payées pour cette résidence
-        $bookedDates = Booking::where('residence_id', $residence->id)
+        // Récupération des réservations confirmées ou payées pour cette résidence
+        // On prépare des ranges {from, to} au format Y-m-d
+        // Note: côté JS, on désactive [from, to-1] pour permettre une arrivée le jour du départ précédent
+        $bookedDateRanges = $residence->bookings()
             ->whereIn('statut', ['confirmed', 'paid'])
-            ->get(['date_arrivee', 'date_depart']);
+            ->get(['date_arrivee', 'date_depart'])
+            ->map(function ($b) {
+                $from = \Carbon\Carbon::parse($b->date_arrivee)->format('Y-m-d');
+                $to   = \Carbon\Carbon::parse($b->date_depart)->format('Y-m-d');
+                return [
+                    'from' => $from,
+                    'to'   => $to,
+                ];
+            })
+            ->values();
 
-        // 3. Crée une liste de toutes les dates (jours) indisponibles
-        $unavailableDates = [];
-        foreach ($bookedDates as $booking) {
-            $startDate = Carbon::parse($booking->date_arrivee);
-            $endDate = Carbon::parse($booking->date_depart);
-
-            // Boucle sur chaque jour entre la date d'arrivée et de départ
-            // pour les ajouter à la liste des dates indisponibles
-            while ($startDate->lte($endDate)) {
-                $unavailableDates[] = $startDate->toDateString();
-                $startDate->addDay();
-            }
-        }
-
-        // 2. Passe le modèle $residence (avec ses relations chargées) à la vue
-        return view('Pages.detailsAppart', compact('residence', 'residences', 'unavailableDates'));
+        return view('Pages.detailsAppart', compact('residence', 'residences', 'bookedDateRanges'));
     }
-
 
 
     /**
@@ -183,73 +176,37 @@ class ResidenceController extends Controller
      */
     public function search(Request $request)
     {
-        try {
-            // 1. Validation des données du formulaire
-            $validated = $request->validate([
-                'address' => 'nullable|string|max:255',
-                'arrivee' => 'nullable|date',
-                'depart' => 'nullable|date|after_or_equal:arrivee',
-                'adultes' => 'required|integer|min:1',
-                'enfants' => 'required|integer|min:0',
-            ]);
+        $validated = $request->validate([
+            'destination'   => 'nullable|string',
+            'date_arrivee'  => 'required|date',
+            'date_depart'   => 'required|date|after:date_arrivee',
+            'voyageurs'     => 'nullable|integer|min:1',
+        ]);
 
-            // 2. Début de la requête pour trouver les résidences
-            $query = Residence::query();
+        $residences = \App\Models\Residence::with(['images', 'types'])
+            ->when(!empty($validated['destination']), function ($q) use ($validated) {
+                $q->where('ville', 'like', '%' . $validated['destination'] . '%');
+            })
+            ->whereDoesntHave('bookings', function ($q) use ($validated) {
+                $q->where('statut', '!=', 'Cancelled') // on exclut les annulées
+                    ->where(function ($query) use ($validated) {
+                        $query->whereBetween('date_arrivee', [$validated['date_arrivee'], $validated['date_depart']])
+                            ->orWhereBetween('date_depart', [$validated['date_arrivee'], $validated['date_depart']])
+                            ->orWhere(function ($sub) use ($validated) {
+                                $sub->where('date_arrivee', '<=', $validated['date_arrivee'])
+                                    ->where('date_depart', '>=', $validated['date_depart']);
+                            });
+                    });
+            })
+            ->get();
 
-            // 3. Appliquer le filtre par adresse si elle est fournie
-            if (!empty($validated['address'])) {
-                $query->where('adresse', 'like', '%' . $validated['address'] . '%');
-            }
+        return view('searchAppart', compact('residences'));
+    }
+    public function searchAppart()
+    {
+        // On charge les résidences avec les images et types pour éviter les requêtes N+1
+        $residences = Residence::with(['images', 'types'])->get();
 
-            // 4. Appliquer les filtres par capacité des types de chambres
-            // On filtre les résidences qui ont au moins un type de chambre
-            // pouvant accueillir le nombre d'adultes et d'enfants spécifié.
-            $query->whereHas('types', function ($typeQuery) use ($validated) {
-                $typeQuery->where('capacite_adultes', '>=', $validated['adultes'])
-                    ->where('capacite_enfants', '>=', $validated['enfants']);
-            });
-
-            // 5. Filtrer les résidences non disponibles si les dates sont fournies
-            if (!empty($validated['arrivee']) && !empty($validated['depart'])) {
-                $query->whereDoesntHave('reservations', function ($q) use ($validated) {
-                    $q->where('date_arrivee', '<=', $validated['depart'])
-                        ->where('date_depart', '>=', $validated['arrivee']);
-                });
-            }
-
-            // 6. Exécuter la requête et récupérer les résultats avec les relations nécessaires
-            $apartments = $query->with(['images', 'types'])->get();
-
-            // 7. Transformer les résultats pour le format JSON attendu
-            $results = $apartments->map(function ($apartment) {
-                $featuredImage = $apartment->images->where('est_principale', true)->first() ?? $apartment->images->first();
-
-                // On calcule le prix minimum de la résidence en fonction des types
-                $minPrice = $apartment->types->min('prix_base') ?? 0;
-
-                // On renvoie un objet propre pour le frontend
-                return [
-                    'id' => $apartment->id,
-                    'nom' => $apartment->nom,
-                    'adresse' => $apartment->adresse,
-                    'is_superhost' => $apartment->is_superhost,
-                    'rating' => $apartment->avgRating(), // Utilisation d'une méthode potentielle du modèle
-                    'prix_min' => $minPrice,
-                    'featuredImage' => $featuredImage ? asset($featuredImage->chemin_image) : null,
-                ];
-            });
-
-            // 8. Retourner les résultats en format JSON
-            return response()->json($results);
-        } catch (\Exception $e) {
-            Log::error('Erreur lors de la recherche d\'appartements.', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return response()->json([
-                'error' => 'Une erreur est survenue lors de la recherche. Veuillez réessayer.'
-            ], 500);
-        }
+        return  view('searchAppart', compact('residences'));
     }
 }

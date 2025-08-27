@@ -39,8 +39,10 @@ Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppar
 Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'bookguest']);
 
 
-// Route pour la recherche d'appartements via une API (requête POST)
-Route::post('/api/search-apartments', [ResidenceController::class, 'search'])->name('api.apartments.search');
+// Route pour la recherche d'appartements via une (requête POST)
+Route::get('search-apartments', [ResidenceController::class, 'searchAppart'])->name('search-apartments.search');
+
+Route::post('/residences/search', [ResidenceController::class, 'search'])->name('residences.search');
 
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
@@ -54,6 +56,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/paiement/{booking}', [PaiementController::class, 'showPaymentPage'])->name('paiements.show');
     // Nouvelle route pour traiter le paiement
     Route::post('/paiement/process', [PaiementController::class, 'process'])->name('paiements.process');
+
+
+    // Details
+    Route::get('/bookings/{booking}', [BookingController::class, 'details'])->name('bookings.details');
+    // Facture : page HTML ou PDF
+    Route::get('/bookings/{id}/invoice', [BookingController::class, 'invoice'])
+        ->name('bookings.invoice');
+
+    // Annulation de réservation
+    Route::patch('/bookings/{id}/cancel', [BookingController::class, 'cancel'])
+        ->name('bookings.cancel');
+
+    // Check-in
+    Route::get('/bookings/{id}/checkin', [BookingController::class, 'checkin'])
+        ->name('bookings.checkin');
 
     // Route pour la page de confirmation de succès
     Route::get('/paiement/success', function () {

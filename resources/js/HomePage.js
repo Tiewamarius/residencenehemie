@@ -547,7 +547,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     // ===========================================================
-    // --- NOUVEAU : Ouverture de la modale via l'URL ---
+    // --- Ouverture de la modale via l'URL ---
     // ===========================================================
     const currentPath = window.location.pathname;
 
@@ -571,6 +571,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const isSuperhost = apartment.is_superhost ?
             `<span class="absolute top-2 left-2 bg-white text-gray-900 font-semibold px-2 py-1 rounded-full text-xs shadow-md">Superhôte</span>` : '';
 
+        // Déterminez si l'appartement est en favoris pour l'icône de cœur
+        const heartClass = apartment.is_favorited ? 'fas' : 'far';
+
         let stars = '';
         const fullStars = Math.floor(apartment.rating);
         const hasHalfStar = apartment.rating % 1 > 0;
@@ -591,6 +594,7 @@ window.addEventListener('DOMContentLoaded', () => {
                         ${isSuperhost}
                         <img src="${imageUrl}" alt="${apartment.nom}" class="w-full h-full object-cover">
                         <span class="wishlist-icon ${isFavorited ? 'active' : ''}" data-residence-id="${apartment.id}"><i class="${isFavorited} fa-heart"></i></span>
+
                     </div>
                     <div class="property-details p-4">
                         <div class="property-review flex items-center mb-2">
@@ -824,5 +828,45 @@ function setupWishlistListeners() {
             }
         });
     });
+// Lancer la configuration des écouteurs au chargement initial
+setupWishlistListeners();
 
+
+
+        try {
+            const response = await fetch(`/toggle-favori/${residenceId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': token,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({}) // Un corps vide peut être envoyé si le backend s'attend à du JSON
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                if (result.status === 'added') {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    console.log(result.message);
+                } else if (result.status === 'removed') {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    console.log(result.message);
+                }
+            } else {
+                if (response.status === 401) {
+                    // Si l'utilisateur n'est pas connecté, on déclenche l'ouverture de la modale de connexion
+                    openLoginModal();
+                    console.warn('Vous devez être connecté pour ajouter des favoris.');
+                } else {
+                    console.error('Erreur du serveur:', result.message || 'Une erreur est survenue.');
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête de favoris:', error);
+        }
+    });
 });

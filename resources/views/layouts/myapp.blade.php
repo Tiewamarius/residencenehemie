@@ -15,24 +15,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
-    {{-- Inclure Vite pour vos assets CSS et JS --}}
-    @vite([
+    {{-- Inclure vos assets CSS et JS --}}
+    <!-- JS principal -->
+    <script src="{{ asset('js/myapp.js') }}" defer></script>
 
-    'resources/js/myapp.js',
+    <!-- Homepage -->
+    <link rel="stylesheet" href="{{ asset('css/homepage.css') }}">
+    <script src="{{ asset('js/homepage.js') }}" defer></script>
 
+    <!-- Détails Appartement -->
+    <link rel="stylesheet" href="{{ asset('css/detailsAppart.css') }}">
+    <script src="{{ asset('js/detailsAppart.js') }}" defer></script>
 
-    'resources/css/homepage.css',
-    'resources/js/homepage.js',
+    <!-- Paiement -->
+    <link rel="stylesheet" href="{{ asset('css/paiement.css') }}">
+    <script src="{{ asset('js/paiement.js') }}" defer></script>
 
-    'resources/css/detailsAppart.css',
-    'resources/js/detailsAppart.js',
+    <!-- Home User -->
+    <link rel="stylesheet" href="{{ asset('css/homeUser.css') }}">
+    <script src="{{ asset('js/homeUser.js') }}" defer></script>
 
-    'resources/css/paiement.css',
-    'resources/js/paiement.js',
-
-    'resources/css/homeUser.css',
-    'resources/js/homeUser.js'
-    ])
 
     {{-- Font Awesome pour les icônes --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />

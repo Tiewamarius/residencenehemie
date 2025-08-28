@@ -1,685 +1,663 @@
-/* Import Google font - Poppins */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+body.modal-open {
+  overflow: hidden; /* Prevent body scroll when modal is open */
 }
 
-a {
-    text-decoration: none;
-    color: inherit;
-    /* Pour que les liens héritent de la couleur du texte parent */
-}
-
-/* Base styles for header (simplified from welcome.css) */
-.header {
-    position: fixed;
-    /* Rendre le header fixe */
-    height: 80px;
-    /* Hauteur fixe comme sur la page d'accueil */
-    width: 100%;
-    padding: 0 20px;
-    /* Ajusté pour correspondre à welcome.css */
-    background-color: #fff;
-    /* Fond blanc pour le header de la page de détail */
-    box-shadow: 0 2px 5px rgba(236, 17, 108, 0.05);
-    z-index: 100;
-    /* Z-index élevé pour qu'il reste au-dessus */
-}
-
-.nav {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    /* S'assurer que le nav prend la hauteur du header */
-}
-
-.nav_logo img {
-    height: 50px;
-    /* Taille du logo */
-}
-
-.nav_actions .host-link {
-    color: #333;
-    font-weight: 500;
-    padding: 8px 15px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-}
-
-.nav_actions .host-link:hover {
-    background-color: #f0f0f0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Main content container */
 .apartment-main-content {
-    padding-top: 80px;
-    /* Espace pour le header fixe */
-    background-color: #f7f7f7;
-    /* Fond léger pour la page */
+  padding-top: calc(4rem + 80px); /* Adjust for fixed header height + extra space */
+  padding-bottom: 4rem; /* Space before footer */
+  transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
+body.modal-open .apartment-main-content {
+  opacity: 0.6;
+  filter: blur(2px);
+  pointer-events: none;
 }
 
-/* Section Header (Titre, Localisation, Actions) */
+.apartment-main-content .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ========================================================================== */
+/* --- Apartment Header Section --- */
+/* ========================================================================== */
 .apartment-header-section {
-    margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .apartment-header-section h1 {
-    font-size: 2.2em;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 10px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
+  margin-bottom: 0.5rem;
 }
 
 .apartment-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    color: #555;
-    font-size: 0.95em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color-medium);
 }
 
-.apartment-meta .location i,
-.apartment-meta .rating i {
-    color: #ff385dd0;
-    /* Couleur d'accentuation */
-    margin-right: 5px;
+.apartment-meta i {
+  margin-right: 0.4rem;
+  color: var(--text-color-dark);
+}
+
+.apartment-meta .rating i.fas.fa-star {
+  color: #FFC107; /* Yellow star */
 }
 
 .apartment-meta .actions {
-    margin-left: auto;
-    /* Pousse les actions à droite */
-    display: flex;
-    gap: 15px;
+  margin-left: auto;
+  display: flex;
+  gap: 1rem;
 }
 
 .apartment-meta .action-link {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #555;
-    font-weight: 500;
-    transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--text-color-dark);
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .apartment-meta .action-link:hover {
-    color: #ff385c;
+  color: var(--primary-color);
 }
 
-/* Section Galerie d'Images */
+/* ========================================================================== */
+/* --- Apartment Gallery (Mobile-first approach) --- */
+/* ========================================================================== */
 .apartment-gallery {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    /* Colonne principale et grille de miniatures */
-    grid-template-rows: repeat(2, 1fr);
-    /* Deux lignes pour les miniatures */
-    gap: 10px;
-    border-radius: 15px;
-    overflow: hidden;
-    /* Pour les coins arrondis */
-    margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for mobile */
+  grid-template-rows: auto;
+  height: auto; /* Flexible height for mobile */
+  gap: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border-radius: var(--border-radius-large);
 }
 
 .apartment-gallery .main-image {
-    grid-column: 1 / 2;
-    /* Prend la première colonne */
-    grid-row: 1 / 3;
-    /* Prend les deux lignes */
-    height: 500px;
-    /* Hauteur fixe pour l'image principale */
-    overflow: hidden;
+  height: 250px; /* Adjusted height for mobile screens */
+  overflow: hidden;
 }
 
 .apartment-gallery .main-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--border-radius-medium);
 }
 
 .apartment-gallery .thumbnail-grid {
-    grid-column: 2 / 3;
-    /* Prend la deuxième colonne */
-    grid-row: 1 / 3;
-    /* Prend les deux lignes */
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Deux colonnes pour les miniatures */
-    grid-template-rows: 1fr 1fr;
-    /* Deux lignes pour les miniatures */
-    gap: 10px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Flexible thumbnails */
+  grid-template-rows: auto;
+  gap: 5px;
+  height: auto;
+}
+
+.apartment-gallery .thumbnail-grid .thumbnail-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius-medium);
 }
 
 .apartment-gallery .thumbnail-grid img {
-    width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.apartment-gallery .thumbnail-grid .show-all-photos-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.apartment-gallery .thumbnail-grid .show-all-photos-overlay:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.apartment-gallery .thumbnail-grid .show-all-photos-overlay span {
+  font-weight: 600;
+  text-align: center;
+  padding: 5px;
+}
+
+/* --- Media Queries for Larger Screens --- */
+@media (min-width: 768px) {
+  .apartment-gallery .main-image {
+    height: 300px;
+  }
+}
+
+@media (min-width: 992px) {
+  .apartment-gallery {
+    /* Large image on left (2.5 parts), thumbnails on right (1.5 parts) */
+    grid-template-columns: 2.5fr 1.5fr;
+    grid-template-rows: repeat(2, 1fr);
+    height: 500px; /* Fixed height for desktop gallery */
+    gap: 0.5rem;
+  }
+
+  .apartment-gallery .main-image {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
     height: 100%;
-    object-fit: cover;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+  }
+
+  .apartment-gallery .main-image img {
+    border-radius: var(--border-radius-large);
+  }
+
+  .apartment-gallery .thumbnail-grid {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 100%;
+    gap: 0.5rem;
+  }
 }
 
-.apartment-gallery .thumbnail-grid img:hover {
-    opacity: 0.9;
-}
-
-/* Section Contenu Principal et Carte de Réservation */
+/* ========================================================================== */
+/* --- Apartment Details Layout (Mobile-first approach) --- */
+/* ========================================================================== */
 .apartment-details-layout {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    /* Colonne de détails et colonne de réservation */
-    gap: 40px;
-    align-items: flex-start;
-    /* Aligne le contenu en haut des colonnes */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.details-left-column {
-    padding-right: 20px;
-    /* Espacement avec la colonne de droite */
+@media (min-width: 1024px) {
+  .apartment-details-layout {
+    flex-direction: row;
+  }
+  .details-left-column {
+    flex: 2;
+  }
+  .details-right-column {
+    flex: 1;
+  }
 }
 
-.details-left-column h2,
-.details-left-column h3 {
-    color: #333;
-    margin-bottom: 15px;
+.details-left-column > div {
+  margin-bottom: 2rem;
 }
 
 .details-left-column hr {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 30px 0;
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 2rem 0;
 }
 
-/* Overview Section */
+/* ========================================================================== */
+/* --- Overview Section --- */
+/* ========================================================================== */
 .overview-section h2 {
-    font-size: 1.8em;
-    font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 0.5rem;
 }
 
 .overview-section .guest-info {
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 20px;
+  font-size: 1em;
+  color: var(--text-color-medium);
+  margin-bottom: 1rem;
 }
 
 .overview-section .guest-info i {
-    color: #777;
-    margin-right: 5px;
+  color: var(--text-color-dark);
+  margin-right: 0.3rem;
 }
 
-.overview-section .host-summary {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.host-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
 }
 
-.overview-section .host-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #ff385c;
+.host-summary .host-profile-picture {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%; /* Using 50% for a perfect circle */
+  object-fit: cover;
 }
 
-.overview-section .host-summary p {
-    font-size: 1.1em;
-    font-weight: 500;
-    color: #333;
+.host-summary p {
+  font-weight: 500;
+  color: var(--text-color-dark);
 }
 
-/* Description Section */
-.description-section h3 {
-    font-size: 1.5em;
-    font-weight: 600;
+/* ========================================================================== */
+/* --- Description & Equipment Sections --- */
+/* ========================================================================== */
+.description-section h3,
+.equipment-section h3,
+.reviews-section h3,
+.location-map-section h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-color-dark);
+  margin-bottom: 1rem;
 }
 
 .description-section p {
-    font-size: 1em;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 15px;
+  color: var(--text-color-medium);
+  margin-bottom: 1rem;
 }
 
 .description-section .read-more {
-    color: #ff385c;
-    font-weight: 500;
-    transition: text-decoration 0.2s ease;
+  color: var(--text-color-dark);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .description-section .read-more:hover {
-    text-decoration: underline;
+  color: var(--primary-color);
 }
 
-/* Amenities Section */
-.amenities-section h3 {
-    font-size: 1.5em;
-    font-weight: 600;
+.equipment-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.amenities-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+.equipment-list li {
+  display: flex;
+  align-items: center;
+  color: var(--text-color-dark);
+  font-size: 0.95rem;
 }
 
-.amenities-list li {
-    font-size: 1em;
-    color: #666;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.equipment-list li i {
+  margin-right: 0.75rem;
+  color: var(--text-color-medium);
 }
 
-.amenities-list li i {
-    color: #333;
-    font-size: 1.2em;
+.show-all-equipment,
+.show-all-reviews {
+  background-color: var(--white);
+  border: 1px solid var(--text-color-dark);
+  color: var(--text-color-dark);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--border-radius-small);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: 1.5rem;
 }
 
-.show-all-amenities {
-    background-color: #fff;
-    border: 1px solid #555;
-    color: #333;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.2s ease;
+.show-all-equipment:hover,
+.show-all-reviews:hover {
+  background-color: var(--background-light);
 }
 
-.show-all-amenities:hover {
-    background-color: #f0f0f0;
-    border-color: #333;
-}
-
-/* Reviews Section */
-.reviews-section h3 {
-    font-size: 1.5em;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-.reviews-section h3 i {
-    color: #ff385c;
-    margin-right: 5px;
+/* ========================================================================== */
+/* --- Reviews Section --- */
+/* ========================================================================== */
+.reviews-section h3 i.fas.fa-star {
+  color: #FFC107;
+  margin-right: 0.5rem;
 }
 
 .review-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Deux colonnes pour les avis */
-    gap: 30px;
-    margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .review-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .review-item {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-medium);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-light);
 }
 
 .reviewer-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.reviewer-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
+.reviewer-info .reviewer-profile-picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .reviewer-info span {
-    font-weight: 600;
-    color: #333;
+  font-weight: 600;
+  color: var(--text-color-dark);
 }
 
 .review-comment {
-    font-size: 0.95em;
-    color: #666;
-    line-height: 1.5;
-    margin-bottom: 10px;
+  color: var(--text-color-medium);
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
 }
 
 .review-date {
-    font-size: 0.8em;
-    color: #999;
+  font-size: 0.85rem;
+  color: var(--text-color-light);
 }
 
-.show-all-reviews {
-    background-color: #fff;
-    border: 1px solid #555;
-    color: #333;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.2s ease;
+/* ========================================================================== */
+/* --- Location Map Section --- */
+/* ========================================================================== */
+.location-map-section .map-placeholder {
+  width: 100%;
+  height: 300px;
+  background-color: #e0e0e0;
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color-medium);
+  font-size: 1.2rem;
 }
 
-.show-all-reviews:hover {
-    background-color: #f0f0f0;
-    border-color: #333;
+.location-map-section .map-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Location Map Section */
-.location-map-section h3 {
-    font-size: 1.5em;
-    font-weight: 600;
+/* ========================================================================== */
+/* --- Booking Card (Right Column) --- */
+/* ========================================================================== */
+.booking-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-large);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-medium);
+  position: sticky;
+  top: 90px;
 }
 
-.location-map-section p {
-    color: #666;
-    margin-bottom: 15px;
+.booking-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.map-placeholder {
-    width: 100%;
-    height: 400px;
-    background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #888;
-    font-size: 1.2em;
-    border-radius: 10px;
-    overflow: hidden;
-    /* Pour les coins arrondis */
+.booking-header .price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
 }
 
-.map-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.booking-header .per-night {
+  font-size: 1em;
+  color: var(--text-color-medium);
 }
 
-
-/* Booking Card (Right Column) */
-.details-right-column {
-    position: sticky;
-    /* Rendre la carte flottante */
-    top: 100px;
-    /* Distance du haut de la fenêtre après le scroll */
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+.booking-header .rating {
+  margin-left: auto;
+  font-size: 0.95rem;
+  color: var(--text-color-medium);
 }
 
-.booking-card .booking-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.booking-card .booking-header .price {
-    font-size: 1.8em;
-    font-weight: 700;
-    color: #333;
-}
-
-.booking-card .booking-header .per-night {
-    font-size: 0.9em;
-    color: #666;
-    margin-left: 5px;
-}
-
-.booking-card .booking-header .rating {
-    font-size: 0.9em;
-    color: #555;
-}
-
-.booking-card .booking-header .rating i {
-    color: #ff385c;
-    margin-right: 5px;
+.booking-header .rating i.fas.fa-star {
+  color: #FFC107;
+  margin-right: 0.3rem;
 }
 
 .booking-form .form-group {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    overflow: hidden;
-    /* Pour les bordures arrondies */
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-small);
+  margin-bottom: 0.1rem;
+  overflow: hidden;
 }
 
 .booking-form .date-selection {
-    display: flex;
-    border-bottom: 1px solid #eee;
-    /* Séparateur entre les dates */
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .booking-form .date-input-group {
-    flex: 1;
-    padding: 10px 15px;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  padding: 0.2rem 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .booking-form .date-input-group:first-child {
-    border-right: 1px solid #eee;
+  border-right: 1px solid var(--border-color);
 }
 
 .booking-form .form-group label {
-    font-size: 0.75em;
-    color: #888;
-    text-transform: uppercase;
-    margin-bottom: 5px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-color-dark);
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
 }
 
-.booking-form input[type="date"],
-.booking-form select {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-size: 1em;
-    color: #333;
-    padding: 5px 0;
-    /* Ajustement du padding */
-    cursor: pointer;
+.booking-form .form-group input,
+.booking-form .form-group select {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0;
+  color: var(--text-color-dark);
+  background: transparent;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .booking-form .guests-selection {
-    padding: 10px 15px;
+  padding: 0.65rem 1rem;
+  position: relative;
+}
+
+.booking-form .guests-selection select {
+  padding-right: 25px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23222222" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 16px;
 }
 
 .check-availability-btn {
-    width: 100%;
-    background-color: #ff385c;
-    color: #fff;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius-small);
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-bottom: 1rem;
 }
 
 .check-availability-btn:hover {
-    background-color: #e0002f;
+  background-color: var(--primary-color-hover);
 }
 
 .price-breakdown {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
 }
 
 .price-breakdown p {
-    display: flex;
-    justify-content: space-between;
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-color-dark);
+}
+
+.price-breakdown p span:first-child {
+  text-decoration: underline;
 }
 
 .price-breakdown .total-price {
-    font-size: 1.2em;
-    font-weight: 600;
-    color: #333;
-    margin-top: 15px;
+  font-weight: 600;
+  font-size: 1.1em;
+  margin-top: 1rem;
 }
 
-/* Footer */
-.footer {
-    text-align: center;
-    padding: 30px 20px;
-    background-color: #333;
-    color: #fff;
-    font-size: 0.9em;
-    margin-top: 50px;
+/* ========================================================================== */
+/* --- Modals (Equipment and Reviews) --- */
+/* ========================================================================== */
+.equipment-modal-overlay,
+.reviews-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-
-/* ========================================================================= */
-/* Responsive Styles */
-/* ========================================================================= */
-
-@media (max-width: 992px) {
-    .apartment-gallery {
-        grid-template-columns: 1fr;
-        /* Une seule colonne pour la galerie */
-        grid-template-rows: auto;
-    }
-
-    .apartment-gallery .main-image {
-        grid-column: 1 / 2;
-        grid-row: auto;
-        height: 400px;
-        /* Réduire la hauteur */
-    }
-
-    .apartment-gallery .thumbnail-grid {
-        grid-column: 1 / 2;
-        grid-row: auto;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        /* Miniatures responsives */
-    }
-
-    .apartment-details-layout {
-        grid-template-columns: 1fr;
-        /* Une seule colonne pour les détails et la réservation */
-        gap: 30px;
-    }
-
-    .details-left-column {
-        padding-right: 0;
-    }
-
-    .details-right-column {
-        position: static;
-        /* Ne plus être sticky sur mobile */
-        top: auto;
-        width: 100%;
-    }
-
-    .review-grid {
-        grid-template-columns: 1fr;
-        /* Une seule colonne pour les avis sur mobile */
-    }
+.equipment-modal-overlay.active,
+.reviews-modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
 }
 
-@media (max-width: 768px) {
-    .header .nav_logo img {
-        height: 40px;
-    }
-
-    .nav_actions .host-link {
-        font-size: 0.8em;
-        padding: 6px 10px;
-    }
-
-    .apartment-header-section h1 {
-        font-size: 1.8em;
-    }
-
-    .apartment-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .apartment-meta .actions {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .apartment-gallery .main-image {
-        height: 300px;
-    }
-
-    .overview-section h2 {
-        font-size: 1.5em;
-    }
-
-    .description-section h3,
-    .amenities-section h3,
-    .reviews-section h3,
-    .location-map-section h3 {
-        font-size: 1.3em;
-    }
-
-    .amenities-list {
-        grid-template-columns: 1fr;
-        /* Une seule colonne pour les équipements sur mobile */
-    }
-
-    .map-placeholder {
-        height: 300px;
-    }
-
-    .booking-card .booking-header .price {
-        font-size: 1.5em;
-    }
-
-    .check-availability-btn {
-        font-size: 1em;
-        padding: 12px 15px;
-    }
+.equipment-modal-content,
+.reviews-modal-content {
+  background-color: var(--white);
+  border-radius: var(--border-radius-large);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
 }
 
-@media (max-width: 480px) {
-    .container {
-        padding: 15px;
-    }
+.equipment-modal-overlay.active .equipment-modal-content,
+.reviews-modal-overlay.active .reviews-modal-content {
+  transform: scale(1);
+}
 
-    .apartment-header-section h1 {
-        font-size: 1.2em;
-    }
+.equipment-modal-close,
+.reviews-modal-close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color-medium);
+  transition: color 0.2s ease;
+}
 
-    .apartment-meta {
-        font-size: 0.70em;
-    }
+.equipment-modal-close:hover,
+.reviews-modal-close:hover {
+  color: var(--text-color-dark);
+}
 
-    .apartment-gallery .main-image {
-        height: 200px;
-    }
+.equipment-modal-content h2,
+.reviews-modal-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color-dark);
+  margin-bottom: 1.5rem;
+  padding-left: 2.5rem;
+}
 
-    .booking-card {
-        padding: 10px;
-    }
+.equipment-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
 
-    .booking-card .booking-header .price {
-        font-size: 1.3em;
-    }
+.equipment-modal-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.equipment-modal-section li {
+  display: flex;
+  align-items: center;
+  color: var(--text-color-dark);
+  font-size: 1em;
+  margin-bottom: 0.5rem;
+}
+
+.equipment-modal-section li i {
+  margin-right: 0.75rem;
+  color: var(--text-color-medium);
+}
+
+.reviews-modal-content .review-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.reviews-modal-content .review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+/* Apparence des dates désactivées (Flatpickr ajoute .flatpickr-disabled) */
+.flatpickr-day.flatpickr-disabled,
+.flatpickr-day.flatpickr-disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Optionnel: forcer le calendrier à apparaître au-dessus si carte sticky */
+.flatpickr-calendar {
+  z-index: 3000;
 }

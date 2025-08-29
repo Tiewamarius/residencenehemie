@@ -44,9 +44,7 @@
                     </div>
                 </div>
 
-
                 <button type="submit" class="check-availability-btn">CHERCHER</button>
-
             </form>
         </div>
     </div>
@@ -58,10 +56,19 @@
     <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
     <div class="properties-grid">
         @forelse(($residences->take(3) ?? collect()) as $featuredResidence)
+        @php
+        $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
+        $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+        @endphp
         <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
             <div class="property-card">
                 <div class="property-image">
+                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
+
+                    {{-- Favoris Gérés par JS --}}
+                    @auth
                     @php
+
                     $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
                     $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
                     // Check if the user has favorited this residence
@@ -73,6 +80,8 @@
                         {{-- Utilisation de l'icône appropriée selon l'état --}}
                         <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
                     </span>
+
+                    @endauth
                 </div>
                 <div class="property-details">
                     @php
@@ -101,7 +110,6 @@
         @endforelse
     </div>
 </section>
-
 
 {{-- Section "Pourquoi nous choisir" --}}
 <section class="why-choose-us">
@@ -167,7 +175,6 @@
     </div>
 </section>
 
-
 {{-- Section Témoignages --}}
 <section class="testimonials">
     <h2 class="section-title">Ce que nos clients disent</h2>
@@ -187,7 +194,7 @@
             <div class="flex items-center mb-4">
                 <img src="https://placehold.co/60x60/FF385C/FFFFFF?text=SM" alt="Photo de profil de Samuel Martin" class="rounded-full mr-4">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Thibaut Schoelcher</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Marius Thibaut</h3>
                     <p class="text-sm text-gray-600">Nouveau locataire</p>
                 </div>
             </div>
@@ -197,7 +204,7 @@
             <div class="flex items-center mb-4">
                 <img src="images/bg.jpg" alt="Photo de profil d'Emma Leroy" class="rounded-full mr-4">
                 <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Oodo Schoelcher</h3>
+                    <h3 class="text-lg font-semibold text-gray-800">Victor Schoelcher</h3>
                     <p class="text-sm text-gray-600">Investisseur</p>
                 </div>
             </div>
@@ -205,4 +212,10 @@
         </div>
     </div>
 </section>
+
+@endsection
+
+@section('scripts')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script></script>
 @endsection

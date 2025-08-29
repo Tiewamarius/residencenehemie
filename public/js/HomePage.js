@@ -637,67 +637,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 500);
     }
 
-    // searchForms.addEventListener('submit', async (e) => {
-    //     e.preventDefault();
-
-    //     // Récupération des valeurs du formulaire
-    //     const address = document.getElementById('address').value;
-    //     const arrivee = document.getElementById('arrivee').value;
-    //     const depart = document.getElementById('depart').value;
-    //     const adultes = document.getElementById('adultes').value;
-    //     const enfants = document.getElementById('enfants').value;
-
-    //     // Afficher l'état de chargement
-    //     propertiesContainer.innerHTML = '<div class="col-span-full text-center text-blue-600 font-medium">Recherche en cours...</div>';
-    //     resultsHeaderContainer.innerHTML = `
-    //         <h2 class="section-title text-3xl font-bold text-gray-900 text-center">Recherche en cours...</h2>
-    //         <p class="section-description mt-2 text-lg text-gray-600 text-center mb-8">Veuillez patienter pendant que nous trouvons les meilleurs logements pour vous.</p>
-    //     `;
-
-    //     // Construire l'objet de données à envoyer
-    //     const searchData = {
-    //         address: address,
-    //         arrivee: arrivee,
-    //         depart: depart,
-    //         adultes: adultes,
-    //         enfants: enfants
-    //     };
-
-    //     try {
-    //         // Effectuer une requête POST vers votre API
-    //         const response = await fetch('/api/search-apartments', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-    //             },
-    //             body: JSON.stringify(searchData)
-    //         });
-
-    //         // Vérifier si la réponse est OK
-    //         if (!response.ok) {
-    //             throw new Error('Erreur réseau ou réponse de l\'API non valide.');
-    //         }
-
-    //         // Récupérer les données JSON de la réponse
-    //         const apartments = await response.json();
-
-    //         // Afficher les résultats
-    //         renderProperties(apartments);
-
-    //     } catch (error) {
-    //         // Gérer les erreurs de la requête
-    //         console.error('Erreur lors de la recherche des appartements :', error);
-    //         propertiesContainer.innerHTML = `<p class="text-red-500 col-span-full text-center text-lg p-8">Une erreur est survenue lors de la recherche. Veuillez réessayer.</p>`;
-    //         resultsHeaderContainer.innerHTML = `<h2 class="section-title text-3xl font-bold text-red-500 text-center">Erreur</h2>`;
-    //     }
-    // });
-
-
-// ======================================
+ 
 // --- SCRIPT DE GESTION DES FAVORIS ---
 // ======================================
-// Mettre cette logique dans une fonction pour la réutiliser après le rendu dynamique
 function setupWishlistListeners() {
         const wishlistIcons = document.querySelectorAll('.wishlist-icon');
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
@@ -707,7 +649,7 @@ function setupWishlistListeners() {
                 event.preventDefault();
                 event.stopPropagation();
 
-                const residenceId = icon.dataset.residenceId;
+                const residenceId = icon.dataset.id;
                 const heartIcon = icon.querySelector('i.fa-heart');
 
                 // Si l'utilisateur n'est pas connecté, ouvrir la modale de connexion et arrêter

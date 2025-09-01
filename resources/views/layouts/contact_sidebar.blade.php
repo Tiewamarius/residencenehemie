@@ -32,6 +32,12 @@
                     <i class="fab fa-facebook-messenger"></i> Facebook Messenger
                 </a>
             </li>
+            <li>
+                <a href="/#Maps"
+                    target="_blank" class="button contactsidebar_help_btn">
+                    <i class="fas fa-map-marker-alt" style="color: white;"></i> Abidjan-CI Bingerville-Fekesse
+                </a>
+            </li>
         </ul>
         <!-- <p class="help-text">Besoin d'aide ?</p>
         <button class="button contactsidebar_help_btn" onclick="alert('Redirection vers la FAQ à implémenter.')">FAQ</button> -->

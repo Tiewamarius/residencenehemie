@@ -172,10 +172,19 @@ $amenityIcons = [
                 <hr>
 
                 <div class="location-map-section">
-                    <h3>Faite votre choix</h3>
+                    <!-- <h3>Retrouvez-nous</h3> -->
                     <p>{{ $residence->quartier ?? 'Quartier' }}, {{ $residence->ville ?? 'Ville' }}, {{ $residence->pays ?? 'Pays' }}</p>
-                    <div class="map-placeholder">
-                        <img src="https://placehold.co/600x400/F0F0F0/333333?text=Carte+de+la+localisation" alt="Carte de la localisation">
+                    <br><br>
+                    <div class="map-container">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3972.182528039468!2d-3.9150304!3d5.38913!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc193abeea31087%3A0x3d0629f3b471e764!2sAppartement%20meubl%C3%A9%202%20pi%C3%A8ces%20rez%20de%20chauss%C3%A9e%2C%20R%C3%A9sidence%20Nehemie%20Feh%20Kesse%20Bingerville!5e0!3m2!1sfr!2sci!4v1756721448320!5m2!1sfr!2sci"
+                            width="100%"
+                            height="300"
+                            style="border:0;"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
                     </div>
                 </div>
             </div>
@@ -258,7 +267,7 @@ $amenityIcons = [
     </div>
 </main>
 
-<section class="featured-properties" id="appartements">
+<!-- <section class="featured-properties" id="appartements">
     <h2 class="section-title">Nos appartements en vedette</h2>
     <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
     <div class="properties-grid">
@@ -297,7 +306,7 @@ $amenityIcons = [
         <p class="text-gray-600 col-span-full text-center">Aucune propriété en vedette pour le moment.</p>
         @endforelse
     </div>
-</section>
+</section> -->
 
 {{-- Injecte les périodes réservées pour Flatpickr --}}
 <script>

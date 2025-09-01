@@ -5,6 +5,7 @@
 @section('content')
 
 {{-- Section principale avec slider et formulaire de recherche --}}
+
 <section class="home">
     <div class="image-slider">
         @forelse($residences->take(8) as $index => $residence)
@@ -48,9 +49,11 @@
             </form>
         </div>
     </div>
+
 </section>
 
 {{-- Section "Nos appartements en vedette" --}}
+
 <section class="featured-properties" id="appartements">
     <h2 class="section-title">Nos appartements en vedette</h2>
     <p class="section-description">Découvrez notre sélection des plus belles propriétés immobilières disponibles.</p>
@@ -59,6 +62,8 @@
         @php
         $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
         $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
+        // Check if the user has favorited this residence
+        $isFavorited = auth()->check() ? auth()->user()->favorites->contains('residence_id', $featuredResidence->id) : false;
         @endphp
         <a href="{{ route('residences.detailsAppart', $featuredResidence->id) }}" class="property-card-link">
             <div class="property-card">
@@ -66,22 +71,15 @@
                     <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
 
                     {{-- Favoris Gérés par JS --}}
-                    @auth
-                    @php
-
-                    $featuredImage = $featuredResidence->images->where('est_principale', true)->first() ?? $featuredResidence->images->sortBy('order')->first();
-                    $featuredImageSource = $featuredImage ? asset($featuredImage->chemin_image) : 'https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';
-                    // Check if the user has favorited this residence
-                    $isFavorited = auth()->check() ? auth()->user()->favorites->contains('residence_id', $featuredResidence->id) : false;
-                    @endphp
-                    <img src="{{ $featuredImageSource }}" alt="{{ $featuredResidence->nom }}" onerror="this.onerror=null;this.src='https://placehold.co/400x300/C0C0C0/333333?text=Image+Appartement';">
-                    {{-- Ajout d'attributs de données pour le JS et une classe pour l'état initial --}}
-                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest {{ $isFavorited ? 'active' : '' }}" data-residence-id="{{ $featuredResidence->id }}">
+                    {{-- L'icône est maintenant toujours visible, la logique de l'état se trouve à l'intérieur --}}
+                    <span class="wishlist-icon @guest open-login-modal-trigger @endguest" data-residence-id="{{ $featuredResidence->id }}">
                         {{-- Utilisation de l'icône appropriée selon l'état --}}
-                        <i class="fa-heart {{ $isFavorited ? 'fas' : 'far' }}"></i>
+                        @if ($isFavorited)
+                        <i class="fa-solid fa-heart active"></i>
+                        @else
+                        <i class="fa-regular fa-heart"></i>
+                        @endif
                     </span>
-
-                    @endauth
                 </div>
                 <div class="property-details">
                     @php
@@ -109,9 +107,11 @@
         <p class="text-gray-600 col-span-full text-center">Aucune propriété en vedette pour le moment.</p>
         @endforelse
     </div>
+
 </section>
 
 {{-- Section "Pourquoi nous choisir" --}}
+
 <section class="why-choose-us">
     <h2 class="section-title">Pourquoi nous choisir ?</h2>
     <p class="section-description">Nous avons conçu la Résidence Néhémie pour répondre à vos attentes les plus élevées. Voici ce qui fait notre différence.</p>
@@ -176,6 +176,7 @@
 </section>
 
 {{-- Section Témoignages --}}
+
 <section class="testimonials">
     <h2 class="section-title">Ce que nos clients disent</h2>
     <p class="section-description">Écoutez les expériences de ceux qui ont choisi Résidences Nehemie.</p>
@@ -212,10 +213,29 @@
         </div>
     </div>
 </section>
-
+<!-- Maps -->
+<div class="location-map-section" style="text-align: center;" id="Maps">
+    <!-- <h3>Retrouvez-nous</h3> -->
+    <p>{{ $residence->quartier ?? 'Quartier' }}, {{ $residence->ville ?? 'Ville' }}, {{ $residence->pays ?? 'Pays' }}</p>
+    <br><br>
+    <div class="map-container">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3972.182528039468!2d-3.9150304!3d5.38913!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc193abeea31087%3A0x3d0629f3b471e764!2sAppartement%20meubl%C3%A9%202%20pi%C3%A8ces%20rez%20de%20chauss%C3%A9e%2C%20R%C3%A9sidence%20Nehemie%20Feh%20Kesse%20Bingerville!5e0!3m2!1sfr!2sci!4v1756721448320!5m2!1sfr!2sci"
+            width=" 90%"
+            height="300"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script></script>
+
 @endsection

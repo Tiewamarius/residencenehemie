@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Residence;
+use App\Models\Review;
 use App\Models\User;
 use App\Models\Type;
 // use App\Models\Payment;
@@ -171,7 +172,40 @@ class BookingController extends Controller
     }
 
 
+    // addreview
+    public function storeReview(Request $request, $bookingId)
+    {
+        $booking = Booking::with('residence')->findOrFail($bookingId);
 
+        // Vérifier que l'user est bien le propriétaire de la réservation
+        // if ($booking->user_id !== Auth()->id()) {
+        //     return back()->with('error', "Non autorisé.");
+        // }
+
+        // Vérifier que le séjour est terminé
+        if (now()->lt($booking->date_fin)) {
+            return back()->with('error', "Vous ne pouvez noter qu'après votre séjour.");
+        }
+
+        $data = $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        Review::create([
+            // 'user_id' => auth()->id(),
+            'residence_id' => $booking->residence_id,
+            'booking_id' => $booking->id,
+            'rating' => $data['rating'],
+            'comment' => $data['comment'],
+        ]);
+
+        return redirect()->route('residences.detailsAppart', $booking->residence_id)
+            ->with('success', "Merci pour votre avis !");
+    }
+
+
+    // details booking
 
     public function details($id)
     {
@@ -183,19 +217,190 @@ class BookingController extends Controller
     {
         $reservation = Booking::findOrFail($id);
 
-        if (in_array($reservation->statut, ['En attente', 'Confirmée'])) {
-            $reservation->statut = 'Annulée';
-            $reservation->save();
-
+        // Vérifier que l'user est propriétaire (ou admin)
+        if ($reservation->user_id !== auth()->id() && !auth()->user()->is_admin) {
             return redirect()
-                ->route('Pages.details', $reservation->id)
-                ->with('status', 'La réservation a bien été annulée.');
+                ->route('bookings.details', $reservation->id)
+                ->withErrors("Vous n'êtes pas autorisé à annuler cette réservation.");
         }
 
+        // Empêcher annulation si déjà annulée ou terminée
+        if (in_array($reservation->statut, ['Annulée', 'Terminée'])) {
+            return redirect()
+                ->route('bookings.details', $reservation->id)
+                ->withErrors("Cette réservation ne peut plus être annulée.");
+        }
+
+        $now = now();
+        $checkinDate = \Carbon\Carbon::parse($reservation->date_debut);
+
+        $refund = 0;
+        $newStatus = 'Annulée';
+
+        // Politique d’annulation
+        $daysBefore = $now->diffInDays($checkinDate, false);
+
+        if ($daysBefore > 7) {
+            $refund = $reservation->total_price;
+            $newStatus = 'Annulée - Remboursée';
+        } elseif ($daysBefore > 2) {
+            $refund = $reservation->total_price * 0.5;
+            $newStatus = 'Annulée - Remboursée partiellement';
+        } else {
+            $refund = 0;
+            $newStatus = 'Annulée - Non remboursée';
+        }
+
+        // Sauvegarder le statut
+        $reservation->statut = $newStatus;
+        $reservation->save();
+
+        // TODO: Intégrer un vrai service de remboursement ici
+        // if ($refund > 0 && $reservation->paiement) {
+        //     RefundService::refund($reservation->paiement, $refund);
+        // }
+
         return redirect()
-            ->route('Pages.details', $reservation->id)
-            ->withErrors('Cette réservation ne peut pas être annulée.');
+            ->route('bookings.details', $reservation->id)
+            ->with('status', "Votre réservation a été annulée. Montant remboursé : {$refund} CFA.");
     }
+
+
+    // verification avant updtae
+    public function checkAvailability(Request $request, $bookingId)
+    {
+        $booking = Booking::with('residence.types')->findOrFail($bookingId);
+
+        $dateArrivee = \Carbon\Carbon::parse($request->query('date_arrivee'));
+        $dateDepart = \Carbon\Carbon::parse($request->query('date_depart'));
+
+        // Vérif basique
+        if ($dateArrivee->isPast()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La date d’arrivée doit être postérieure à aujourd’hui.'
+            ]);
+        }
+
+        if ($dateDepart->lte($dateArrivee)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'La date de départ doit être après la date d’arrivée.'
+            ]);
+        }
+
+        // Vérifier disponibilité (si d’autres réservations occupent déjà l’appart)
+        $alreadyBooked = Booking::where('residence_id', $booking->residence_id)
+            ->where('id', '!=', $booking->id) // exclure la résa en cours
+            ->where(function ($query) use ($dateArrivee, $dateDepart) {
+                $query->whereBetween('date_arrivee', [$dateArrivee, $dateDepart])
+                    ->orWhereBetween('date_depart', [$dateArrivee, $dateDepart])
+                    ->orWhere(function ($q) use ($dateArrivee, $dateDepart) {
+                        $q->where('date_arrivee', '<=', $dateArrivee)
+                            ->where('date_depart', '>=', $dateDepart);
+                    });
+            })
+            ->exists();
+
+        if ($alreadyBooked) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ces dates sont déjà occupées.'
+            ]);
+        }
+
+        // Calcul du nombre de nuits
+        $nights = $dateArrivee->diffInDays($dateDepart);
+
+        // Prix de base de l’appartement
+        $prixBase = $booking->residence->types->first()->prix_base ?? 0;
+
+        // Calcul total
+        $total = $nights * $prixBase;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Les dates sont disponibles.',
+            'nights'  => $nights,
+            'total'   => $total
+        ]);
+    }
+
+
+    // Update reservation
+    public function update(Request $request, $id)
+    {
+        $reservation = Booking::findOrFail($id);
+
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Règles de validation
+        // Règles de validation
+        $validated = $request->validate([
+            'date_arrivee' => 'required|date|after_or_equal:today',
+            'date_depart' => 'required|date|after:date_arrivee',
+            'nombre_adultes' => 'required|integer|min:1',
+            'nombre_enfants' => 'nullable|integer|min:0',
+            'payment_method' => 'required|string',
+        ]);
+
+        // Si tout est ok, tu pourras remettre la suite
+        $reservation->update($request->all());
+
+        return redirect()->back()->with('status', 'La réservation a été modifiée avec succès.');
+    }
+
+
+
+    // Recommander (refaire une réservation sur la même résidence)
+    public function reorder($id)
+    {
+        $reservation = Booking::findOrFail($id);
+
+        // Vérifier statut
+        if (!in_array($reservation->statut, ['Annulée', 'Terminée'])) {
+            return redirect()->route('bookings.show', $reservation->id)
+                ->withErrors("Vous ne pouvez pas recommander tant que la réservation n'est pas annulée ou terminée.");
+        }
+
+        // Créer une nouvelle réservation avec les mêmes infos
+        $newBooking = Booking::create([
+            'user_id'      => auth()->id(),
+            'residence_id' => $reservation->residence_id,
+            'date_arrivee' => now()->addDays(7), // par défaut dans 1 semaine (à ajuster avec un formulaire)
+            'date_depart'  => now()->addDays(10),
+            'nombre_adultes' => $reservation->nombre_adultes,
+            'nombre_enfants' => $reservation->nombre_enfants,
+            'total_price'  => $reservation->total_price,
+            'frais_service' => $reservation->frais_service,
+            'statut'       => 'En attente',
+        ]);
+
+        return redirect()->route('bookings.show', $newBooking->id)
+            ->with('status', "Nouvelle réservation créée pour la résidence !");
+    }
+
+    // Modifier une réservation (redirige vers un formulaire d’édition)
+    public function edit($id)
+    {
+        $reservation = Booking::findOrFail($id);
+
+        // Vérifier que l'utilisateur est bien propriétaire
+        if ($reservation->user_id !== auth()->id()) {
+            abort(403);
+        }
+        // Empêcher modification si séjour déjà commencé ou trop proche
+        if (now()->greaterThanOrEqualTo($reservation->date_arrivee->subDays(2))) {
+            return redirect()->route('bookings.show', $reservation->id)
+                ->withErrors("Le délai de modification est dépassé.");
+        }
+
+        return view('bookings.edit', compact('reservation'));
+    }
+
+
 
     /**
      * Effectuer le check-in

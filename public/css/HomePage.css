@@ -3,8 +3,8 @@
 
 /* --- Variables CSS (Ajoutées pour une meilleure gestion) --- */
 :root {
-    --primary-color: #ed5257; /* Rouge-rose signature Airbnb */
-    --primary-color-hover: #f52a71; /* Teinte plus foncée pour le survol */
+    --primary-color:#f07e97; /* Rouge-rose signature Airbnb */
+    --primary-color-hover: #ed5257; /* Teinte plus foncée pour le survol */
     --text-color-dark: #222222;
     --text-color-medium: #717171;
     --text-color-light: #AAAAAA;
@@ -121,9 +121,9 @@ button {
 
 .nav_link {
     /*color: var(--white);  Couleur par défaut (transparent header) */
-    color: #717171;
+    color: #f27474;
     font-weight: 500;
-    font-size: 1.05em;
+    font-size: 1.2em;
     transition: color 0.3s ease;
     padding: 5px 0; /* Ajout d'un léger padding pour une meilleure zone de clic */
 }

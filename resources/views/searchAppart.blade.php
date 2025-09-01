@@ -85,7 +85,8 @@
         <a href="{{ url('/') }}" class="btn-back-home">🔙 Retour à l’accueil</a>
     </div>
     @else
-    <div class="properties-grid">
+    {{-- On ajoute une classe conditionnelle pour gérer l'affichage d'un seul résultat --}}
+    <div class="properties-grid @if($residences->count() === 1) single-item-grid @endif">
         @foreach($residences as $residence)
         <a href="{{ route('residences.detailsAppart', $residence->id) }}" class="property-card-link">
             <div class="property-card">
@@ -227,6 +228,18 @@
         display: block;
     }
 
+    /* Nouvelle classe pour un seul résultat */
+    .single-item-grid {
+        display: flex;
+        /* Utilise Flexbox pour un meilleur contrôle */
+        justify-content: center;
+        /* Centre la carte horizontalement */
+        max-width: 400px;
+        /* Limite la largeur de la carte */
+        margin: 0 auto;
+        /* Centre le conteneur principal */
+    }
+
     /* responsive */
 
     /* --- Responsive --- */
@@ -298,7 +311,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         /** ==========================
-         *  Gestion des voyageurs
+         *  Gestion des voyageurs
          * ========================== */
         const counters = document.querySelectorAll(".counter");
         counters.forEach(counter => {
@@ -326,7 +339,7 @@
         }
 
         /** ==========================
-         *  Auto-submit après choix de dates
+         *  Auto-submit après choix de dates
          * ========================== */
         const checkIn = document.getElementById("check_in_date");
         const checkOut = document.getElementById("check_out_date");
@@ -343,7 +356,7 @@
 
 
         /** ==========================
-         *  Bouton reset (vider champs)
+         *  Bouton reset (vider champs)
          * ========================== */
         const resetBtn = document.getElementById("reset-btn");
         resetBtn.addEventListener("click", () => {

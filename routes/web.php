@@ -35,8 +35,6 @@ Route::get('/favoris', function () {
 Route::get('/residences/{residence}', [ResidenceController::class, 'detailsAppart'])
     ->name('residences.detailsAppart');
 
-// Route pour la page de réservation (qui affiche le formulaire,  )
-Route::post('/residences/{residence}/bookguest', [ResidenceController::class, 'bookguest']);
 
 
 // Route pour la recherche d'appartements via une (requête POST)
@@ -44,22 +42,48 @@ Route::get('search-apartments', [ResidenceController::class, 'searchAppart'])->n
 
 Route::post('/residences/search', [ResidenceController::class, 'search'])->name('residences.search');
 
+// === Routes pour user non connecté ===
+
+// Créer une réservation en tant qu'invité
+Route::post('/residences/{residence}/guestReserver', [BookingController::class, 'guestReserver'])
+    ->name('residences.guestReserver');
+
+// Route correcte pour afficher la page de paiement d'une réservation
+Route::get('/paiement/{booking}/guestReserver', [PaiementController::class, 'showGuestPaymentPage'])
+    ->name('paiements.showGuest');
+
+// Nouvelle route pour traiter le paiement
+Route::post('/paiements/finaliser', [PaiementController::class, 'finaliser'])->name('paiements.finaliser');
+
+
+
+// Details
+Route::get('/bookings/{booking}', [BookingController::class, 'details'])->name('bookings.details');
+
+
+
+
 // Routes protégées par l'authentification
 Route::middleware('auth')->group(function () {
     // Routes de profil utilisateur
     Route::get('/homeUser', [ProfileController::class, 'homeUser'])->name('profile.homeUser');
+
     // Route pour la page de réservation (qui affiche le formulaire, )
     Route::post('/residences/{residence}/reserver', [BookingController::class, 'reserver'])
         ->name('residences.reserver');
 
     // Route correcte pour afficher la page de paiement d'une réservation
-    Route::get('/paiement/{booking}', [PaiementController::class, 'showPaymentPage'])->name('paiements.show');
+    Route::get('/paiement/{booking}', [PaiementController::class, 'showPaymentPage'])
+        ->name('paiements.show');
+
     // Nouvelle route pour traiter le paiement
-    Route::post('/paiement/process', [PaiementController::class, 'process'])->name('paiements.process');
+    Route::post('/paiement/process', [PaiementController::class, 'process'])
+        ->name('paiements.process');
 
 
     // Details
     Route::get('/bookings/{booking}', [BookingController::class, 'details'])->name('bookings.details');
+
     // Facture : page HTML ou PDF
     Route::get('/bookings/{id}/invoice', [BookingController::class, 'invoice'])
         ->name('bookings.invoice');
@@ -85,15 +109,10 @@ Route::middleware('auth')->group(function () {
     // Route::post('/residences/{residence}/book', [BookingController::class, 'store'])->name('residences.book');
 
     // Route pour la gestion des favoris
-    // Votre fonction storefavoris() est parfaitement conçue pour cette action.
     Route::post('/favorites/add/{residence}', [ResidenceController::class, 'storefavoris'])->name('favorites.storefavoris');
 
-    // La suppression doit idéalement utiliser la méthode DELETE (c'est ce que votre JS essaie déjà de faire).
-    // Votre fonction destroyfavoris() est également prête pour cela.
-    Route::delete('/favorites/remove/{residence}', [ResidenceController::class, 'deletefavoris'])->name('favorites.deletefavoris');
-
-    // Si vous avez une route pour afficher les favoris, elle utiliserait la méthode GET
-    Route::get('/favorites', [ResidenceController::class, ' favoris'])->name('favorites.index');
+    // Mise à jour de la route pour qu'elle pointe vers la méthode correcte
+    Route::delete('/favorites/remove/{residence}', [ResidenceController::class, 'destroyfavoris'])->name('favorites.deletefavoris');
 });
 
 // Routes pour les réservations d'invités (requête POST)

@@ -1,19 +1,37 @@
 /* Import Google font - Poppins */
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
-/* --- Base Styles --- */
+/* --- Variables CSS (Ajoutées pour une meilleure gestion) --- */
+:root {
+    --primary-color: #ed5257; /* Rouge-rose signature Airbnb */
+    --primary-color-hover: #f52a71; /* Teinte plus foncée pour le survol */
+    --text-color-dark: #222222;
+    --text-color-medium: #717171;
+    --text-color-light: #AAAAAA;
+    --border-color: #DDDDDD;
+    --background-light: #F7F7F7;
+    --white: #FFFFFF;
+    --shadow-light: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --border-radius-small: 8px;
+    --border-radius-medium: 10px;
+    --border-radius-large: 16px;
+}
+
+/* --- Base et Réinitialisations --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
 }
 
 body {
+    font-family: "Poppins", sans-serif;
+    color: var(--text-color-dark);
     line-height: 1.6;
-    background-color: #f7f7f7; /* Light background for the overall page */
-    color: #333;
-    overflow-x: hidden; /* Empêche le défilement horizontal causé par la sidebar cachée */
+    background-color: var(--background-light); /* Utilisation de la variable */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -21,189 +39,206 @@ a {
     color: inherit;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block; /* Removes extra space below images */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin-bottom: 1rem;
 }
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+}
+
+/* Styles pour le bouton générique */
+.button {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: var(--border-radius-small);
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: var(--primary-color-hover);
+}
+
 
 /* --- Header --- */
 .header {
-    position: fixed;
+    position: fixed; /* Reste fixed pour être au-dessus */
     top: 0;
     left: 0;
     width: 100%;
     height: 80px;
-    background-color: transparent; /* Header transparent */
-    z-index: 1000; /* Ensures header stays on top */
-    transition: background-color 0.3s ease;
+    background-color: transparent; /* Transparent par défaut */
+    z-index: 1000;
+    transition: background-color 0.3s ease,
+    box-shadow 0.3s ease; /* Transition douce */
+    display: flex;
+    align-items: center;
+}
+
+/* Style ajouté quand le header a une classe "scrolled" (ajoutée par JS) */
+.header.scrolled {
+    background-color: var(--white); /* Devient blanc au scroll */
+    box-shadow: var(--shadow-light); /* Ombre légère */
 }
 
 .nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px; /* Max width for your content */
+    max-width: 1200px; /* Adaptez à votre mise en page */
     margin: 0 auto;
-    height: 100%;
-    padding: 0 20px;
-}
-
-/* Icône burger - visible seulement sur mobile */
-.menu_toggle_btn {
-    font-size: 28px;
-    color: #fff; /* Couleur de l'icône sur fond transparent */
-    cursor: pointer;
-    display: none; /* Caché par défaut sur les grands écrans */
-    z-index: 1001; /* S'assure qu'il est au-dessus du logo */
+    width: 100%; /* S'assure que le nav prend toute la largeur du header */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px; /* Espacement intérieur */
 }
 
 .nav_logo img {
-    height: 50px; /* Adjust based on your logo size */
+    height: 70px; /* Taille du logo */
     width: auto;
-    /* filter: brightness(0) invert(1); Rend le logo blanc pour un fond sombre */
+}
+
+/* Cacher le menu_toggle_btn par défaut (grand écran) */
+.menu_toggle_btn {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--text-color-dark);
+    cursor: pointer;
 }
 
 .nav_item {
     display: flex;
     list-style: none;
-    gap: 25px; /* Spacing between nav items */
+    gap: 25px; /* Espacement entre les éléments du menu */
+    align-items: center;
 }
 
 .nav_link {
+    /*color: var(--white);  Couleur par défaut (transparent header) */
+    color: #717171;
     font-weight: 500;
-    color: #fff; /* Texte blanc pour les liens */
+    font-size: 1.05em;
     transition: color 0.3s ease;
+    padding: 5px 0; /* Ajout d'un léger padding pour une meilleure zone de clic */
+}
+
+/* Couleur des liens quand le header est scrollé */
+.header.scrolled .nav_link {
+    color: var(--text-color-dark); /* Devient sombre au scroll */
 }
 
 .nav_link:hover {
-    color: #ff385c; /* Accent color */
+    color: var(--primary-color);
 }
 
+/* Icônes dans la nav */
 .nav_link i {
     font-size: 1.1em;
 }
 
-.button {
-    background-color: #ff385c;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-}
-
-.button:hover {
-    background-color: #e0002f;
-}
-
-/* Cache le bouton "Assistant" du header principal sur tous les écrans par défaut */
+/* Bouton "Assistant" dans le header */
 #form-open {
-    display: none;
+    margin-left: 20px;
 }
 
-/* --- Sidebar Menu --- */
+/* --- Sidebar --- */
 .sidebar {
     position: fixed;
     top: 0;
-    left: -280px; /* Caché par défaut (largeur de 250px + un petit décalage) */
-    width: 250px; /* Largeur de votre sidebar */
-    height: 100vh;
-    background-color: #fff; /* Couleur de fond de la sidebar */
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    z-index: 999; /* Moins que le header principal, il "glisse derrière" */
-    transition: left 0.3s ease-in-out;
+    left: -300px; /* Caché par défaut */
+    width: 300px;
+    height: 100%;
+    background-color: var(--white);
+    box-shadow: 2px 0 10px rgba(17, 192, 96, 0.1);
+    z-index: 1500; /* Plus élevé que le header */
+    transition: left 0.3s ease;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
 }
 
-/* Lorsque la sidebar est active (ouverte) */
 .sidebar.active {
-    left: 0; /* Fait glisser la sidebar en vue */
+    left: 0; /* Affiche la sidebar */
 }
 
 .sidebar_header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px 20px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .sidebar_logo {
-    height: 45px; /* Taille du logo dans la sidebar */
-    filter: none; /* Le logo redevient normal sur fond blanc */
+    height: 50px;
+    width: auto;
 }
 
 .sidebar_close_btn {
-    font-size: 24px;
-    color: #555;
+    font-size: 1.8rem;
+    color: var(--text-color-dark);
     cursor: pointer;
 }
 
 .sidebar_nav_items {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     flex-grow: 1; /* Permet à la liste de prendre l'espace disponible */
 }
 
-.sidebar_nav_items li {
-    margin-bottom: 10px;
-}
-
 .sidebar_nav_link {
-    display: block;
-    padding: 12px 20px;
-    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    color: var(--text-color-dark);
     font-weight: 500;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    font-size: 1.1em;
+    transition: color 0.2s ease;
 }
 
 .sidebar_nav_link:hover {
-    background-color: #f0f0f0;
-    color: #ff385c;
+    color: var(--primary-color);
 }
 
 .sidebar_nav_link i {
-    margin-right: 10px;
+    font-size: 1.2em;
+    color: var(--text-color-medium); /* Couleur des icônes dans la sidebar */
 }
 
 .sidebar_assistant_btn {
-    width: calc(100% - 40px); /* Largeur du bouton dans la sidebar */
-    margin: 20px auto 0; /* Centrer le bouton */
-}
-
-/* Overlay quand la sidebar est ouverte */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
-    z-index: 998; /* Entre le contenu et la sidebar */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    margin-top: auto; /* Pousse le bouton en bas de la sidebar */
 }
 
-.overlay.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-
-/* --- Home Section (Hero Banner with Slider and Search Card) --- */
+/* --- Section Home (Slider et Hero Card) --- */
 .home {
     position: relative;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; /* Pleine hauteur de la vue */
     display: flex;
-    align-items: center; /* Aligns content vertically in the middle */
-    overflow: hidden;
+    flex-direction: column; /* Utilise column pour empiler le contenu et la barre mobile */
+    align-items: center;
+    justify-content: center; /* Centre verticalement le contenu principal */
+    overflow: hidden; /* Important pour les images du slider */
+    /* Ajout d'un pseudo-élément pour l'overlay du slider */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /*background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));  Dégradé sombre en bas */
+        /*z-index: 5;  Au-dessus des images, mais sous le contenu */
+    }
 }
 
 .image-slider {
@@ -213,328 +248,408 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.slider-image {
     position: absolute;
-    opacity: 0; /* Hidden by default for slider effect */
-    transition: opacity 1.5s ease-in-out;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* S'assure que l'image couvre tout l'espace */
+    opacity: 0;
+    transition: opacity 1s ease-in-out; /* Transition douce pour le fondu */
+    z-index: 1;
 }
 
 .slider-image.active {
-    opacity: 1; /* Show active image */
-}
-
-/* Overlay for hero text readability */
-.home::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Dark overlay for contrast */
-    z-index: 2;
+    opacity: 1; /* CORRECTION: Changed from 10 to 1 for correct visibility */
+    z-index: 2; /* L'image active est au-dessus des autres images du slider */
 }
 
 .hero-content-wrapper {
     position: relative;
-    z-index: 3; /* Above the overlay */
-    color: #fff;
-    width: 100%; /* Take full width to control inner elements */
-    max-width: 1200px; /* Match nav max-width */
-    margin: 0 auto; /* Center the wrapper itself */
-    padding: 0 20px; /* Add padding for smaller screens */
-    display: flex; /* Use flexbox to align card to left */
-    justify-content: flex-start; /* Align card to the start (left) */
+    z-index: 10; /* Au-dessus de l'image du slider */
+    text-align: center;
+    color: var(--white); /* Texte blanc sur l'image */
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px; /* Permet une largeur plus grande pour le wrapper */
+    display: flex;
+    flex-direction: column;
+    /* Aligne le contenu du wrapper à gauche sur les grands écrans */
+    align-items: flex-start; /* MODIFICATION: Changed to flex-start for left alignment */
+    justify-content: center;
+    height: 100%; /* Prend toute la hauteur disponible dans .home */
+    padding-left: 5%; /* Ajoute un padding à gauche pour le décalage */
 }
 
-/* Formulaire de recherche détaillé (pour PC) */
 .hero-card-container {
-    background-color: rgba(255, 255, 255, 0.95); /* Semi-transparent white background for the card */
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9); /* Fond légèrement transparent */
+    border-radius: var(--border-radius-large);
     padding: 30px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    max-width: 450px; /* Max width for the search card */
-    color: #333; /* Dark text inside the card */
-    text-align: left; /* Align text within card to left */
-    /* Visible par défaut sur PC */
-    display: block;
+    box-shadow: var(--shadow-medium);
+    max-width: 400px; /* Conserve une largeur définie pour le formulaire */
+    /* Supprime margin: 0 auto; car le parent gère l'alignement */
+    margin: 0; /* MODIFICATION: Removed auto margin */
+    color: var(--text-color-dark); /* Texte sombre à l'intérieur de la carte */
+    display: flex; /* S'assure qu'il est toujours flex */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .hero-card-container h2 {
-    font-size: 2.2em;
+    font-size: 2.5em;
     margin-bottom: 10px;
-    font-weight: 700;
+    color: var(--text-color-dark);
 }
 
 .hero-card-description {
     font-size: 1.1em;
-    margin-bottom: 25px;
-    color: #555;
+    margin-bottom: 30px;
+    color: var(--text-color-medium);
 }
 
-.hero-search-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Styles pour le formulaire de recherche de la bannière (banner-search-form) */
+.banner-search-form {
+    display: flex; /* Utilise flexbox pour le layout */
+    flex-direction: column; /* Les éléments s'empilent */
+    gap: 0; /* Pas d'espacement direct entre les groupes, les bordures gèrent la séparation */
+    border: 1px solid var(--border-color); /* Bordure autour de tout le formulaire */
+    border-radius: var(--border-radius-small); /* Rayon de bordure pour l'ensemble du formulaire */
+    overflow: hidden; /* Important pour que le border-radius s'applique correctement aux enfants */
+    width: 100%; /* Prend toute la largeur de son conteneur (hero-card-container) */
 }
 
-.hero-search-form .form-group {
-    text-align: left;
+.banner-search-form .form-group {
+    border: none; /* Supprime les bordures individuelles */
+    border-bottom: 1px solid var(--border-color); /* Ajoute une bordure inférieure pour empiler */
+    border-radius: 0; /* Supprime les rayons de bordure individuels */
+    padding: 12px 15px; /* Garde le padding */
+    transition: background-color 0.2s ease; /* Transition pour l'effet de survol */
+    background-color: var(--white); /* S'assure que le fond est blanc */
+    position: relative; /* Pour les icônes ou pseudo-éléments */
+    text-align: left; /* Aligne le texte à gauche dans les champs */
 }
 
-.hero-search-form label {
+.banner-search-form .form-group:last-of-type:not(.form-group-row) {
+    border-bottom: none; /* Pas de bordure inférieure pour le dernier élément empilé s'il n'est pas une ligne */
+}
+
+.banner-search-form .form-group:hover {
+    background-color: var(--background-light); /* Effet de survol subtil */
+}
+
+.banner-search-form .form-group:focus-within {
+    background-color: var(--white); /* Garde le fond blanc */
+    box-shadow: inset 0 0 0 2px var(--text-color-dark); /* Ombre interne pour le focus */
+    z-index: 1; /* Amène l'élément focusé au premier plan */
+}
+
+.banner-search-form label {
     display: block;
-    font-size: 0.8em;
-    color: #777;
-    margin-bottom: 5px;
-    text-transform: uppercase;
+    font-size: 0.7em; /* Plus petite taille de police pour l'étiquette */
     font-weight: 600;
+    color: var(--text-color-dark); /* Comme sur l'image */
+    margin-bottom: 2px;
+    text-transform: uppercase;
 }
 
-.hero-search-form input[type="text"],
-.hero-search-form input[type="date"] {
+.banner-search-form input,
+.banner-search-form select {
     width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: none; /* Pas de bordure individuelle */
+    background: transparent;
     font-size: 1em;
-    color: #333;
+    color: var(--text-color-dark);
+    outline: none;
+    padding: 0;
+    -webkit-appearance: none; /* Supprime la flèche déroulante par défaut */
+    -moz-appearance: none;
+    appearance: none;
 }
 
-.hero-search-form .date-group {
-    display: flex;
-    gap: 10px;
+.banner-search-form select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23222222" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center; /* Positionne la flèche */
+    background-size: 16px; /* Taille de la flèche */
+    padding-right: 30px; /* Crée de l'espace pour la flèche */
 }
 
-.hero-search-form .date-input {
-    flex: 1;
+.banner-search-form input::placeholder {
+    color: var(--text-color-medium);
 }
 
-.search-button-hero {
+.banner-search-form .form-group-row {
+    display: flex; /* Les éléments de cette ligne sont côte à côte par default */
+    gap: 0; /* Pas d'espacement, les bordures gèrent la séparation */
     width: 100%;
-    background-color: #ff385c;
-    color: #fff;
-    padding: 15px 25px;
-    border: none;
-    border-radius: 8px;
+    border-bottom: 1px solid var(--border-color); /* Ajoute une bordure inférieure pour la ligne entière */
+}
+
+.banner-search-form .form-group-row:last-of-type {
+    border-bottom: none; /* Pas de bordure inférieure pour le dernier groupe de lignes */
+}
+
+.banner-search-form .form-group-row .form-group {
+    flex: 1; /* Distribue l'espace équitablement */
+    margin: 0; /* Supprime la marge externe */
+    border-right: 1px solid var(--border-color); /* Ajoute une bordure droite pour la séparation entre les éléments d'une ligne */
+    border-bottom: none; /* Supprime la bordure inférieure des groupes de formulaires imbriqués */
+}
+
+.banner-search-form .form-group-row .form-group:last-child {
+    border-right: none; /* Pas de bordure à droite pour le dernier élément d'une ligne */
+}
+
+/* Styles spécifiques pour le bouton de recherche */
+.search-button {
+    background-color: var(--primary-color); /* Utilise la couleur primaire */
+    color: var(--white);
+    padding: 15px 20px;
+    border-radius: 0; /* Supprime le rayon de bordure individuel, il est sur le formulaire principal */
     font-size: 1.1em;
     font-weight: 600;
-    cursor: pointer;
+    width: 100%;
     transition: background-color 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+    text-transform: uppercase; /* Comme sur l'image */
+    /* S'assure que le bouton prend toute la largeur et a des coins arrondis en bas */
+    border-bottom-left-radius: var(--border-radius-small);
+    border-bottom-right-radius: var(--border-radius-small);
+    border-top: 1px solid var(--border-color); /* Ajoute une bordure supérieure pour le séparer du dernier groupe de champs */
+    margin-top: -1px; /* Chevauchement pour rendre la bordure continue */
 }
 
-.search-button-hero:hover {
-    background-color: #e0002f;
+.search-button:hover {
+    background-color: var(--primary-color-hover);
 }
 
-/* --- Nouvelle Barre de Recherche Mobile (design spécifique) --- */
+
+/* --- Mobile Search Bar (Visible uniquement sur petits écrans) --- */
 .mobile-search-bar {
-    position: relative; /* Nécessaire pour le z-index et le positionnement du bouton */
-    background-color: #fff;
-    border-radius: 40px; /* Bords très arrondis */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    /* Masqué par défaut sur PC */
-    display: none;
-    /* margin: 0 auto; /* Pour centrer horizontalement quand visible - sera géré par flex du parent */
+    position: absolute; /* Positionné par rapport à .home */
+    bottom: 20px; /* Ajustez la position selon votre préférence */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--white);
+    border-radius: 30px; /* Coins très arrondis */
+    padding: 8px 15px;
+    box-shadow: var(--shadow-medium);
+    width: 90%; /* Prend une bonne largeur sur mobile */
+    max-width: 400px; /* Limite la largeur pour ne pas être trop grand sur tablette */
+    display: none; /* Caché par défaut (desktop first) */
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    z-index: 10; /* Au-dessus de l'overlay du slider */
 }
 
 .mobile-search-field {
-    flex: 1; /* Permet aux champs de prendre l'espace disponible */
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-    cursor: pointer; /* Indique qu'ils sont cliquables */
-    min-width: 0; /* Permet la réduction des flex items */
+    flex-grow: 1;
+    padding: 0 5px;
+    text-align: left;
 }
 
 .mobile-search-field .label {
-    font-size: 0.75em; /* Petite taille pour le label */
+    display: block;
+    font-size: 0.75em;
+    color: var(--text-color-medium);
     font-weight: 600;
-    color: #333;
+    text-transform: uppercase;
     margin-bottom: 2px;
-    white-space: nowrap; /* Empêche le retour à la ligne */
 }
 
 .mobile-search-field input {
-    border: none; /* Pas de bordure */
-    outline: none; /* Pas de contour au focus */
+    border: none;
+    background: transparent;
     width: 100%;
     font-size: 0.9em;
-    color: #555;
-    background-color: transparent; /* Fond transparent */
-    padding: 0; /* Pas de padding interne */
-}
-
-.mobile-search-field input::placeholder {
-    color: #888;
+    color: var(--text-color-dark);
+    padding: 0;
+    outline: none;
 }
 
 .mobile-search-separator {
-    width: 1px; /* Ligne de séparation fine */
-    height: 30px; /* Hauteur de la ligne */
-    background-color: #ddd;
-    margin: 0 5px; /* Espacement autour du séparateur */
+    width: 1px;
+    height: 25px;
+    background-color: var(--border-color);
+    margin: 0 5px;
 }
 
 .mobile-search-button {
-    background-color: #ff385c;
-    color: #fff;
-    border: none;
-    border-radius: 50%; /* Bouton rond */
-    width: 50px; /* Taille du bouton */
-    height: 50px; /* Taille du bouton */
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 1.2em;
-    cursor: pointer;
+    justify-content: center;
+    font-size: 1em;
+    flex-shrink: 0;
     transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Empêche le bouton de rétrécir */
 }
 
 .mobile-search-button:hover {
-    background-color: #e0002f;
+    background-color: var(--primary-color-hover);
 }
 
-/* --- Chat Assistant Modal --- */
+
+/* --- Chat Assistant Modale --- */
 .chat_container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
+    bottom: 100px;
+    right: 20px;
     width: 350px;
     height: 450px;
-    background-color: #fff;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    background-color: var(--white);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-medium);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    z-index: 1001; /* Above all other content */
-    transform: scale(0); /* Hidden by default */
-    transform-origin: bottom right;
-    transition: transform 0.3s ease-in-out;
+    z-index: 2000; /* Très haut */
+    transform: scale(0.8); /* Commencer plus petit */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
 }
 
 .chat_container.active {
-    transform: scale(1); /* Show the modal */
+    transform: scale(1);
+    opacity: 1;
+    visibility: visible;
 }
 
 .chat_close {
     position: absolute;
     top: 10px;
-    right: 15px;
-    font-size: 24px;
+    right: 10px;
+    font-size: 1.5rem;
+    color: var(--text-color-medium);
     cursor: pointer;
-    color: #555;
-    z-index: 10;
+    z-index: 2001;
 }
 
 .chat_header {
-    background-color: #ff385c;
-    color: #fff;
-    padding: 15px 20px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 15px;
     text-align: center;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    font-size: 1.2em;
+    border-top-left-radius: var(--border-radius-medium);
+    border-top-right-radius: var(--border-radius-medium);
+    position: relative;
+}
+
+.chat_header h2 {
+    color: var(--white);
+    margin: 0;
+    font-size: 1.2em;
 }
 
 .chat_messages {
     flex-grow: 1;
-    padding: 20px;
+    padding: 15px;
     overflow-y: auto;
-    background-color: #f9f9f9;
+    background-color: var(--background-light);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .message {
-    padding: 8px 12px;
-    border-radius: 15px;
-    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: var(--border-radius-small);
     max-width: 80%;
+    word-wrap: break-word;
 }
 
 .bot-message {
-    background-color: #e0e0e0;
+    background-color: #e2e2e2;
+    color: var(--text-color-dark);
     align-self: flex-start;
-    margin-right: auto;
-    border-bottom-left-radius: 2px;
 }
 
 .user-message {
-    background-color: #ff385c;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--white);
     align-self: flex-end;
-    margin-left: auto;
-    border-bottom-right-radius: 2px;
 }
 
 .chat_input_area {
     display: flex;
-    padding: 15px 20px;
-    border-top: 1px solid #eee;
-    background-color: #fff;
+    padding: 15px;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--white);
+    gap: 10px;
 }
 
 #chat_input {
     flex-grow: 1;
     padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    margin-right: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    font-size: 1em;
+    outline: none;
 }
 
 #send_chat_btn {
-    padding: 10px 20px;
-    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 1em;
 }
 
-
-/* --- Featured Properties Section --- */
+/* --- Section Featured Properties --- */
 .featured-properties {
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 50px 24px; /* Ajusté */
+    background-color: var(--white); /* Fond blanc pour cette section */
     text-align: center;
+    /* Ombre simple (décalage horizontal, décalage vertical, couleur) */
+    box-shadow: 0px 80px 50px 50px #fffffff9;
+
 }
 
 .section-title {
-    font-size: 2.5em;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 15px;
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    color: var(--text-color-dark);
 }
 
 .section-description {
     font-size: 1.1em;
-    color: #666;
+    color: var(--text-color-medium);
     margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .properties-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .property-card {
-    background-color: #fff;
-    border-radius: 10px;
+    background-color: var(--white);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-light);
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .property-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    box-shadow: var(--shadow-medium);
 }
 
 .property-image {
     position: relative;
-    height: 220px; /* Fixed height for card images */
+    height: 250px; /* Hauteur fixe pour l'image de la carte */
     overflow: hidden;
 }
 
@@ -542,6 +657,7 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
 }
 
 .wishlist-icon {
@@ -555,26 +671,36 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1em;
-    color: #ff385c;
+    font-size: 1.2em;
+    color: var(--text-color-dark);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .wishlist-icon:hover {
-    background-color: rgba(255, 255, 255, 1);
+    background-color: var(--white);
+    color: var(--primary-color);
+}
+
+.wishlist-icon.active { /* Pour un état "aimé" */
+    color: var(--primary-color);
 }
 
 .visit-tag {
     position: absolute;
     bottom: 15px;
     left: 15px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #fff;
-    padding: 5px 12px;
-    border-radius: 5px;
-    font-size: 0.85em;
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 8px 15px;
+    border-radius: var(--border-radius-small);
+    font-size: 0.9em;
     font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.visit-tag:hover {
+    background-color: var(--primary-color-hover);
 }
 
 .property-details {
@@ -584,215 +710,1170 @@ img {
 
 .property-details h3 {
     font-size: 1.3em;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    margin-bottom: 8px;
+    white-space: nowrap; /* Empêche le retour à la ligne */
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute "..." */
 }
 
 .property-location {
-    font-size: 0.95em;
-    color: #777;
-    margin-bottom: 8px;
+    font-size: 0.9em;
+    color: var(--text-color-medium);
+    margin-bottom: 10px;
 }
 
 .property-price {
-    font-size: 1.2em;
-    font-weight: 700;
-    color: #ff385c;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--primary-color); /* Prix en couleur accentuée */
 }
 
 
 /* --- Footer --- */
 .footer {
     text-align: center;
-    padding: 30px 20px;
-    background-color: #222;
-    color: #fff;
+    padding: 24px;
+    background-color: black;
+    color: white;
     font-size: 0.9em;
     margin-top: 50px;
+    border-top: 1px solid var(--border-color);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent noir */
+    z-index: 1050; /* Entre le header et les sidebars */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Nouvelle Sidebar de Contact (Droite) --- */
+.contactsidebar {
+    position: fixed;
+    top: 0;
+    right: -400px; /* Caché par défaut, dépasse à droite */
+    width: 400px; /* Largeur de la sidebar de contact */
+    max-width: 90vw; /* Pour les petits écrans, ne pas dépasser 90% de la largeur du viewport */
+    height: 100%;
+    background-color: var(--white);
+    box-shadow: -2px 0 10px rgba(187, 15, 15, 0.1); /* Ombre à gauche */
+    z-index: 1200; /* Plus haut que l'overlay et la sidebar gauche */
+    transition: right 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+}
+
+.contactsidebar.active {
+    right: 0; /* Affiche la sidebar */
+}
+
+.contactsidebar_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0; /* Empêche le header de rétrécir */
+}
+
+.contactsidebar_header h3 {
+    font-size: 1.5em;
+    margin: 0; /* Retire la marge par défaut des h3 */
+    color: var(--text-color-dark);
+}
+
+.contactsidebar_close_btn {
+    font-size: 1.8rem;
+    color: var(--text-color-medium);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.contactsidebar_close_btn:hover {
+    color: var(--primary-color);
+}
+
+.contactsidebar_content {
+    padding: 25px;
+    flex-grow: 1; /* Permet au contenu de prendre l'espace restant */
+}
+
+.contactsidebar_content p {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: var(--text-color-medium);
+}
+
+.contactsidebar_content ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.contactsidebar_content li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    font-size: 1.05em;
+    color: var(--text-color-dark);
+    /* border-bottom: 1px solid var(--border-color); */
+}
+
+.contactsidebar_content li:last-child {
+    border-bottom: none; /* Pas de bordure pour le dernier élément */
+}
+
+.contactsidebar_content li i {
+    font-size: 1.3em;
+    color: var(--primary-color);
+    min-width: 25px; /* Assure que les icônes sont alignées */
+    text-align: center;
+}
+
+.contactsidebar_content .help-text {
+    font-weight: 600;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: var(--text-color-dark);
+}
+
+.contactsidebar_help_btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+}
+.contact-link { /* Style pour les liens cliquables */
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background-color: var(--background-light);
+        border-radius: var(--border-radius-small);
+        color: var(--text-color-dark);
+        text-decoration: none;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .contact-link:hover {
+        background-color: #e9e9e9;
+        transform: translateX(5px); /* Petit effet de glissement */
+    }
+
+    .contact-link i {
+        margin-right: 0.75rem;
+        color: var(--primary-color); /* Couleur des icônes */
+        font-size: 1.1rem;
+    }
+
+    .help-text {
+        font-weight: 500;
+        color: var(--text-color-dark) !important; /* Important pour s'assurer que le texte est sombre */
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .contactsidebar_help_btn {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background-color: var(--primary-color);
+        color: var(--white);
+        border: none;
+        border-radius: var(--border-radius-small);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .contactsidebar_help_btn:hover {
+        background-color: var(--primary-color-hover);
+    }
+
+/* Responsive pour la sidebar de contact */
+@media (max-width: 480px) {
+    .contactsidebar {
+        width: 100%; /* Sur très petits écrans, prend toute la largeur */
+        right: -100vw; /* Adapté à 100% de la largeur du viewport */
+    }
 }
 
 
-/* --- Responsive Styles --- */
-@media (max-width: 992px) {
-    .nav_item {
-        gap: 15px;
-    }
+/* ========================================================================= */
+/* Responsive Styles */
+/* ========================================================================= */
+
+/* Styles pour les grands écrans (tablettes et desktop) */
+@media (min-width: 768px) {
     .hero-card-container {
-        max-width: 500px;
-        padding: 25px;
+        max-width: 400px; /* Conserve la largeur compacte comme sur l'image */
+        padding: 30px; /* Revert to default padding */
+        display: flex; /* S'assure qu'il est visible sur grand écran */
     }
-    .hero-card-container h2 {
-        font-size: 1.8em;
+
+    /* Le formulaire de recherche principal est affiché sur les grands écrans */
+    .banner-search-form {
+        display: flex; /* Toujours flex column pour l'empilement */
+        flex-direction: column;
+        gap: 0;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-small);
+        overflow: hidden;
+        width: 100%; /* Prend toute la largeur de son conteneur */
     }
-    .hero-card-description {
+
+    /* Cache la barre de recherche mobile sur les grands écrans */
+    .mobile-search-bar {
+        display: none;
+    }
+
+    /* Ajustements de la navigation pour les grands écrans */
+    .nav_item, #form-open {
+        display: flex; /* Affiche les éléments de navigation et le bouton "Assistant" */
+    }
+
+    .menu_toggle_btn {
+        display: none; /* Cache le bouton hamburger */
+    }
+}
+
+/* Styles pour les petits écrans (smartphones) */
+@media (max-width: 767px) {
+    /* Cache le formulaire de recherche principal sur les petits écrans */
+    .banner-search-form {
+        display: none; /* Cache le formulaire détaillé sur mobile */
+    }
+
+    /* Affiche la barre de recherche mobile sur les petits écrans */
+    .mobile-search-bar {
+        display: flex; /* MODIFICATION: Active la barre de recherche mobile */
+        position: absolute; /* Positionne-la en bas */
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 400px; /* Pour éviter qu'elle soit trop large sur des tablettes en mode portrait */
+    }
+
+    .hero-card-container {
+        display: none; /* MODIFICATION: Cache le grand conteneur de carte sur mobile */
+    }
+
+    /* Ajustements du wrapper pour centrer le contenu sur mobile */
+    .hero-content-wrapper {
+        align-items: center; /* MODIFICATION: Centre le contenu sur mobile */
+        padding-left: 0; /* MODIFICATION: Supprime le padding gauche sur mobile */
+    }
+
+    /* Ajustements de la navigation pour les petits écrans */
+    .nav_item, #form-open {
+        display: none; /* Cache les éléments de navigation et le bouton "Assistant" */
+    }
+
+    .menu_toggle_btn {
+        display: block; /* Affiche le bouton hamburger */
+    }
+
+    .header .nav {
+        justify-content: space-between; /* Ajuste l'alignement quand les liens sont cachés */
+    }
+
+    .header {
+        height: 70px; /* Hauteur réduite pour le header */
+    }
+
+    .sidebar {
+        width: 250px; /* Sidebar plus étroite */
+    }
+
+    .sidebar_nav_link {
         font-size: 1em;
     }
-    .properties-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
-    .section-title {
-        font-size: 2em;
-    }
-}
 
-@media (max-width: 768px) {
-    .header {
-        height: auto;
-        padding: 10px 20px;
-        background-color: #fff;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        display: flex;
-        /* Sur mobile, on veut une colonne virtuelle pour aligner burger, logo et search bar */
-        flex-direction: column; /* Changed to column to stack elements */
-        align-items: center; /* Center horizontally */
-    }
-
-    .nav {
-        /* Le nav est maintenant un conteneur pour les éléments du header mobile */
-        display: flex;
-        flex-direction: row; /* Burger, logo, et le bouton assistant sur la même ligne */
-        justify-content: space-between; /* Espacement équitable */
-        align-items: center;
-        width: 100%; /* Occupe toute la largeur */
-        padding: 0; /* Pas de padding interne, géré par le header */
-    }
-
-    .nav_logo img {
-        filter: none; /* Logo redevient normal sur fond blanc */
-        height: 45px;
-    }
-
-    /* Cache les éléments de navigation traditionnels du header sur mobile */
-    .nav_item {
-        display: none;
-    }
-
-    /* Rend l'icône burger visible */
-    .menu_toggle_btn {
-        display: block;
-        color: #333; /* Couleur sombre sur fond blanc */
-        order: 0; /* Place le burger au début */
-    }
-    
-    /* Le logo nav_logo doit être au centre du header mobile */
-    .nav_logo {
-        order: 1; /* Place le logo après le burger */
-        flex-grow: 0;
-        text-align: center;
-        margin: 0 10px; /* Ajoute un peu de marge autour du logo */
-    }
-
-    /* Le bouton assistant du header est toujours masqué */
-    .button#form-open {
-        display: none;
-        order: 2; /* S'il était visible, il serait après le logo */
-    }
-
-    /* La barre de recherche mobile est visible et prend toute la largeur */
-    .mobile-search-bar {
-        display: flex; /* Active la flexbox pour le layout mobile */
-        order: 2; /* Place la barre de recherche après le logo sur une nouvelle ligne */
-        width: 100%; /* Prend toute la largeur disponible */
-        margin-top: 15px; /* Marge pour la séparer du header */
-        padding: 10px 15px;
-        height: 70px; /* Hauteur fixe pour un look compact */
-    }
-
-    .home {
-        height: auto; /* Allow section to adapt to content */
-        padding-top: 150px; /* Espace pour le header et la barre de recherche */
-        padding-bottom: 50px;
-    }
-    .hero-content-wrapper {
-        padding: 0 20px;
-        justify-content: center; /* Centrer le contenu à nouveau */
-    }
-
-    /* Masque le formulaire détaillé de la carte sur mobile */
-    .hero-card-container {
-        display: none;
-    }
-
-    /* Ajustements pour les champs de date du formulaire original (s'il était visible) */
-    .hero-search-form .date-group {
-        flex-direction: column;
-        gap: 15px;
-    }
     .chat_container {
         width: 90%;
-        max-width: 320px;
         height: 400px;
-        bottom: 20px;
-        right: 20px;
-    }
-    .featured-properties {
-        padding: 40px 15px;
-    }
-    .section-title {
-        font-size: 1.8em;
-    }
-    .section-description {
-        font-size: 0.95em;
-    }
-    .property-details h3 {
-        font-size: 1.2em;
-    }
-    .property-price {
-        font-size: 1.1em;
+        right: 5%;
+        left: 5%;
+        bottom: 100px;
+        transform: scale(1); /* Pas de transformation sur les petits écrans */
     }
 }
 
 @media (max-width: 480px) {
-    .header {
-        height: auto;
-    }
-    .nav_logo img {
-        height: 40px;
-    }
-    .menu_toggle_btn {
-        font-size: 26px;
+    .nav {
+        padding: 0 10px;
     }
 
-    /* La barre de recherche mobile s'ajuste davantage sur très petit écran */
-    .mobile-search-bar {
-        padding: 8px 10px; /* Réduire le padding */
-        height: 60px; /* Réduire la hauteur */
+    /* Ajustements de taille de police pour les titres sur très petits écrans si nécessaire */
+    .hero-card-container h2 {
+        font-size: 1.8em; /* Légèrement plus petit pour les très petits écrans */
     }
-    .mobile-search-field {
-        padding: 0 5px; /* Réduire le padding des champs */
-    }
-    .mobile-search-field .label {
-        font-size: 0.7em;
-    }
-    .mobile-search-field input {
-        font-size: 0.8em;
-    }
-    .mobile-search-separator {
-        height: 25px; /* Réduire la hauteur du séparateur */
-    }
-    .mobile-search-button {
-        width: 45px;
-        height: 45px;
-        font-size: 1.1em;
-    }
-
-    .hero-card-container { /* Just in case it's still somehow visible */
-        display: none;
-    }
-    
-    .chat_container {
-        width: 95%;
-        right: 2.5%;
-        bottom: 15px;
-    }
-    .section-title {
-        font-size: 1.5em;
-    }
-    .properties-grid {
-        grid-template-columns: 1fr; /* Single column on very small screens */
+    .hero-card-description {
+        font-size: 0.9em;
     }
 }
+
+/* --- Styles pour la Modale de Connexion/Inscription --- */
+/* --- Modale de Connexion/Inscription --- */
+.login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fond sombre semi-transparent */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Assure qu'il est au-dessus de tout */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.login-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.login-modal {
+    background-color: var(--white);
+    border-radius: var(--border-radius-large);
+    width: 100%;
+    max-width: 560px; /* Largeur maximale selon l'image */
+    height: auto; /* Hauteur adaptative */
+    max-height: 90vh; /* Empêche la modale d'être trop haute sur les petits écrans */
+    overflow: hidden; /* Cache le contenu qui dépasse les coins arrondis */
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9); /* Effet d'animation à l'ouverture */
+    transition: transform 0.3s ease;
+}
+
+.login-modal-overlay.active .login-modal {
+    transform: scale(1);
+}
+
+.login-modal-header {
+    position: relative;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.login-modal-close-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.2rem;
+    color: var(--text-color-medium);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.login-modal-close-btn:hover {
+    color: var(--text-color-dark);
+}
+
+.login-modal-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin: 0;
+}
+
+.login-modal-content {
+    padding: 25px;
+    flex-grow: 1; /* Permet au contenu de prendre l'espace disponible */
+    overflow-y: auto; /* Ajoute un défilement si le contenu est trop long */
+}
+
+.login-modal-welcome {
+    font-size: 1.6em;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin-bottom: 25px;
+    text-align: left; /* Aligne le titre de bienvenue à gauche */
+}
+
+/* Styles pour les onglets de connexion/inscription */
+.login-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px; /* Espace entre le titre et les onglets */
+}
+
+.login-tabs .tab-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px 15px;
+    font-size: 1em;
+    font-weight: 500;
+    color: var(--text-color-medium);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.login-tabs .tab-button.active {
+    color: var(--text-color-dark);
+    font-weight: 600;
+    border-color: var(--primary-color);
+}
+
+.login-tabs .tab-button:hover:not(.active) {
+    color: var(--primary-color);
+}
+
+/* Styles pour les sections de formulaire (connexion/inscription) */
+.form-section {
+    display: none; /* Caché par défaut */
+}
+
+.form-section.active {
+    display: block; /* Visible quand actif */
+}
+
+.login-form .form-group,
+.register-form .form-group {
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    padding: 10px 15px;
+    background-color: var(--white);
+    text-align: left;
+}
+
+.login-form .form-group label,
+.register-form .form-group label {
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    display: block;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+.login-form .form-group input,
+.login-form .form-group select,
+.register-form .form-group input,
+.register-form .form-group select {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 5px 0;
+    color: var(--text-color-dark);
+    background: transparent;
+    -webkit-appearance: none; /* Supprime le style par défaut des selects */
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.login-form .form-group select,
+.register-form .form-group select {
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23222222" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+.login-form .info-text {
+    font-size: 0.75em;
+    color: var(--text-color-medium);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.login-form .info-text a {
+    color: var(--text-color-dark);
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+.login-continue-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: 600;
+    border-radius: var(--border-radius-small);
+    background-color: var(--primary-color);
+    color: var(--white);
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+.login-continue-btn:hover {
+    background-color: var(--primary-color-hover);
+}
+
+.or-separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    color: var(--text-color-medium);
+}
+
+.or-separator::before,
+.or-separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.or-separator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.or-separator:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.social-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-small);
+    background-color: var(--white);
+    color: var(--text-color-dark);
+    font-size: 1em;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.social-login-btn:hover {
+    background-color: var(--background-light);
+    border-color: var(--text-color-dark);
+}
+
+.social-login-btn i {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+/* Styles spécifiques pour les boutons sociaux si vous voulez des couleurs de marque */
+.google-btn i { color: #DB4437; } /* Google Red */
+.apple-btn i { color: #000000; } /* Apple Black */
+.facebook-btn i { color: #1877F2; } /* Facebook Blue */
+.email-btn i { color: var(--text-color-dark); } /* Email icon color */
+
+
+/* Responsive pour la modale de connexion */
+@media (max-width: 600px) {
+    
+    .login-modal {
+        margin: 20px; /* Ajoute une marge sur les très petits écrans */
+        border-radius: var(--border-radius-medium);
+    }
+    .login-modal-header {
+        padding: 15px;
+    }
+    .login-modal-close-btn {
+        top: 15px;
+        left: 15px;
+    }
+    .login-modal-content {
+        padding: 20px;
+    }
+    .login-modal-welcome {
+        font-size: 1.4em;
+    }
+    .login-continue-btn, .social-login-btn {
+        padding: 12px;
+        font-size: 0.95em;
+    }
+}
+/* Responsive pour la modale de connexion */
+@media (max-width: 600px) {
+    .login-modal {
+        margin: 20px; /* Ajoute une marge sur les très petits écrans */
+        border-radius: var(--border-radius-medium);
+    }
+    .login-modal-header {
+        padding: 15px;
+    }
+    .login-modal-close-btn {
+        top: 15px;
+        left: 15px;
+    }
+    .login-modal-content {
+        padding: 20px;
+    }
+    .login-modal-welcome {
+        font-size: 1.4em;
+    }
+    .login-continue-btn, .social-login-btn {
+        padding: 12px;
+        font-size: 0.95em;
+    }
+}
+ 
+/* ========================================================================= */
+/* Responsive Styles (Suite des styles existants) */
+/* ========================================================================= */
+
+/* Styles pour les grands écrans (tablettes et desktop) */
+@media (min-width: 768px) {
+    #button-opens{
+        display: none;
+    }
+
+    .hero-card-container {
+        max-width: 400px; /* Conserve la largeur compacte comme sur l'image */
+        padding: 30px; /* Revert to default padding */
+        display: flex; /* S'assure qu'il est visible sur grand écran */
+    }
+
+    /* Le formulaire de recherche principal est affiché sur les grands écrans */
+    .banner-search-form {
+        display: flex; /* Toujours flex column pour l'empilement */
+        flex-direction: column;
+        gap: 0;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-small);
+        overflow: hidden;
+        width: 100%; /* Prend toute la largeur de son conteneur */
+    }
+
+    /* Cache la barre de recherche mobile sur les grands écrans */
+    .mobile-search-bar {
+        display: noneh;
+    }
+
+    /* Ajustements de la navigation pour les grands écrans */
+    .nav_item, #form-open {
+        display: flex; /* Affiche les éléments de navigation et le bouton "Assistant" */
+    }
+
+    .menu_toggle_btn {
+        display: none; /* Cache le bouton hamburger */
+    }
+}
+
+/* Styles pour les petits écrans (smartphones) */
+@media (max-width: 767px) {
+    #button-opens{
+        display: non;
+    }
+
+    /* Le formulaire de recherche principal est affiché sur les petits écrans */
+    #search-form-opens {
+
+        display: none; /* Rendre le formulaire principal visible */
+        flex-direction: column; /* Empile les éléments */
+        gap: 0;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius-small);
+        overflow: hidden;
+        width: 100%;
+    }
+
+    /* Force les groupes de champs à s'empiler sur les petits écrans */
+    .banner-search-form .form-group-row {
+        flex-direction: column; /* MODIFICATION: Empile les champs de date/adultes/enfants */
+        border-right: none; /* Supprime la bordure droite pour les éléments empilés */
+    }
+
+    .banner-search-form .form-group-row .form-group {
+        border-right: none; /* Supprime la bordure droite pour les éléments individuels dans les lignes empilées */
+        border-bottom: 1px solid var(--border-color); /* Ajoute une bordure inférieure pour les éléments empilés */
+    }
+
+    .banner-search-form .form-group-row .form-group:last-child {
+        border-bottom: none; /* Pas de bordure inférieure pour le dernier élément de la ligne empilée */
+    }
+
+    /* Cache la barre de recherche mobile sur les petits écrans */
+    .mobile-search-bar {
+        display: none; /* Toujours caché */
+    }
+
+    .hero-card-container {
+        display: flex; /* Rendre le conteneur de carte visible sur mobile */
+        max-width: 90%; /* Ajuste la largeur sur mobile */
+        padding: 20px; /* Ajuste le padding pour mobile */
+        margin: 0 auto; /* Centre le conteneur sur mobile */
+    }
+
+    /* Ajustements du wrapper pour centrer le formulaire sur mobile */
+    .hero-content-wrapper {
+        align-items: center; /* MODIFICATION: Centre le contenu sur mobile */
+        padding-left: 0; /* MODIFICATION: Supprime le padding gauche sur mobile */
+    }
+
+    /* Ajustements de la navigation pour les petits écrans */
+    .nav_item, #form-open {
+        display: none; /* Cache les éléments de navigation et le bouton "Assistant" */
+    }
+
+    .menu_toggle_btn {
+        display: block; /* Affiche le bouton hamburger */
+    }
+
+    .header .nav {
+        justify-content: space-between; /* Ajuste l'alignement quand les liens sont cachés */
+    }
+
+    .header {
+        height: 70px; /* Hauteur réduite pour le header */
+    }
+
+    .sidebar {
+        width: 250px; /* Sidebar plus étroite */
+    }
+
+    .sidebar_nav_link {
+        font-size: 1em;
+    }
+
+    .chat_container {
+        border: 1px solid var(--primary-color-hover);
+        width: 70%;
+        height: 350px;
+        right: 10%;
+        left: 10%;
+        bottom: 100px;
+        transform: scale(1); /* Pas de transformation sur les petits écrans */
+    }
+}
+
+@media (max-width: 480px) {
+    .nav {
+        padding: 0 10px;
+    }
+
+    /* Ajustements de taille de police pour les titres sur très petits écrans si nécessaire */
+    .hero-card-container h2 {
+        font-size: 1.8em; /* Légèrement plus petit pour les très petits écrans */
+    }
+    .hero-card-description {
+        font-size: 0.9em;
+    }
+}
+
+
+/* Styles pour la section "Pourquoi nous choisir" */
+
+/* Section principale "Pourquoi nous choisir" */
+.why-choose-us {
+    position: relative;
+    padding: 30px 10px; /* Augmentation du padding pour plus d'espace */
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+    color: var(--white); /* Texte blanc par défaut pour la section */
+    background-color: var(--background-dark); /* Fond de secours */
+    /* Variable CSS pour l'image de fond de la section entière, définie par JS */
+    --why-choose-us-background-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Etre'); /* Image par défaut */
+}
+
+/* Pseudo-élément pour l'image de fond de la section */
+.why-choose-us::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--why-choose-us-background-image); /* Utilise la variable CSS */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: brightness(0.6) blur(px); /* Assombrit et floute l'image pour la lisibilité du texte */
+    z-index: 0;
+    transition: background-image 0.7s ease-in-out, filter 0.7s ease-in-out; /* Transition douce pour l'image et le filtre */
+}
+
+/* Pseudo-élément pour l'overlay de dégradé sur l'image de fond de la section (conservé mais optionnel si le filtre suffit) */
+.why-choose-us::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+/* S'assure que le contenu de la section est au-dessus du fond et de l'overlay */
+.why-choose-us .section-title,
+.why-choose-us .section-description {
+    position: relative;
+    z-index: 2;
+    color: var(--white);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.7); /* Ombre plus prononcée pour la lisibilité */
+}
+
+/* Conteneur principal de la section "Pourquoi nous choisir" */
+.why-choose-us-content {
+    position: relative;
+    z-index: 2;
+    /* --- MODIFICATIONS CLÉS POUR L'ALIGNEMENT HORIZONTAL --- */
+    display: flex;
+    flex-direction: row; /* MODIFICATION: Aligne les éléments horizontalement */
+    justify-content: space-between; /* MODIFICATION: Distribue l'espace entre les conteneurs */
+    align-items: center; /* MODIFICATION: Aligne les conteneurs verticalement au centre */
+    /* -------------------------------------------------------- */
+    gap: 30px; /* Espacement entre les deux colonnes */
+    max-width: 1200px;
+    margin: 10px auto 0;
+    padding: 10px;
+    border-radius: var(--border-radius-large);
+    backdrop-filter: blur(2px);
+}
+
+
+@media (min-width: 992px) { /* Pour les tablettes et ordinateurs */
+    .why-choose-us-content {
+        flex-direction: row; /* Côte à côte sur grand écran */
+        text-align: left; /* Réinitialise l'alignement du texte pour les éléments internes */
+    }
+}
+
+/* Conteneur des boutons de fonctionnalité (la "partie blanche à gauche") */
+.feature-buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Espacement entre les boutons */
+    background-color: var(--white); /* Fond blanc */
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-light);
+    padding: 18px;
+    min-width: 280px; /* Largeur minimale pour les boutons */
+    flex-shrink: 0; /* Empêche les boutons de rétrécir */
+}
+
+@media (max-width: 991px) { /* Pour les mobiles */
+    .feature-buttons-container {
+        width: 100%;
+        min-width: unset; /* Annule la largeur minimale */
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-color); /* Ligne de séparation en bas sur mobile */
+        margin-bottom: 20px; /* Marge pour séparer de la zone d'affichage */
+    }
+}
+
+/* Boutons de fonctionnalité individuels (les "onglets") */
+.feature-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 15px 20px;
+    background-color: transparent;
+    border: none; /* Supprime les bordures par défaut des boutons */
+    border-radius: var(--border-radius-small);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    color: var(--text-color-dark);
+    font-weight: 500;
+    font-size: 1.05em;
+    cursor: pointer;
+}
+
+/* Effet de survol pour les boutons de fonctionnalité */
+.feature-button:hover:not(.active) {
+    background-color: var(--background-light);
+    color: var(--primary-color);
+    transform: translateX(5px); /* Léger décalage au survol */
+}
+
+/* Styles pour le bouton de fonctionnalité actif */
+.feature-button.active {
+    background-color: var(--primary-color);
+    color: var(--white);
+    font-weight: 600; /* Plus gras quand actif */
+    box-shadow: var(--shadow-medium); /* Ombre pour le bouton actif */
+}
+
+/* Icônes dans les boutons de fonctionnalité */
+.feature-button i {
+    font-size: 1.5em;
+    margin-right: 15px;
+    color: var(--primary-color);
+    transition: color 0.3s ease;
+}
+
+/* Couleur des icônes dans les boutons actifs */
+.feature-button.active i {
+    color: var(--white); /* Icône blanche quand actif */
+}
+
+/* Zone d'affichage du contenu dynamique (image de fond et texte superposé) */
+.feature-display-area {
+    position: relative;
+    flex-grow: 1; /* Prend l'espace restant */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centre le contenu verticalement */
+    align-items: flex-start; /* Aligne le texte à gauche */
+    padding: 20px; /* Padding plus généreux */
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+    min-height: 400px; /* Hauteur minimale augmentée */
+    color: var(--white);
+    text-align: justify;
+    /* box-shadow: var(--shadow-medium); */
+    /* Variable CSS pour l'image de fond de la zone d'affichage, définie par JS */
+    --current-feature-image: url('https://placehold.co/1200x800/d4d4d4/ffffff?text=Votre+Bien-Etre'); /* Image par défaut */
+}
+
+/* Pseudo-élément pour l'image de fond de la zone d'affichage */
+.feature-display-area::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*background-image: var(--current-feature-image);  Utilise la variable CSS */
+    background-size: cover;
+    background-position: center;
+    border-radius: var(--border-radius-medium);
+    z-index: 1;
+    transition: background-image 0.6s ease-in-out; /* Transition douce pour le changement d'image */
+}
+
+/* Pseudo-élément pour l'overlay de dégradé sur l'image de la zone d'affichage */
+.feature-display-area::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /*background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0) 100%);  Dégradé sombre du bas vers le haut */
+    border-radius: var(--border-radius-medium);
+    z-index: 2;
+}
+
+/* Styles pour le titre et le paragraphe superposés */
+.feature-display-area h3,
+.feature-display-area p {
+    position: relative;
+    z-index: 3;
+    color: var(--white);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.7); /* Ombre plus foncée pour la lisibilité */
+}
+
+.feature-display-area h3 {
+    font-size: 2.2em; /* Taille de police légèrement augmentée */
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.feature-display-area p {
+    font-size: 1.15em; /* Taille de police légèrement augmentée */
+    line-height: 1.7;
+    margin-bottom: 0;
+}
+
+/* Section "Témoignages" */
+.testimonials {
+    background-color: var(--background-light); /* Fond clair pour les témoignages */
+    padding: 30px 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Carte de témoignage */
+.testimonial-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-light);
+    padding: 25px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Conteneur Flexbox pour l'image et le nom dans la carte de témoignage */
+.testimonial-card .flex {
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Image de profil dans la carte de témoignage */
+.testimonial-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* Cercle */
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+/* Paragraphe de texte du témoignage */
+.testimonial-card p {
+    color: var(--text-color-dark);
+    line-height: 1.6;
+}
+
+/* Texte de petite taille dans la carte de témoignage */
+.testimonial-card .text-sm {
+    color: var(--text-color-medium);
+}
+
+/* Responsive pour la section "Pourquoi nous choisir" (sur petits écrans) */
+@media (max-width: 992px) {
+    .why-choose-us-content {
+        grid-template-columns: 1fr; /* Empile les boutons et la zone d'affichage sur les écrans plus petits */
+    }
+}
+
+@media (max-width: 767px) {
+    .why-choose-us-content {
+        grid-template-columns: 1fr; /* Force l'empilement sur mobile */
+        /* padding: 20px; Ajuste le padding */
+    }
+
+    .feature-buttons-container {
+        flex-direction: row; /* Les boutons s'alignent horizontalement sur mobile */
+        flex-wrap: wrap; /* Permet aux boutons de passer à la ligne */
+        justify-content: center; /* Centre les boutons */
+        gap: 8px; /* Réduit l'espacement */
+        padding: 10px; /* Réduit le padding */
+    }
+
+    .feature-button {
+        flex: 1 1 auto; /* Permet aux boutons de s'adapter et de grandir */
+        min-width: 120px; /* Largeur minimale pour éviter qu'ils ne soient trop petits */
+        max-width: 48%; /* Deux boutons par ligne */
+        padding: 12px 15px; /* Ajuste le padding */
+        font-size: 0.9em; /* Réduit la taille de la police */
+    }
+
+    .feature-button i {
+        font-size: 1.2em; /* Réduit la taille des icônes */
+        margin-right: 8px;
+    }
+
+    .feature-display-area {
+        min-height: 250px; /* Réduit la hauteur minimale */
+        padding: 20px; /* Ajuste le padding */
+    }
+
+    .feature-display-area h3 {
+        font-size: 1.5em; /* Réduit la taille du titre */
+    }
+
+    .feature-display-area p {
+        font-size: 0.9em; /* Réduit la taille du paragraphe */
+    }
+}
+
+
+
+/* Section "Témoignages" */
+.testimonials {
+    background-color: var(--background-light); /* Fond clair pour les témoignages */
+    padding: 60px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Carte de témoignage */
+.testimonial-card {
+    background-color: var(--white);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-light);
+    padding: 25px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Conteneur Flexbox pour l'image et le nom dans la carte de témoignage */
+.testimonial-card .flex {
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+/* Image de profil dans la carte de témoignage */
+.testimonial-card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%; /* Cercle */
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+/* Paragraphe de texte du témoignage */
+.testimonial-card p {
+    color: var(--text-color-dark);
+    line-height: 1.6;
+}
+
+/* Texte de petite taille dans la carte de témoignage */
+.testimonial-card .text-sm {
+    color: var(--text-color-medium);
+}
+
+/* Responsive pour la section "Pourquoi nous choisir" (sur petits écrans) */
+@media (max-width: 992px) {
+    .why-choose-us-content {
+        grid-template-columns: 1fr; /* Empile les boutons et la zone d'affichage sur les écrans plus petits */
+    }
+}
+
+@media (max-width: 767px) {
+    .why-choose-us-content {
+        grid-template-columns: 1fr; /* Force l'empilement sur mobile */
+        padding: 20px; /* Ajuste le padding */
+    }
+
+    .feature-buttons-container {
+        flex-direction: row; /* Les boutons s'alignent horizontalement sur mobile */
+        flex-wrap: wrap; /* Permet aux boutons de passer à la ligne */
+        justify-content: center; /* Centre les boutons */
+        gap: 8px; /* Réduit l'espacement */
+        padding: 10px; /* Réduit le padding */
+    }
+
+    .feature-button {
+        flex: 1 1 auto; /* Permet aux boutons de s'adapter et de grandir */
+        min-width: 120px; /* Largeur minimale pour éviter qu'ils ne soient trop petits */
+        max-width: 48%; /* Deux boutons par ligne */
+        padding: 12px 15px; /* Ajuste le padding */
+        font-size: 0.9em; /* Réduit la taille de la police */
+    }
+
+    .feature-button i {
+        font-size: 1.2em; /* Réduit la taille des icônes */
+        margin-right: 8px;
+    }
+
+    .feature-display-area {
+        min-height: 250px; /* Réduit la hauteur minimale */
+        padding: 20px; /* Ajuste le padding */
+    }
+
+    .feature-display-area h3 {
+        font-size: 1.5em; /* Réduit la taille du titre */
+    }
+
+    .feature-display-area p {
+        font-size: 0.9em; /* Réduit la taille du paragraphe */
+    }
+}
+

@@ -54,8 +54,8 @@
 .payment-option {
     border: 1px solid #e5e7eb;
     border-radius: 0.75rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.2rem;
+    margin-bottom: 0.5rem;
     cursor: pointer;
     transition: all 0.25s ease-in-out;
     position: relative;
@@ -213,7 +213,7 @@
 
 .travel-info,
 .price-details {
-    padding: 1.5rem 0;
+    padding: 0.5rem 0;
 }
 .travel-info { border-bottom: 1px solid #e5e7eb; }
 .travel-info h3,

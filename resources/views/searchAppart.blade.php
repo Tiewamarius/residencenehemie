@@ -18,14 +18,14 @@
                 {{-- Arrivée --}}
                 <div class="search-bar-item">
                     <label for="check_in_date">Arrivée</label>
-                    <input type="text" id="check_in_date" name="date_arrivee" readonly placeholder=" "
+                    <input type="text" id="check_in_date" name="date_arrivee" readonly placeholder="Ajouter une date"
                         value="{{ request('date_arrivee') }}">
                 </div>
 
                 {{-- Départ --}}
                 <div class="search-bar-item">
                     <label for="check_out_date">Départ</label>
-                    <input type="text" id="check_out_date" name="date_depart" readonly placeholder=" "
+                    <input type="text" id="check_out_date" name="date_depart" readonly placeholder="Ajouter une date"
                         value="{{ request('date_depart') }}">
                 </div>
 
@@ -132,6 +132,8 @@
     }
 
     .search-bar-container {
+
+        border: 0.5px solid #ed5257;
         display: flex;
         align-items: center;
         background: #f7f7f7;
@@ -158,7 +160,7 @@
     }
 
     .search-bar-button button {
-        background: #ff385c;
+        background: #ed5257;
         color: white;
         border: none;
         border-radius: 50px;
@@ -267,6 +269,7 @@
 
     @media (max-width: 576px) {
         .search-bar-wrapper {
+
             top: 60px;
             /* header plus petit sur mobile */
             padding: 0.3rem;

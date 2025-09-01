@@ -18,13 +18,13 @@
                 <li>
                     <a href="#" data-tab="reservations" class="profile-nav-item">
                         <i class="fas fa-suitcase-rolling"></i>
-                        Réservations précédentes
+                        Réservations
                     </a>
                 </li>
                 <li>
                     <a href="#" data-tab="connections" class="profile-nav-item">
                         <i class="fas fa-users"></i>
-                        Connexions
+                        Autre
                     </a>
                 </li>
             </ul>
@@ -95,24 +95,20 @@
                 <table id="reservations-table">
                     <thead>
                         <tr>
+
+                            <th>Statut</th>
+                            <th>Actions</th>
                             <th>Numéro</th>
                             <th>Résidence</th>
                             <th>Date arrivée</th>
                             <th>Date départ</th>
                             <th>Prix total</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if (!empty($reservations) && $reservations->count() > 0)
                         @foreach ($reservations as $reservation)
                         <tr>
-                            <td>{{ $reservation->numero_reservation }}</td>
-                            <td>{{ $reservation->residence->nom }}</td>
-                            <td>{{ \Carbon\Carbon::parse($reservation->date_arrivee)->format('d/m/Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($reservation->date_depart)->format('d/m/Y') }}</td>
-                            <td>{{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</td>
                             <td>
                                 <span class="status 
                                     @if($reservation->statut === 'pending') pending 
@@ -129,6 +125,12 @@
                                     détails
                                 </a>
                             </td>
+                            <td>{{ $reservation->numero_reservation }}</td>
+                            <td>{{ $reservation->residence->nom }}</td>
+                            <td>{{ \Carbon\Carbon::parse($reservation->date_arrivee)->format('d/m/Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($reservation->date_depart)->format('d/m/Y') }}</td>
+                            <td>{{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</td>
+
 
                         </tr>
                         @endforeach

@@ -3,6 +3,17 @@
 @section('title', 'Accueil - Résidences Nehemie')
 
 @section('content')
+<!-- Section pour afficher les erreurs -->
+@if ($errors->any())
+<div class="error-messages bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <strong>⚠️ Veuillez corriger les erreurs suivantes :</strong>
+    <ul class="mt-2 list-disc list-inside">
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
 
 @php
 $allImages = $residence->images ?? collect();
@@ -182,8 +193,9 @@ $amenityIcons = [
                         </span>
                     </div>
 
-                    <form class="booking-form" action="{{ route('residences.reserver', $residence->id) }}" method="POST">
+                    <form class="booking-form" action=" {{ Auth::check() ? route('residences.reserver', $residence->id) : route('residences.guestReserver', $residence->id) }}" method="POST">
                         @csrf
+
                         <input type="hidden" name="residence_id" value="{{ $residence->id }}">
                         <input type="hidden" name="total_price" id="total-price-input">
                         <input type="hidden" name="type_id" value="{{ $firstType->id ?? '' }}">
@@ -217,7 +229,19 @@ $amenityIcons = [
                             </select>
                         </div>
 
-                        <button type="submit" class="check-availability-btn" disabled>RÉSERVER</button>
+                        @guest
+                        <!-- Bouton pour les invités -->
+                        <button type="submit" class="check-availability-btn" disabled>
+                            CONTINUER
+                        </button>
+                        @endguest
+
+                        @auth
+                        <!-- Bouton pour les utilisateurs connectés -->
+                        <button type="submit" class="check-availability-btn" disabled>
+                            RÉSERVER
+                        </button>
+                        @endauth
                     </form>
 
                     <div class="price-breakdown">
@@ -277,7 +301,7 @@ $amenityIcons = [
 
 {{-- Injecte les périodes réservées pour Flatpickr --}}
 <script>
-    window.bookedDateRanges = @json($bookedDateRanges ?? []);
+    // window.bookedDateRanges = @json($bookedDateRanges ?? []);
 </script>
 
 @endsection

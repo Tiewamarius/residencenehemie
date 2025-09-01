@@ -19,9 +19,9 @@ class Booking extends Model
         'nombre_enfants',
         'total_price',      // <-- Assurez-vous que c'est bien 'total_price' ici aussi
         'statut',
-        'numero_reservation', // NOUVEAU
-        'details_client',     // NOUVEAU
-        'note_client',        // NOUVEAU
+        'numero_reservation',
+        'details_client',
+        'note_client',
     ];
 
     protected $casts = [

@@ -1,137 +1,139 @@
 @extends('layouts.myapp')
 
-@section('title', 'Confirmation de la réservation')
+@section('title', 'Paiement - Résidences Nehemie')
 
 @section('content')
+<main class="payment-main-content">
 
-<!-- Conteneur principal -->
-<main class="container mx-auto mt-8 p-6 lg:p-10 flex flex-col lg:flex-row gap-8">
+    <div class="container mx-auto">
+        <div class="payment-container">
+            <!-- Colonne gauche -->
+            <div class="payment-left-column">
+                <a href="{{ route('residences.detailsAppart', $booking->residence->id) }}" class="back-link">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>Demande de réservation</h1>
 
-    <!-- Section de gauche - Détails du voyage et paiement -->
-    <div class="w-full lg:w-3/5">
+                <section class="payment-method-section">
+                    <h2>1. Choisissez un mode de paiement</h2>
+                    <form id="payment-form" action="{{ route('paiements.process') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                        <input type="hidden" name="total_price" value="{{ $booking->total_price }}">
 
-        {{-- Vérifie et affiche les messages de succès --}}
-        @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-        </div>
-        @endif
-
-        {{-- Vérifie et affiche les messages d'erreur de validation --}}
-        @if ($errors->any())
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
-            <ul class="list-disc list-inside">
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
-
-        <!-- 1. Votre voyage -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900">1. Votre voyage</h2>
-            <div class="mt-4">
-                <h3 class="font-semibold text-lg text-gray-800">
-                    Dates :
-                    <span class="font-normal">{{ \Carbon\Carbon::parse($check_in_date)->format('d/m/Y') }} – {{ \Carbon\Carbon::parse($check_out_date)->format('d/m/Y') }}</span>
-                </h3>
-                <h3 class="font-semibold text-lg text-gray-800 mt-2">
-                    Voyageurs :
-                    <span class="font-normal">{{ $guests }} personne(s)</span>
-                </h3>
-            </div>
-        </div>
-
-        <!-- 2. Paiement -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900">2. Paiement</h2>
-            <div class="mt-4">
-                <p class="text-gray-700 mb-4">
-                    Sélectionnez votre mode de paiement.
-                </p>
-                {{-- Formulaire de paiement fictif --}}
-                <form id="payment-form" action="{{ route('residences.book', $residence->id) }}" method="POST">
-                    @csrf
-
-                    {{-- Champs cachés pour passer les données du voyage --}}
-                    <input type="hidden" name="check_in_date" value="{{ $check_in_date }}">
-                    <input type="hidden" name="check_out_date" value="{{ $check_out_date }}">
-                    <input type="hidden" name="guests" value="{{ $guests }}">
-
-                    <div class="mb-4">
-                        <label for="card_number" class="block text-gray-700 text-sm font-bold mb-2">Numéro de carte</label>
-                        <input type="text" id="card_number" name="card_number" placeholder="XXXX XXXX XXXX XXXX" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                    </div>
-                    <div class="mb-4 flex gap-4">
-                        <div class="w-1/2">
-                            <label for="expiration_date" class="block text-gray-700 text-sm font-bold mb-2">Date d'expiration</label>
-                            <input type="text" id="expiration_date" name="expiration_date" placeholder="MM/AA" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <!-- Carte (indisponible) -->
+                        <div class="payment-option disabled-option" data-message="🚫 Paiement par carte indisponible.">
+                            <label class="payment-label">
+                                <img src="{{ asset('images/mastercard-hd-png.png') }}" alt="Carte" height="350px" class="payment-logo">
+                                <input type="radio" name="payment_method" value="carte" disabled>
+                                Carte bancaire
+                            </label>
                         </div>
-                        <div class="w-1/2">
-                            <label for="cvv" class="block text-gray-700 text-sm font-bold mb-2">CVV</label>
-                            <input type="text" id="cvv" name="cvv" placeholder="XXX" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+
+                        <!-- PayPal (indisponible) -->
+                        <div class="payment-option disabled-option" data-message="🚫 Paiement via PayPal indisponible.">
+                            <label class="payment-label">
+                                <img src="{{ asset('images/paypal.jpg') }}" alt="PayPal" class="payment-logo">
+                                <input type="radio" name="payment_method" value="paypal" disabled>
+                                PayPal
+                            </label>
+                        </div>
+
+                        <!-- Mobile Money -->
+                        <div class="payment-option disabled-option">
+                            <label class="payment-label" for="payment-mm">
+                                <img src="{{ asset('images/orange-Money.jpg') }}" alt="Mobile Money" class="payment-logo">
+                                <input type="radio" id="payment-mm" name="payment_method" value="mobile_money">
+                                Orange Mobile Money
+                            </label>
+                            <div class="payment-details" id="mobile-money-details">
+                                <div class="form-group">
+                                    <label for="mobile-money-phone">Numéro Mobile Money</label>
+                                    <input type="tel" id="mobile-money-phone" name="mobile_money_phone" placeholder="Ex: 0707070707" value="{{ old('mobile_money_phone') }}">
+                                    @error('mobile_money_phone') <small class="text-red-500">{{ $message }}</small> @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Wave -->
+                        <div class="payment-option disabled-option">
+                            <label class="payment-label" for="payment-wave">
+                                <img src="{{ asset('images/WAVE-M.jpg') }}" alt="Wave" class="payment-logo">
+                                <input type="radio" id="payment-wave" name="payment_method" value="wave">
+                                Wave
+                            </label>
+                            <div class="payment-details" id="wave-details">
+                                <div class="form-group">
+                                    <label for="wave-phone">Numéro Wave</label>
+                                    <input type="tel" id="wave-phone" name="wave_phone" placeholder="Ex: 0707070707" value="{{ old('wave_phone') }}">
+                                    @error('wave_phone') <small class="text-red-500">{{ $message }}</small> @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Espèce -->
+                        <div class="payment-option">
+                            <label class="payment-label {{ $hasUnpaidBooking ? 'disabled-label' : '' }}" for="payment-espece">
+                                <img src="{{ asset('images/especes.png') }}" alt="Espèce" class="payment-logo">
+                                <input type="radio" id="payment-espece" name="payment_method" value="espece"
+                                    {{ $hasUnpaidBooking ? 'disabled' : '' }}>
+                                Paiement en espèce
+                            </label>
+
+                            <div class="payment-details" id="espece-details">
+                                <p>Un agent vous contactera pour organiser le paiement en espèce.</p>
+
+                                @if($hasUnpaidBooking)
+                                <p class="warning-message" id="warning-message">
+                                    ⚠️ Ce mode de paiement est bloqué car une réservation en attente d’espèces existe déjà pour cet appartement.
+                                </p>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <button type="submit" class="submit-payment-btn" disabled>Confirmer</button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- Colonne droite -->
+            <div class="payment-right-column">
+                <div class="booking-summary-card">
+                    <div class="residence-summary">
+                        @php
+                        $mainImage = $booking->residence->images->where('est_principale', true)->first();
+                        $imagePath = $mainImage ? asset($mainImage->chemin_image) : 'https://placehold.co/100x100';
+                        @endphp
+                        <img src="{{ $imagePath }}" alt="Image résidence" class="w-20 h-20 object-cover rounded-xl">
+                        <div>
+                            <h4>{{ $booking->residence->nom }}</h4>
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                {{ $booking->residence->reviews->count() > 0 ? number_format($booking->residence->reviews->avg('note'), 2) : 'N/A' }}
+                                ({{ $booking->residence->reviews->count() }} avis)
+                            </span>
                         </div>
                     </div>
 
-                    {{-- Bouton de soumission du formulaire --}}
-                    <button type="submit" class="w-full bg-[#FF385C] text-white font-semibold py-3 px-6 rounded-md hover:bg-[#E0004E] transition-colors duration-200">
-                        Confirmer et payer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+                    <div class="travel-info">
+                        <h3>Informations sur le voyage</h3>
+                        <p><span>Dates</span>
+                            <span>{{ \Carbon\Carbon::parse($booking->date_arrivee)->translatedFormat('d F') }} - {{ \Carbon\Carbon::parse($booking->date_depart)->translatedFormat('d F Y') }}</span>
+                        </p>
+                        <p><span>Voyageurs</span> <span>{{ $booking->nombre_adultes }} adulte(s)</span></p>
+                    </div>
 
-    <!-- Section de droite - Détails de la réservation -->
-    <div class="w-full lg:w-2/5">
-        <div class="bg-white rounded-xl shadow-md p-6 sticky top-8">
-            <!-- Détails de la chambre dynamiques -->
-            <div class="flex items-center gap-4 border-b border-gray-200 pb-4 mb-4">
-                {{-- Affiche l'image principale de la résidence --}}
-                <img src="{{ optional($residence->images->first())->url ?: 'https://placehold.co/100x80' }}" alt="Image de la chambre" class="w-24 h-20 object-cover rounded-md">
-                <div>
-                    <h3 class="font-semibold text-lg">{{ $residence->name }}</h3>
-                    <div class="flex items-center text-gray-600 mt-1">
-                        <i class="fas fa-star text-sm text-yellow-400"></i>
-                        <span class="ml-1 text-sm font-medium">{{ $residence->rating ?? 'N/A' }}</span>
-                        <span class="ml-1 text-xs text-gray-500">({{ $residence->review_count ?? '0' }})</span>
+                    <div class="price-details">
+                        <h3>Détail du prix</h3>
+                        <p>
+                            <span>{{ number_format($booking->type->prix_base, 0, ',', ' ') }} FCFA x {{ \Carbon\Carbon::parse($booking->date_arrivee)->diffInDays($booking->date_depart) }} nuit(s)</span>
+                            <span>{{ number_format($booking->total_price - 10000, 0, ',', ' ') }} FCFA</span>
+                        </p>
+                        <p><span>Frais de service</span> <span>10 000 FCFA</span></p>
+                        <p class="total"><span>Total</span> <span>{{ number_format($booking->total_price, 0, ',', ' ') }} FCFA</span></p>
                     </div>
                 </div>
-            </div>
-
-            <!-- Détails du paiement dynamiques -->
-            <div class="border-b border-gray-200 pb-4 mb-4">
-                <div class="flex items-center justify-between mb-2">
-                    <h4 class="font-semibold">Détails du prix</h4>
-                </div>
-
-                @php
-                // Calcule le nombre de nuits
-                $checkIn = \Carbon\Carbon::parse($check_in_date);
-                $checkOut = \Carbon\Carbon::parse($check_out_date);
-                $nights = $checkIn->diffInDays($checkOut);
-
-                // Calcule le prix total
-                $totalPrice = $residence->price_per_night * $nights;
-                @endphp
-
-                <ul class="mt-4 space-y-2 text-sm">
-                    <li class="flex justify-between items-center">
-                        <span class="text-gray-700">{{ $residence->price_per_night }} € x {{ $nights }} nuits</span>
-                        <span class="font-semibold">{{ $totalPrice }} €</span>
-                    </li>
-                    <li class="flex justify-between items-center text-gray-500">
-                        <span>Frais de service</span>
-                        <span class="font-semibold">50 €</span> {{-- Exemple de frais fixes --}}
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Total final -->
-            <div class="flex justify-between items-center font-bold text-lg">
-                <span>Total (EUR)</span>
-                <span>{{ $totalPrice + 50 }} €</span>
             </div>
         </div>
     </div>

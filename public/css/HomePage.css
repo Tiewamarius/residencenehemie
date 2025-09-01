@@ -120,7 +120,8 @@ button {
 }
 
 .nav_link {
-    color: var(--white); /* Couleur par défaut (transparent header) */
+    /*color: var(--white);  Couleur par défaut (transparent header) */
+    color: #717171;
     font-weight: 500;
     font-size: 1.05em;
     transition: color 0.3s ease;

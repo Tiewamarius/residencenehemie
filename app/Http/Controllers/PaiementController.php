@@ -4,6 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail; // Pour l'envoi d'emails
+use Illuminate\Support\Facades\Notification; // Pour l'envoi de notifications (SMS)
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +23,39 @@ class PaiementController extends Controller
      * @return \Illuminate\View\View
      */
     public function showPaymentPage(Booking $booking)
+    {
+        $booking->load('residence.images', 'residence.reviews', 'type');
+
+        // Vérifier chevauchement de réservation en "pending"
+        $hasUnpaidBooking = $booking->residence
+            ->bookings()
+            ->where('statut', 'pending')
+            ->when(!is_null($booking->user_id), function ($query) use ($booking) {
+                // Si user connecté → exclure ses propres pending
+                $query->where('user_id', '!=', $booking->user_id);
+            }, function ($query) {
+                // Si user non connecté → exclure les bookings sans user_id
+                $query->whereNotNull('user_id');
+            })
+            ->where(function ($query) use ($booking) {
+                $query->whereBetween('date_arrivee', [$booking->date_arrivee, $booking->date_depart])
+                    ->orWhereBetween('date_depart', [$booking->date_arrivee, $booking->date_depart])
+                    ->orWhere(function ($sub) use ($booking) {
+                        $sub->where('date_arrivee', '<=', $booking->date_arrivee)
+                            ->where('date_depart', '>=', $booking->date_depart);
+                    });
+            })
+            ->exists();
+
+        return view('Pages.paiement', compact('booking', 'hasUnpaidBooking'));
+    }
+
+
+
+
+    // Guest paiement
+
+    public function showGuestPaymentPage(Booking $booking)
     {
         $booking->load('residence.images', 'residence.reviews', 'type');
 
@@ -36,7 +75,83 @@ class PaiementController extends Controller
             ->exists();
 
 
-        return view('Pages.paiement', compact('booking', 'hasUnpaidBooking'));
+        return view('Pages.paiementGuest', compact('booking', 'hasUnpaidBooking'));
+    }
+
+
+    // guest
+    public function finaliser(Request $request)
+    {
+        $data = $request->validate([
+            'booking_id'     => 'required|exists:bookings,id',
+            'payment_method' => 'required|string',
+            'total_price'    => 'required|numeric|min:0',
+            'email'          => 'required|string|email|max:255',
+            'name'           => 'required|string|max:255',
+            'phone_number'   => 'required|string|max:20',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // 🔒 1) Verrouiller la réservation
+            $booking = Booking::lockForUpdate()->findOrFail($data['booking_id']);
+
+            // 2) User existant ou création avec mdp aléatoire
+            $user = User::where('email', $data['email'])->first();
+            $plainPassword = null;
+
+            if (!$user) {
+                $plainPassword = Str::random(10);
+                $user = User::create([
+                    'name'         => $data['name'],
+                    'email'        => $data['email'],
+                    'phone_number' => $data['phone_number'],
+                    'password'     => Hash::make($plainPassword),
+                ]);
+                // Mail::to($user->email)->send(new GuestAccountCreated($user, $plainPassword));
+            }
+            // 🚀 3) Authentifier automatiquement l'user
+            Auth::login($user);
+            // 3) Sécurité : empêcher l’appropriation
+            if (!is_null($booking->user_id) && $booking->user_id !== $user->id) {
+                DB::rollBack();
+                return back()->with('error', "Cette réservation est déjà associée à un autre utilisateur.");
+            }
+
+            // 4) Associer la réservation au user et définir statut
+            $booking->user_id = $user->id;
+            $booking->statut  = $data['payment_method'] === 'espece' ? 'pending' : 'confirmed';
+            $booking->save();
+
+            // 5) Éviter les doublons
+            if (Payment::where('booking_id', $booking->id)->exists()) {
+                DB::commit();
+                return redirect()->route('bookings.details', $booking)
+                    ->with('success', 'Paiement déjà initié pour cette réservation.');
+            }
+
+            // 6) Créer le paiement
+            Payment::create([
+                'booking_id'       => $booking->id,
+                'transaction_id'   => 'TRANS-' . now()->timestamp,
+                'montant'          => $data['total_price'],
+                'methode_paiement' => $data['payment_method'],
+                'statut'           => $data['payment_method'] === 'espece' ? 'unpaid' : 'paid',
+                'date_paiement'    => now(),
+            ]);
+
+            DB::commit();
+
+            $msg = $data['payment_method'] === 'espece'
+                ? 'Votre réservation est en attente. Un agent vous contactera.'
+                : 'Paiement confirmé et réservation validée !';
+
+            return redirect()->route('bookings.details', $booking)->with('success', $msg);
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Erreur finaliser (guest): ' . $e->getMessage());
+            return back()->withInput()->with('error', 'Une erreur est survenue. Réessayez.');
+        }
     }
 
 

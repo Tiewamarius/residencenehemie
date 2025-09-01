@@ -16,7 +16,7 @@
 
                 <section class="payment-method-section">
                     <h2>1. Choisissez un mode de paiement</h2>
-                    <form id="payment-form" action="{{ route('paiements.process') }}" method="POST">
+                    <form id="payment-form" action="{{ route('paiements.finaliser') }}" method="POST">
                         @csrf
                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                         <input type="hidden" name="total_price" value="{{ $booking->total_price }}">
@@ -91,61 +91,67 @@
                             </div>
                         </div>
 
-                        @auth
-                        <button type="submit" class="submit-payment-btn">Confirmer</button>
-                        @endauth
+                        <div class="price-details">
+                            @guest
+                            <h3>Vos coordonnées</h3>
+                            <div class="form-group">
+                                <input type="text" id=" " name="name" placeholder="Nom " required>
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" id=" " name="phone_number" placeholder=" Numero" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" id=" " name="email" placeholder="Email" required>
+                            </div>
+                            @endguest
+                            <button type="submit" class="button login-continue-btn">RESERVER</button>
 
-                        @guest
-                        <p class="text-sm text-gray-600 mt-4">
-                            Connectez-vous ou créez un compte pour confirmer votre réservation.
-                        </p>
-                        @endguest
                     </form>
-                </section>
             </div>
 
-            <!-- Colonne droite -->
-            <div class="payment-right-column">
-                <div class="booking-summary-card">
-                    <div class="residence-summary">
-                        @php
-                        $mainImage = $booking->residence->images->where('est_principale', true)->first();
-                        $imagePath = $mainImage ? asset($mainImage->chemin_image) : 'https://placehold.co/100x100';
-                        @endphp
-                        <img src="{{ $imagePath }}" alt="Image résidence" class="w-20 h-20 object-cover rounded-xl">
-                        <div>
-                            <h4>{{ $booking->residence->nom }}</h4>
-                            <span class="rating">
-                                <i class="fas fa-star"></i>
-                                {{ $booking->residence->reviews->count() > 0 ? number_format($booking->residence->reviews->avg('note'), 2) : 'N/A' }}
-                                ({{ $booking->residence->reviews->count() }} avis)
-                            </span>
-                        </div>
+            </section>
+        </div>
+
+        <!-- Colonne droite -->
+        <div class="payment-right-column">
+            <div class="booking-summary-card">
+                <div class="residence-summary">
+                    @php
+                    $mainImage = $booking->residence->images->where('est_principale', true)->first();
+                    $imagePath = $mainImage ? asset($mainImage->chemin_image) : 'https://placehold.co/100x100';
+                    @endphp
+                    <img src="{{ $imagePath }}" alt="Image résidence" class="w-20 h-20 object-cover rounded-xl">
+                    <div>
+                        <h4>{{ $booking->residence->nom }}</h4>
+                        <span class="rating">
+                            <i class="fas fa-star"></i>
+                            {{ $booking->residence->reviews->count() > 0 ? number_format($booking->residence->reviews->avg('note'), 2) : 'N/A' }}
+                            ({{ $booking->residence->reviews->count() }} avis)
+                        </span>
                     </div>
-
-                    <div class="travel-info">
-                        <h3>Informations sur le voyage</h3>
-                        <p><span>Dates</span>
-                            <span>{{ \Carbon\Carbon::parse($booking->date_arrivee)->translatedFormat('d F') }} - {{ \Carbon\Carbon::parse($booking->date_depart)->translatedFormat('d F Y') }}</span>
-                        </p>
-                        <p><span>Voyageurs</span> <span>{{ $booking->nombre_adultes }} adulte(s)</span></p>
-                    </div>
-
-                    <div class="price-details">
-                        <h3>Détail du prix</h3>
-                        <p>
-                            <span>{{ number_format($booking->type->prix_base, 0, ',', ' ') }} FCFA x {{ \Carbon\Carbon::parse($booking->date_arrivee)->diffInDays($booking->date_depart) }} nuit(s)</span>
-                            <span>{{ number_format($booking->total_price - 10000, 0, ',', ' ') }} FCFA</span>
-                        </p>
-                        <p><span>Frais de service</span> <span>10 000 FCFA</span></p>
-                        <p class="total"><span>Total</span> <span>{{ number_format($booking->total_price, 0, ',', ' ') }} FCFA</span></p>
-                    </div>
-
-
-
                 </div>
+
+                <div class="travel-info">
+                    <h3>Informations sur le voyage</h3>
+                    <p><span>Dates</span>
+                        <span>{{ \Carbon\Carbon::parse($booking->date_arrivee)->translatedFormat('d F') }} - {{ \Carbon\Carbon::parse($booking->date_depart)->translatedFormat('d F Y') }}</span>
+                    </p>
+                    <p><span>Voyageurs</span> <span>{{ $booking->nombre_adultes }} adulte(s)</span></p>
+                </div>
+
+                <div class="price-details">
+                    <h3>Détail du prix</h3>
+                    <p>
+                        <span>{{ number_format($booking->type->prix_base, 0, ',', ' ') }} FCFA x {{ \Carbon\Carbon::parse($booking->date_arrivee)->diffInDays($booking->date_depart) }} nuit(s)</span>
+                        <span>{{ number_format($booking->total_price - 10000, 0, ',', ' ') }} FCFA</span>
+                    </p>
+                    <p><span>Frais de service</span> <span>10 000 FCFA</span></p>
+                    <p class="total"><span>Total</span> <span>{{ number_format($booking->total_price, 0, ',', ' ') }} FCFA</span></p>
+                </div>
+
             </div>
         </div>
+    </div>
     </div>
 </main>
 @endsection

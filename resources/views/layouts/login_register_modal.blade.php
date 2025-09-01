@@ -37,7 +37,7 @@
                         <input type="text" id="register-name" name="name" placeholder="Entrez votre nom complet" required>
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="register-email" name="email" placeholder="Entrez votre email" required>
+                        <input type="tel" id="register-phone" name="phone_number" placeholder="Entrez votre contact" required>
                     </div>
                     <div class="form-group">
                         <input type="email" id="register-email" name="email" placeholder="Entrez votre email" required>

@@ -483,14 +483,6 @@
                                      class="w-full border rounded-lg p-2">
                              </div>
 
-                             <!-- <div>
-                                 <label for="payment_method">Méthode de paiement</label>
-                                 <select id="payment_method" name="payment_method" class="w-full border rounded-lg p-2">
-                                     <option value="carte" {{ old('payment_method', $reservation->payment_method) === 'carte' ? 'selected' : '' }}>Carte bancaire</option>
-                                     <option value="mobile" {{ old('payment_method', $reservation->payment_method) === 'mobile' ? 'selected' : '' }}>Mobile Money</option>
-                                     <option value="cash" {{ old('payment_method', $reservation->payment_method) === 'cash' ? 'selected' : '' }}>Paiement en espèces</option>
-                                 </select>
-                             </div> -->
                          </div>
 
                          <div class="actions mt-4">
@@ -504,10 +496,10 @@
 
 
                  {{-- Recommander si annulée ou terminée --}}
-                 @if(in_array($reservation->statut, ['Annulée - Non remboursée','Terminée']))
-                 <button type="button" id="reorder-btn" class="btn primary">
-                     <i class="fas fa-redo"></i> Recommander
-                 </button>
+                 @if(in_array($reservation->statut, ['Annulée - Non remboursée', 'Terminée']))
+                 <a href="{{ route('residences.detailsAppart', ['residence' => $reservation->residence_id]) }}" class="btn primary">
+                     <i class="fas fa-redo"></i> Voir la résidence
+                 </a>
                  @endif
 
 

@@ -92,16 +92,12 @@ class BookingController extends Controller
             }
 
             // 6. Rediriger vers la page de paiement
-            return redirect()
-                ->route('paiements.show', ['booking' => $booking->id])
+            return redirect()->route('paiements.show', ['booking' => $booking->id])
                 ->with('message', '✅ Réservation effectuée avec succès ! Un email de confirmation vous a été envoyé.');
         } catch (\Exception $e) {
             // Gérer les erreurs de réservation
             Log::error('Erreur de réservation: ' . $e->getMessage());
-            return redirect()
-                ->back()
-                ->with('error', '❌ Une erreur est survenue lors de la réservation. Veuillez réessayer.')
-                ->withInput();
+            return redirect()->back()->with('error', '❌ Une erreur est survenue lors de la réservation. Veuillez réessayer.')->withInput();
         }
     }
 
@@ -343,7 +339,7 @@ class BookingController extends Controller
             abort(403);
         }
 
-        // Règles de validation
+
         // Règles de validation
         $validated = $request->validate([
             'date_arrivee' => 'required|date|after_or_equal:today',
@@ -353,8 +349,21 @@ class BookingController extends Controller
             // 'payment_method' => 'required|string',
         ]);
 
+        // Conversion en objets Carbon
+        $dateArrivee = \Carbon\Carbon::parse($validated['date_arrivee']);
+        $dateDepart  = \Carbon\Carbon::parse($validated['date_depart']);
+
+        // Calcul du nombre de nuits
+        $nuits = $dateArrivee->diffInDays($dateDepart);
+
+        // ⚠️ Si ton prix vient du type de logement :
+        $prixParNuit = $reservation->type->prix_base ?? $reservation->residence->prix_base;
+
+        // Nouveau total
+        $validated['total_price'] = $nuits * $prixParNuit;
+
         // Si tout est ok, tu pourras remettre la suite
-        $reservation->userUpdate($request->all());
+        $reservation->update($validated);
 
         return redirect()->back()->with('status', 'La réservation a été modifiée avec succès.');
     }

@@ -8,7 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail; // Pour l'envoi d'emails
-use Illuminate\Support\Facades\Notification; // Pour l'envoi de notifications (SMS)
+use App\Mail\GuestAccountCreated;
+// use Illuminate\Support\Facades\Notification; // Pour l'envoi de notifications (SMS)
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -108,7 +109,9 @@ class PaiementController extends Controller
                     'phone_number' => $data['phone_number'],
                     'password'     => Hash::make($plainPassword),
                 ]);
-                // Mail::to($user->email)->send(new GuestAccountCreated($user, $plainPassword));
+
+
+                Mail::to($user->email)->send(new GuestAccountCreated($user, $plainPassword));
             }
             // 🚀 3) Authentifier automatiquement l'user
             Auth::login($user);

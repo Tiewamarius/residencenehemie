@@ -2,7 +2,8 @@
 .profile-container {
     display: flex;
     gap: 2rem;
-    padding: 2rem;
+    margin-top: 70px;
+    padding: 1rem;
 }
 .profile-sidebar {
     width: 25%;

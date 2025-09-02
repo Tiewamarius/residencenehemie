@@ -5,7 +5,7 @@
      /* Layout base */
      .booking-show {
          max-width: 1100px;
-         margin: 80px auto 40px;
+         margin: 110px auto 40px;
          /* centré + espace sous le header */
          padding: 0 1rem;
          /* un peu de padding latéral */
@@ -448,7 +448,7 @@
                      <div id="price-info" class="mt-2 text-sm text-gray-700"></div>
 
 
-                     <form action="{{ route('bookings.update', $reservation->id) }}" method="POST" class="space-y-4">
+                     <form action="{{ route('bookings.userUpdate', $reservation->id) }}" method="POST" class="space-y-4">
                          @csrf
                          @method('PUT')
 

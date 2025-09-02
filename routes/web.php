@@ -88,8 +88,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/bookings/{id}/reorder', [BookingController::class, 'reorder'])
         ->name('bookings.reorder');
 
-    Route::get('/bookings/{id}/edit', [BookingController::class, 'edit'])
-        ->name('bookings.edit');
+    Route::get('/bookings/{id}/userEdit', [BookingController::class, 'userEdit'])
+        ->name('bookings.userEdit');
 
 
     // verification avant update
@@ -97,8 +97,8 @@ Route::middleware('auth')->group(function () {
         ->name('bookings.checkAvailability');
 
     // Update reservation
-    Route::put('/bookings/{id}', [BookingController::class, 'update'])
-        ->name('bookings.update');
+    Route::put('/bookings/{id}', [BookingController::class, 'userUpdate'])
+        ->name('bookings.userUpdate');
 
 
 

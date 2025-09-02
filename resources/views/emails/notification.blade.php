@@ -65,17 +65,6 @@
             font-size: 12px;
             color: #6b7280;
         }
-
-        a.button {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
     </style>
 </head>
 
@@ -83,9 +72,9 @@
     <div class="container">
         <div class="header">
             @if($type === 'new')
-            <h1>📩 Réservation confirmée !</h1>
+            <h1>📩 Nouvelle réservation</h1>
             @elseif($type === 'update')
-            <h1>🔄 Réservation mise à jour</h1>
+            <h1>🔄 Réservation modifiée</h1>
             @elseif($type === 'cancel')
             <h1>❌ Réservation annulée</h1>
             @else
@@ -94,35 +83,28 @@
         </div>
 
         <div class="content">
-            <h2>Bonjour {{ $booking->user->name }},</h2>
-
-            @if($type === 'new')
-            <p>Votre réservation a été effectuée avec succès ! 🎉</p>
-            @elseif($type === 'update')
-            <p>Votre réservation a été modifiée avec succès.</p>
-            @elseif($type === 'cancel')
-            <p>Votre réservation a été annulée. Si un remboursement est applicable, il sera traité sous peu.</p>
-            @endif
-
             <h2>Détails de la réservation</h2>
             <div class="info">
+                <p><span class="highlight">Client :</span> {{ $booking->user->name }} ({{ $booking->user->email }})</p>
                 <p><span class="highlight">Résidence :</span> {{ $booking->residence->nom }}</p>
                 <p><span class="highlight">Type :</span> {{ $booking->type->nom }}</p>
                 <p><span class="highlight">Arrivée :</span> {{ \Carbon\Carbon::parse($booking->date_arrivee)->format('d/m/Y') }}</p>
                 <p><span class="highlight">Départ :</span> {{ \Carbon\Carbon::parse($booking->date_depart)->format('d/m/Y') }}</p>
-                <p><span class="highlight">Nombre d’adultes :</span> {{ $booking->nombre_adultes }}</p>
-                <p><span class="highlight">Nombre d’enfants :</span> {{ $booking->nombre_enfants ?? 0 }}</p>
                 <p><span class="highlight">Prix total :</span> {{ number_format($booking->total_price, 0, ',', ' ') }} CFA</p>
                 <p><span class="highlight">Statut :</span> {{ $booking->statut }}</p>
-                <p><span class="highlight">Numéro de réservation :</span> {{ $booking->numero_reservation }}</p>
             </div>
 
-            <a class="button" href="{{ route('bookings.details', $booking->id) }}">Voir ma réservation</a>
+            @if($type === 'new')
+            <p>Une nouvelle réservation vient d’être effectuée. 🎉</p>
+            @elseif($type === 'update')
+            <p>La réservation a été mise à jour par le client.</p>
+            @elseif($type === 'cancel')
+            <p>La réservation a été annulée.</p>
+            @endif
         </div>
 
         <div class="footer">
             <p>💡 Ceci est un message automatique, merci de ne pas répondre directement à cet email.</p>
-            <p>📞 Pour toute question, contactez notre support : support@odedis.com</p>
         </div>
     </div>
 </body>

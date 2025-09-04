@@ -84,6 +84,24 @@ Route::middleware('auth')->group(function () {
     // Details
     Route::get('/bookings/{booking}', [BookingController::class, 'details'])->name('bookings.details');
 
+    // reativer reservation annuler ou terminé
+    Route::get('/bookings/{id}/reorder', [BookingController::class, 'reorder'])
+        ->name('bookings.reorder');
+
+    Route::get('/bookings/{id}/userEdit', [BookingController::class, 'userEdit'])
+        ->name('bookings.userEdit');
+
+
+    // verification avant update
+    Route::get('/bookings/{id}/check-availability', [BookingController::class, 'checkAvailability'])
+        ->name('bookings.checkAvailability');
+
+    // Update reservation
+    Route::put('/bookings/{id}', [BookingController::class, 'userUpdate'])
+        ->name('bookings.userUpdate');
+
+
+
     // Facture : page HTML ou PDF
     Route::get('/bookings/{id}/invoice', [BookingController::class, 'invoice'])
         ->name('bookings.invoice');

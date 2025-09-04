@@ -5,7 +5,7 @@
      /* Layout base */
      .booking-show {
          max-width: 1100px;
-         margin: 80px auto 40px;
+         margin: 110px auto 40px;
          /* centré + espace sous le header */
          padding: 0 1rem;
          /* un peu de padding latéral */
@@ -398,7 +398,8 @@
                          </tr>
                          <tr>
                              <td>Frais de service</td>
-                             <td class="text-right">{{ number_format($reservation->frais_service ?? 10000, 0, ',', ' ') }} FCFA</td>
+                             <td class="text-right">Gratuit</td>
+                             <!-- <td class="text-right">{{ number_format($reservation->frais_service ?? 10000, 0, ',', ' ') }} FCFA</td> -->
                          </tr>
                          @if(!empty($reservation->taxes))
                          <tr>
@@ -429,6 +430,79 @@
                  </form>
                  @endif
 
+
+                 {{-- Modifier si délai pas dépassé --}}
+                 @php
+                 $canEdit = now()->diffInHours($reservation->date_arrivee, false) > 48;
+                 @endphp
+
+                 {{-- Bouton pour afficher le formulaire --}}
+                 @if($canEdit && $reservation->statut === 'pending')
+                 <button type="button" id="toggle-edit" class="btn outline">
+                     <i class="fas fa-edit"></i> Modifier la réservation
+                 </button>
+
+                 {{-- Formulaire de modification (caché au début) --}}
+                 <section class="card mt-6" id="edit-form" style="display: none;">
+                     <h3 class="card-title">Modifier la réservation</h3>
+                     <div id="price-info" class="mt-2 text-sm text-gray-700"></div>
+
+
+                     <form action="{{ route('bookings.userUpdate', $reservation->id) }}" method="POST" class="space-y-4">
+                         @csrf
+                         @method('PUT')
+
+                         <div class="details-grid">
+                             <div>
+                                 <label for="date_arrivee">Nouvelle date d’arrivée</label>
+                                 <input type="date" id="date_arrivee" name="date_arrivee"
+                                     value="{{ old('date_arrivee', \Carbon\Carbon::parse($reservation->date_arrivee)->format('Y-m-d')) }}"
+                                     min="{{ now()->format('Y-m-d') }}"
+                                     class="w-full border rounded-lg p-2">
+                             </div>
+
+                             <div>
+                                 <label for="date_depart">Nouvelle date de départ</label>
+                                 <input type="date" id="date_depart" name="date_depart"
+                                     value="{{ old('date_depart', \Carbon\Carbon::parse($reservation->date_depart)->format('Y-m-d')) }}"
+                                     min="{{ now()->format('Y-m-d') }}"
+                                     class="w-full border rounded-lg p-2">
+                             </div>
+
+                             <div>
+                                 <label for="nombre_adultes">Nombre d’adultes</label>
+                                 <input type="number" id="nombre_adultes" name="nombre_adultes" min="1"
+                                     value="{{ old('nombre_adultes', $reservation->nombre_adultes ?? 1) }}"
+                                     class="w-full border rounded-lg p-2">
+                             </div>
+
+                             <div>
+                                 <label for="nombre_enfants">Nombre d’enfants</label>
+                                 <input type="number" id="nombre_enfants" name="nombre_enfants" min="0"
+                                     value="{{ old('nombre_enfants', $reservation->nombre_enfants ?? 0) }}"
+                                     class="w-full border rounded-lg p-2">
+                             </div>
+
+                         </div>
+
+                         <div class="actions mt-4">
+                             <button type="submit" class="btn primary">
+                                 <i class="fas fa-save"></i> Enregistrer les modifications
+                             </button>
+                         </div>
+                     </form>
+                 </section>
+                 @endif
+
+
+                 {{-- Recommander si annulée ou terminée --}}
+                 @if(in_array($reservation->statut, ['Annulée - Non remboursée', 'Terminée']))
+                 <a href="{{ route('residences.detailsAppart', ['residence' => $reservation->residence_id]) }}" class="btn primary">
+                     <i class="fas fa-redo"></i> Voir la résidence
+                 </a>
+                 @endif
+
+
                  @if($reservation->statut === 'confirmed')
                  <a href="{{ route('bookings.checkin', $reservation->id) }}" class="btn primary">
                      <i class="fas fa-door-open"></i> Check-in
@@ -458,11 +532,19 @@
                  <p>Créée</p>
                  <small>{{ \Carbon\Carbon::parse($reservation->created_at)->translatedFormat('d/m/Y H:i') }}</small>
              </div>
-             <div class="step {{ $reservation->statut === 'Confirmée' || $reservation->statut === 'Terminée' ? 'done' : '' }}">
+             <div class="step {{ $reservation->statut === 'pending' || $reservation->statut === 'pending' ? 'done' : '' }}">
+                 <span class="dot"></span>
+                 <p>En attente</p>
+             </div>
+             <div class="step {{ $reservation->statut === 'Annulée - Non remboursée' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
+                 <span class="dot"></span>
+                 <p>Annulé</p>
+             </div>
+             <div class="step {{ $reservation->statut === 'confirmed' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
                  <span class="dot"></span>
                  <p>Confirmée</p>
              </div>
-             <div class="step {{ $reservation->statut === 'Terminée' ? 'done' : '' }}">
+             <div class="step {{ $reservation->statut === 'Terminer' ? 'done' : '' }}">
                  <span class="dot"></span>
                  <p>Terminée</p>
              </div>
@@ -476,39 +558,139 @@
      </section>
      <script>
          document.addEventListener('DOMContentLoaded', () => {
-             // Copier la référence
+             // === COPIER UNE RÉFÉRENCE ===
              document.querySelectorAll('.copy-ref').forEach(btn => {
                  btn.addEventListener('click', async () => {
-                     const value = btn.getAttribute('data-copy');
+                     const value = btn.dataset.copy;
                      try {
                          await navigator.clipboard.writeText(value);
-                         flash(btn, 'Copié !');
+                         flash(btn, '✅ Copié !');
                      } catch {
-                         flash(btn, 'Impossible de copier');
+                         flash(btn, '❌ Échec copie', 'red');
                      }
                  });
              });
 
-             // Confirmation d’annulation
+             // === CONFIRMATION ANNULATION ===
              const cancelForm = document.getElementById('cancel-form');
              if (cancelForm) {
-                 cancelForm.addEventListener('submit', (e) => {
+                 cancelForm.addEventListener('submit', e => {
                      const btn = cancelForm.querySelector('[data-confirm]');
-                     const msg = btn?.getAttribute('data-confirm') || 'Confirmer ?';
+                     const msg = btn?.dataset.confirm || 'Confirmer l’annulation ?';
                      if (!confirm(msg)) e.preventDefault();
                  });
              }
+
+             // === TOGGLE FORMULAIRE MODIFICATION ===
+             const toggleBtn = document.getElementById('toggle-edit');
+             const editForm = document.getElementById('edit-form');
+             if (toggleBtn && editForm) {
+                 toggleBtn.addEventListener('click', () => {
+                     const isHidden = editForm.style.display === 'none' || editForm.style.display === '';
+                     editForm.style.display = isHidden ? 'block' : 'none';
+                     toggleBtn.innerHTML = isHidden ?
+                         '<i class="fas fa-times"></i> Fermer' :
+                         '<i class="fas fa-edit"></i> Modifier la réservation';
+                 });
+             }
+
+
+             // === TOGGLE FORMULAIRE recommender ===
+             const reorderBtn = document.getElementById('reorder-btn');
+             if (reorderBtn && editForm) {
+                 reorderBtn.addEventListener('click', () => {
+                     // Ouvre le formulaire si caché
+                     if (editForm.style.display === 'none' || editForm.style.display === '') {
+                         editForm.style.display = 'block';
+                         // Scroll vers le formulaire
+                         editForm.scrollIntoView({
+                             behavior: 'smooth',
+                             block: 'start'
+                         });
+
+                         // Met à jour le texte du bouton "Modifier" si présent
+                         if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-times"></i> Fermer';
+                     }
+                 });
+             }
+
+             // === VÉRIFICATION DISPONIBILITÉ + CALCUL PRIX ===
+             const dateArriveeInput = document.getElementById('date_arrivee');
+             const dateDepartInput = document.getElementById('date_depart');
+             const priceInfo = document.getElementById('price-info');
+
+             async function checkAvailability() {
+                 const dateArrivee = dateArriveeInput?.value;
+                 const dateDepart = dateDepartInput?.value;
+                 if (!dateArrivee || !dateDepart) return;
+
+                 const today = new Date().toISOString().split("T")[0];
+
+                 // Vérifier si la date arrivée est avant aujourd'hui
+                 if (dateArrivee < today) {
+                     priceInfo.innerHTML = "❌ La date d’arrivée doit être postérieure à aujourd’hui.";
+                     priceInfo.className = "text-red-500 font-medium";
+                     return;
+                 }
+
+                 // Vérifier si la date départ >= arrivée
+                 if (dateDepart <= dateArrivee) {
+                     priceInfo.innerHTML = "❌ La date de départ doit être après la date d’arrivée.";
+                     priceInfo.className = "text-red-500 font-medium";
+                     return;
+                 }
+
+                 // Loader visuel
+                 priceInfo.innerHTML = "⏳ Vérification...";
+                 priceInfo.className = "text-gray-500";
+
+                 try {
+                     const res = await fetch(
+                         `/bookings/{{ $reservation->id }}/check-availability?date_arrivee=${dateArrivee}&date_depart=${dateDepart}`
+                     );
+                     const data = await res.json();
+
+                     if (data.success) {
+                         priceInfo.innerHTML = `
+                ✅ ${data.message}<br>
+                ${data.nights} nuit(s) × {{$reservation->type->prix_base}} CFA = 
+                <strong>${data.total} CFA</strong>
+            `;
+                         priceInfo.className = "text-green-600 font-medium";
+                     } else {
+                         priceInfo.innerHTML = `❌ ${data.message}`;
+                         priceInfo.className = "text-red-500 font-medium";
+                     }
+                 } catch (error) {
+                     console.error(error);
+                     priceInfo.innerHTML = "⚠️ Erreur réseau. Réessayez.";
+                     priceInfo.className = "text-red-500";
+                 }
+             }
+
+
+             if (dateArriveeInput && dateDepartInput) {
+                 dateArriveeInput.addEventListener('change', checkAvailability);
+                 dateDepartInput.addEventListener('change', checkAvailability);
+             }
          });
 
-         /** Petit feedback visuel à côté du bouton copié */
-         function flash(btn, text) {
+         /**
+          * Petit feedback visuel à côté d’un bouton
+          */
+         function flash(btn, text, color = 'green') {
              const chip = document.createElement('span');
              chip.textContent = text;
              chip.style.marginLeft = '.5rem';
              chip.style.fontSize = '.85rem';
-             chip.style.color = '#10b981';
+             chip.style.fontWeight = '500';
+             chip.style.color = color === 'green' ? '#10b981' : '#ef4444';
+             chip.style.opacity = '0';
+             chip.style.transition = 'opacity 0.3s ease';
+
              btn.insertAdjacentElement('afterend', chip);
-             setTimeout(() => chip.remove(), 1600);
+             requestAnimationFrame(() => (chip.style.opacity = '1'));
+             setTimeout(() => chip.remove(), 1800);
          }
      </script>
  </main>

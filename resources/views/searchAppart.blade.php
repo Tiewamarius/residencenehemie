@@ -10,9 +10,12 @@
             <div class="search-bar-container">
                 {{-- Destination --}}
                 <div class="search-bar-item">
-                    <label for="destination"></label>
-                    <input type="text" id="destination" name="destination" placeholder="Bingerville-Fekesse"
-                        value="{{ request('destination') }}">
+                    <a href="https://www.google.com/maps/search/?api=1&query=Abidjan,+Côte+d'Ivoire,+Bingerville+Fekesse"
+                        target="_blank"
+                        class="destination-link">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Abidjan-CI Bingerville-Fekesse</span>
+                    </a>
                 </div>
 
                 {{-- Arrivée --}}
@@ -30,7 +33,7 @@
                 </div>
 
                 {{-- Voyageurs --}}
-                <div class="search-bar-item voyageurs-dropdown">
+                <!-- <div class="search-bar-item voyageurs-dropdown">
                     <label for="voyageurs">Personnes</label>
                     <input type="text" id="voyageurs" name="voyageurs" readonly
                         placeholder="nombre de personnes" value="{{ request('personnes') }}">
@@ -61,7 +64,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 {{-- Bouton recherche --}}
                 <div class="search-bar-button">
@@ -355,21 +358,28 @@
         checkOut.addEventListener("change", trySubmit);
 
 
-        /** ==========================
-         *  Bouton reset (vider champs)
-         * ========================== */
+
+        // Bouton reset(vider champs)
+
         const resetBtn = document.getElementById("reset-btn");
+
         resetBtn.addEventListener("click", () => {
-            // Vider les champs
-            document.getElementById("destination").value = "";
-            checkIn.value = "";
-            checkOut.value = "";
-            document.getElementById("voyageurs").value = "";
+            // Vider destination si existe
+            const destination = document.getElementById("destination");
+            if (destination) destination.value = "";
+
+            // Vider dates
+            if (checkIn) checkIn.value = "";
+            if (checkOut) checkOut.value = "";
+
+            // Vider voyageurs si existe
+            const voyageurs = document.getElementById("voyageurs");
+            if (voyageurs) voyageurs.value = "";
 
             // Réinitialiser les compteurs voyageurs
             document.querySelectorAll(".count").forEach(c => c.textContent = 0);
 
-            // Option : recharger la page avec résultats initiaux
+            // Recharger la page avec résultats initiaux
             window.location.href = "{{ url('/search-apartments') }}";
         });
     });

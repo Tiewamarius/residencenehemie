@@ -38,59 +38,102 @@ Route::prefix('admin')->middleware('guest:admin')->group(function () {
 
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
-    // Route home
+    // Tableau de bord
     Route::get('dashboard', [AdminController::class, 'homes'])
-        ->name('adminauth.homes');
+        ->name('admin.dashboard');
 
-
-    // Route All resiences
+    /**
+     * Résidences
+     */
     Route::get('residences', [AdminController::class, 'residences'])
-        ->name('admin.residences');
+        ->name('admin.residences.index');
+    Route::get('residences/create', [AdminController::class, 'createResidence'])
+        ->name('admin.residences.create');
+    Route::post('residences', [AdminController::class, 'storeResidence'])
+        ->name('admin.residences.store');
+    Route::get('residences/{residence}/edit', [AdminController::class, 'editResidence'])
+        ->name('admin.residences.edit');
+    Route::put('residences/{residence}', [AdminController::class, 'updateResidence'])
+        ->name('admin.residences.update');
+    Route::delete('residences/{residence}', [AdminController::class, 'destroyResidence'])
+        ->name('admin.residences.destroy');
 
-
-    // Route booking
+    /**
+     * Réservations
+     */
     Route::get('bookings', [AdminController::class, 'index'])
-        ->name('admin.bookings');
+        ->name('admin.bookings.index');
+    Route::get('bookings/{booking}', [AdminController::class, 'showBooking'])
+        ->name('admin.bookings.show');
+    Route::get('bookings/{booking}/edit', [AdminController::class, 'editBooking'])
+        ->name('admin.bookings.edit');
+    Route::put('bookings/{booking}', [AdminController::class, 'updateBooking'])
+        ->name('admin.bookings.update');
+    Route::delete('bookings/{booking}', [AdminController::class, 'destroyBooking'])
+        ->name('admin.bookings.destroy');
+    Route::post('bookings/{booking}/approve', [AdminController::class, 'approveBooking'])
+        ->name('admin.bookings.approve');
+    Route::post('bookings/{booking}/reject', [AdminController::class, 'rejectBooking'])
+        ->name('admin.bookings.reject');
 
-    // Route to show a single booking.
-    Route::get('bookings/{booking}', [AdminController::class, 'show'])->name('bookings.show');
+    /**
+     * Clients
+     */
+    Route::get('clients', [AdminController::class, 'clients'])
+        ->name('admin.clients.index');
 
-    // Route to show the form for editing a booking.
-    Route::get('bookings/{booking}/edit', [AdminController::class, 'edit'])->name('bookings.edit');
+    Route::get('clients/{client}/bookings', [AdminController::class, 'getClientBookings'])
+        ->name('admin.clients.bookings');
 
-    // Route to handle the form submission for updating a booking
-    Route::put('bookings/{booking}', [AdminController::class, 'update'])->name('bookings.update');
+    Route::get('clients/{client}', [AdminController::class, 'showClient'])
+        ->name('admin.clients.show');
 
-    // Route to delete a booking. Use the DELETE HTTP method.
-    Route::delete('bookings/{booking}', [AdminController::class, 'destroy'])->name('bookings.destroy');
+    Route::delete('clients/{client}', [AdminController::class, 'destroyClient'])
+        ->name('admin.clients.destroy');
 
+    /**
+     * Paiements
+     */
+    Route::get('payments', [AdminController::class, 'payments'])
+        ->name('admin.payments.index');
+    Route::get('payments/{payment}', [AdminController::class, 'showPayment'])
+        ->name('admin.payments.show');
 
+    /**
+     * Utilisateurs (Admins)
+     */
+    Route::get('users', [AdminController::class, 'users'])
+        ->name('admin.users.index');
+    Route::get('users/create', [AdminController::class, 'createUser'])
+        ->name('admin.users.create');
+    Route::post('users', [AdminController::class, 'storeUser'])
+        ->name('admin.users.store');
+    Route::get('users/{user}/edit', [AdminController::class, 'editUser'])
+        ->name('admin.users.edit');
+    Route::put('users/{user}', [AdminController::class, 'updateUser'])
+        ->name('admin.users.update');
+    Route::delete('users/{user}', [AdminController::class, 'destroyUser'])
+        ->name('admin.users.destroy');
 
+    /**
+     * Rapports
+     */
+    Route::get('reports', [AdminController::class, 'reports'])
+        ->name('admin.reports.index');
+    Route::get('reports/{report}', [AdminController::class, 'showReport'])
+        ->name('admin.reports.show');
 
+    /**
+     * Paramètres / Profil admin
+     */
+    Route::get('profile', [AdminController::class, 'profile'])
+        ->name('admin.profile');
+    Route::put('profile', [AdminController::class, 'updateProfile'])
+        ->name('admin.profile.update');
 
-    Route::get('verify-email', AdminEmailVerificationPromptController::class)
-        ->name('admin.verification.notice');
-
-    Route::get('verify-email/{id}/{hash}', AdminVerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('admin.verification.verify');
-
-    Route::post('email/verification-notification', [AdminEmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('admin.verification.send');
-
-    Route::get('confirm-password', [AdminConfirmablePasswordController::class, 'show'])
-        ->name('admin.password.confirm');
-
-    Route::post('confirm-password', [AdminConfirmablePasswordController::class, 'store']);
-
-    Route::put('admin.password', [AdminPasswordController::class, 'update'])->name('admin.password.update');
-
-
-
-
-
-
-    Route::post('admin/logout', [AdminAuthenticatedSessionController::class, 'destroy'])
+    /**
+     * Déconnexion
+     */
+    Route::post('logout', [AdminAuthenticatedSessionController::class, 'destroy'])
         ->name('admin.logout');
 });

@@ -213,7 +213,23 @@
         </div>
     </div>
 </section>
-
+<!-- Maps -->
+<div class="location-map-section" style="text-align: center;" id="Maps">
+    <!-- <h3>Retrouvez-nous</h3> -->
+    <p>{{ $residence->quartier ?? 'Quartier' }}, {{ $residence->ville ?? 'Ville' }}, {{ $residence->pays ?? 'Pays' }}</p>
+    <br><br>
+    <div class="map-container">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3972.182528039468!2d-3.9150304!3d5.38913!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc193abeea31087%3A0x3d0629f3b471e764!2sAppartement%20meubl%C3%A9%202%20pi%C3%A8ces%20rez%20de%20chauss%C3%A9e%2C%20R%C3%A9sidence%20Nehemie%20Feh%20Kesse%20Bingerville!5e0!3m2!1sfr!2sci!4v1756721448320!5m2!1sfr!2sci"
+            width=" 90%"
+            height="300"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
 @endsection
 
 @section('scripts')

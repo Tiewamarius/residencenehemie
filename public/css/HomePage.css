@@ -3,8 +3,8 @@
 
 /* --- Variables CSS (Ajoutées pour une meilleure gestion) --- */
 :root {
-    --primary-color: #ed5257; /* Rouge-rose signature Airbnb */
-    --primary-color-hover: #f52a71; /* Teinte plus foncée pour le survol */
+    --primary-color:#f07e97; /* Rouge-rose signature Airbnb */
+    --primary-color-hover: #ed5257; /* Teinte plus foncée pour le survol */
     --text-color-dark: #222222;
     --text-color-medium: #717171;
     --text-color-light: #AAAAAA;
@@ -75,7 +75,8 @@ button {
     left: 0;
     width: 100%;
     height: 80px;
-    background-color: transparent; /* Transparent par défaut */
+    background-color:#0d02026b;
+     /*transparent;  Transparent par défaut */
     z-index: 1000;
     transition: background-color 0.3s ease,
     box-shadow 0.3s ease; /* Transition douce */
@@ -121,9 +122,9 @@ button {
 
 .nav_link {
     /*color: var(--white);  Couleur par défaut (transparent header) */
-    color: #717171;
+    color: #f27474;
     font-weight: 500;
-    font-size: 1.05em;
+    font-size: 1.2em;
     transition: color 0.3s ease;
     padding: 5px 0; /* Ajout d'un léger padding pour une meilleure zone de clic */
 }
@@ -205,12 +206,12 @@ button {
 }
 
 .sidebar_nav_link:hover {
-    color: var(--primary-color);
+    color: var(--primary-color-hover);
 }
 
 .sidebar_nav_link i {
     font-size: 1.2em;
-    color: var(--text-color-medium); /* Couleur des icônes dans la sidebar */
+    color: var(--primary-color-hover); /* Couleur des icônes dans la sidebar */
 }
 
 .sidebar_assistant_btn {
@@ -1670,7 +1671,7 @@ button {
 .feature-display-area h3,
 .feature-display-area p {
     position: relative;
-    z-index: 3;
+    z-index: 4;
     color: var(--white);
     text-shadow: 0 1px 4px rgba(0,0,0,0.7); /* Ombre plus foncée pour la lisibilité */
 }
@@ -1745,6 +1746,22 @@ button {
         grid-template-columns: 1fr; /* Force l'empilement sur mobile */
         /* padding: 20px; Ajuste le padding */
     }
+    #feature-display-title{
+text-align: center;
+background-color: #DB4437;
+border-radius: var(--border-radius-medium);
+    box-shadow: var(--shadow-light);
+    padding: 25px;
+    }
+    .feature-buttons-container {
+        display: none;
+        flex-direction: row; /* Les boutons s'alignent horizontalement sur mobile */
+        flex-wrap: wrap; /* Permet aux boutons de passer à la ligne */
+        justify-content: center; /* Centre les boutons */
+        gap: 8px; /* Réduit l'espacement */
+        padding: 10px; /* Réduit le padding */
+    }
+}
 
     .feature-buttons-container {
         flex-direction: row; /* Les boutons s'alignent horizontalement sur mobile */
@@ -1779,7 +1796,7 @@ button {
     .feature-display-area p {
         font-size: 0.9em; /* Réduit la taille du paragraphe */
     }
-}
+
 
 
 

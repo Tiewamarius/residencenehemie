@@ -1248,9 +1248,9 @@ h6 {
   height: 1px;
 }
 
-.h-sidenav {
+/* .h-sidenav {
   height: calc(100vh - 370px);
-}
+} */
 
 .max-h-8 {
   max-height: 2rem;

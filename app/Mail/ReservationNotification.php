@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ConfirmationEmail extends Mailable
+class ReservationNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -36,7 +36,7 @@ class ConfirmationEmail extends Mailable
         };
 
         return $this->subject($subject)
-            ->view("emails.confirmation")
+            ->view("emails.notification")
             ->with([
                 'booking' => $this->booking,
                 'type' => $this->type,

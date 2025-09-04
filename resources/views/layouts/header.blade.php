@@ -15,7 +15,7 @@
             <!-- <li><a href="#" class="nav_link" id="open-login-modal"><i class="fas fa-heart"></i></a></li> -->
             @else
             <!-- <li><a href="{{ route('favorites.index') }}" class="nav_link"><i class="fas fa-heart"></i></a></li> -->
-            <li><a href="{{ route('profile.homeUser') }}" class="nav_link"><i class="fas fa-user-circle"></i></a></li>
+            <li><a href="{{ route('profile.homeUser') }}" class="nav_link"><i class="fas fa-user-circle"></i> Compte</a></li>
             <li><a href="" class="nav_link" onclick="event.preventDefault(); document.getElementById('logout-form-header').submit();">
                     <i class="fas fa-sign-out-alt"></i>
                 </a></li>

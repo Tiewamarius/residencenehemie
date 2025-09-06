@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\review;
 use App\Models\Residence;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -22,8 +23,12 @@ class RegisteredUserController extends Controller
 
     {
 
-        $residences = Residence::with(['images', 'types'])->get();
-        return view('welcomes', compact('residences'));
+        $reviews = Review::with('user', 'residence')
+            ->where('statut', 'pending') // on affiche que les avis validés
+            ->latest()
+            ->take(6) // tu limites le nombre affiché
+            ->get();
+        return view('welcomes', compact('residences', 'reviews'));
     }
 
     /**

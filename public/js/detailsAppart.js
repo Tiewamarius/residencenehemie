@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Prix ---
   const parsePrice = (txt) => (txt || '0').replace(/\s/g, '').replace(/[^\d]/g, '') * 1;
   const basePricePerNight = parsePrice(pricePerNightEl ? pricePerNightEl.textContent : '0');
-  const serviceFee = 10000;
+  // const serviceFee = 10000;
+  const serviceFee = 0;
 
   function recalcTotal() {
     let nights = 0, subtotal = 0, total = serviceFee;

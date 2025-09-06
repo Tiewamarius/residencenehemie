@@ -54,7 +54,8 @@ class BookingController extends Controller
             $checkInDate     = Carbon::parse($validatedData['date_arrivee']);
             $checkOutDate    = Carbon::parse($validatedData['date_depart']);
             $numberOfNights  = $checkInDate->diffInDays($checkOutDate);
-            $serviceFee      = 10000;
+            // $serviceFee      = 10000;
+            $serviceFee      = 0;
             $totalPrice      = ($type->prix_base * $numberOfNights) + $serviceFee;
             $reservationNumber = 'RES-' . Str::upper(Str::random(8)) . '-' . time();
             $detailsClient   = [
@@ -125,7 +126,8 @@ class BookingController extends Controller
             $checkInDate = Carbon::parse($validatedData['date_arrivee']);
             $checkOutDate = Carbon::parse($validatedData['date_depart']);
             $numberOfNights = $checkInDate->diffInDays($checkOutDate);
-            $serviceFee = 10000;
+            // $serviceFee = 10000;
+            $serviceFee = 0;
             $totalPrice = ($type->prix_base * $numberOfNights) + $serviceFee;
             $reservationNumber = 'RES-' . Str::upper(Str::random(8)) . '-' . time();
             $detailsClient = [

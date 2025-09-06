@@ -73,7 +73,29 @@ $amenityIcons = [
                     @endif
                 </span>
                 <div class="actions">
-                    <a href="#" class="action-link"><i class="fas fa-share-alt"></i> Partager</a>
+                    <a href="#" class="action-link" id="share-btn">
+                        <i class="fas fa-share-alt"></i> Partager
+                    </a>
+                    <!-- Script de partage -->
+                    <script>
+                        document.getElementById('share-btn').addEventListener('click', function(e) {
+                            e.preventDefault();
+
+                            if (navigator.share) {
+                                navigator.share({
+                                    title: document.title,
+                                    text: "Découvrez cette résidence incroyable 👇",
+                                    url: window.location.href
+                                }).then(() => {
+                                    console.log("Partage réussi !");
+                                }).catch((error) => {
+                                    console.error("Erreur de partage : ", error);
+                                });
+                            } else {
+                                alert("Le partage n'est pas supporté sur ce navigateur.");
+                            }
+                        });
+                    </script>
                     @guest
                     <a href="#" class="action-link open-login-modal-trigger"><i class="fas fa-heart"></i> Enregistrer</a>
                     @else
@@ -104,15 +126,15 @@ $amenityIcons = [
                 <div class="overview-section">
                     <h2>Appartement entier : Hôte {{ $residence->user?->name ?? 'Inconnu' }}</h2>
                     <p class="guest-info">
-                        <i class="fas fa-users"></i> {{ $firstType->nb_voyageurs ?? 'N/A' }} Personne{{ ($firstType->nb_voyageurs ?? 0) > 1 ? 's' : '' }}
-                        &bull; <i class="fas fa-bed"></i> {{ $firstType->nb_chambres ?? 'N/A' }} chambre{{ ($firstType->nb_chambres ?? 0) > 1 ? 's' : '' }}
+                        <i class="fas fa-users"></i>Adulte{{ ($firstType->capacite_adultes ?? 0) > 1 ? 's:' : ':' }}{{ $firstType->capacite_adultes ?? 'N/A' }} Max, Enfant{{ ($firstType->capacite_enfants ?? 0) > 1 ? 's:' : ':' }}{{ $firstType->capacite_enfants ?? 'N/A' }}Max
+                        &bull; <i class="fas fa-bed"></i> {{ $residence->nombre_chambres ?? 'N/A' }} chambre{{ ($firstType->nb_chambres ?? 0) > 1 ? 's' : '' }}
                         &bull; <i class="fas fa-bed"></i> {{ $firstType->nombre_lits ?? 'N/A' }} lit{{ ($firstType->nombre_lits ?? 0) > 1 ? 's' : '' }}
-                        &bull; <i class="fas fa-shower"></i> {{ $firstType->nb_salles_de_bain ?? 'N/A' }} salle{{ ($firstType->nb_salles_de_bain ?? 0) > 1 ? 's' : '' }} de bain
+                        &bull; <i class="fas fa-shower"></i> {{ $firstType->nb_salles_de_bain ?? '2' }} salle{{ ($firstType->nb_salles_de_bain ?? 0) > 1 ? 's' : '' }} de bain
                     </p>
-                    <div class="host-summary">
+                    <!-- <div class="host-summary">
                         <img src="{{ $residence->user?->profile_picture ? asset($residence->user->profile_picture) : 'https://placehold.co/50x50/B0B0B0/FFFFFF?text=H' }}" alt="Photo de l'hôte" class="host-profile-picture">
                         <p>Hôte : {{ $residence->user?->name ?? 'Inconnu' }}</p>
-                    </div>
+                    </div> -->
                 </div>
 
                 <hr>
@@ -120,7 +142,7 @@ $amenityIcons = [
                 <div class="description-section">
                     <h3>Description</h3>
                     <p>{{ $residence->description ?? 'Aucune description disponible.' }}</p>
-                    <a href="#" class="read-more">En savoir plus <i class="fas fa-chevron-right"></i></a>
+                    <!-- <a href="#" class="read-more">En savoir plus <i class="fas fa-chevron-right"></i></a> -->
                 </div>
 
                 <hr>
@@ -137,14 +159,14 @@ $amenityIcons = [
                         <li>Aucun équipement listé.</li>
                         @endforelse
                     </ul>
-                    @if(($residence->Equipment ?? collect())->count() > 8)
+                    <!-- @if(($residence->Equipment ?? collect())->count() > 8)
                     <button class="show-all-equipment" id="show-all-equipment-btn">Afficher les {{ $residence->Equipment->count() }} équipements</button>
-                    @endif
+                    @endif -->
                 </div>
 
                 <hr>
 
-                <div class="reviews-section">
+                <!-- <div class="reviews-section">
                     @if($avgRating)
                     <h3><i class="fas fa-star"></i> {{ number_format($avgRating, 2) }} &bull; {{ $reviewCount }} avis</h3>
                     @else
@@ -167,9 +189,9 @@ $amenityIcons = [
                     @if($reviewCount > 2)
                     <button class="show-all-reviews" id="show-all-reviews-btn">Afficher les {{ $reviewCount }} avis</button>
                     @endif
-                </div>
+                </div> -->
 
-                <hr>
+                <!-- <hr> -->
 
                 <div class="location-map-section">
                     <!-- <h3>Retrouvez-nous</h3> -->
@@ -193,13 +215,13 @@ $amenityIcons = [
                 <div class="booking-card">
                     <div class="booking-header">
                         <span class="price">{{ number_format($minPrice ?? 0, 0, ',', ' ') }} FCFA</span> <span class="per-night">/jour</span>
-                        <span class="rating">
+                        <!-- <span class="rating">
                             @if($avgRating)
                             <i class="fas fa-star"></i> {{ number_format($avgRating, 2) }} &bull; {{ $reviewCount }} avis
                             @else
                             Aucun avis
                             @endif
-                        </span>
+                        </span> -->
                     </div>
 
                     <form class="booking-form" action=" {{ Auth::check() ? route('residences.reserver', $residence->id) : route('residences.guestReserver', $residence->id) }}" method="POST">
@@ -258,7 +280,7 @@ $amenityIcons = [
                             <span>{{ number_format($minPrice ?? 0, 0, ',', ' ') }} FCFA x <span id="nights-display-breakdown">0</span> nuit(s)</span>
                             <span><span id="price-subtotal">0</span> FCFA</span>
                         </p>
-                        <p><span>Frais de service</span> <span>10 000 FCFA</span></p>
+                        <p><span>Frais de service</span> <span style="color:#28a745;">Gratuit</span></p>
                         <p class="total-price"><span>Total</span> <span><span id="price-total">0</span> FCFA</span></p>
                     </div>
                 </div>

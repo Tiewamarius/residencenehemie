@@ -3,16 +3,19 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResidenceController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaiementController;
 use App\Http\Controllers\auth\SocialiteController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Residence;
 
 // Route pour la page d'accueil avec les résidences
-Route::get('/', function () {
-    $residences = Residence::with(['images', 'types'])->get();
-    return view('welcomes', compact('residences'));
-});
+// Route::get('/', function () {
+//     $residences = Residence::with(['images', 'types'])->get();
+//     return view('welcomes', compact('residences'));
+// });
+
+Route::get('/', [HomeController::class, 'HomePage']);
 
 // Routes d'authentification sociale avec Google
 Route::get('/auth/google/redirect', [SocialiteController::class, 'redirect'])
@@ -72,6 +75,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/residences/{residence}/reserver', [BookingController::class, 'reserver'])
         ->name('residences.reserver');
 
+
+    // Route pour la review
+    Route::post('/residences/{residence}/review', [ProfileController::class, 'store'])->name('review.store');
+
+
     // Route correcte pour afficher la page de paiement d'une réservation
     Route::get('/paiement/{booking}', [PaiementController::class, 'showPaymentPage'])
         ->name('paiements.show');
@@ -120,7 +128,7 @@ Route::middleware('auth')->group(function () {
     })->name('paiements.success');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Route pour soumettre le formulaire de réservation (requête POST)

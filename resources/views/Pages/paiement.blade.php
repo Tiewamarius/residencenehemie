@@ -76,17 +76,17 @@
                             <label class="payment-label {{ $hasUnpaidBooking ? 'disabled-label' : '' }}" for="payment-espece">
                                 <img src="{{ asset('images/especes.png') }}" alt="Espèce" class="payment-logo">
                                 <input type="radio" id="payment-espece" name="payment_method" value="espece"
-                                    {{ $hasUnpaidBooking ? 'disabled' : '' }}>
+                                    {{ $hasUnpaidBooking ? 'disabled' : '' }} required>
                                 Paiement en espèce
                             </label>
 
                             <div class="payment-details" id="espece-details">
-                                <p>Un agent vous contactera pour organiser le paiement en espèce.</p>
-
                                 @if($hasUnpaidBooking)
-                                <p class="warning-message" id="warning-message">
+                                <p>
                                     ⚠️ Ce mode de paiement est bloqué car une réservation en attente d’espèces existe déjà pour cet appartement.
                                 </p>
+                                @else
+                                <p>Un agent vous contactera pour organiser le paiement en espèce.</p>
                                 @endif
                             </div>
                         </div>

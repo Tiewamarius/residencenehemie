@@ -76,7 +76,7 @@
                             <label class="payment-label {{ $hasUnpaidBooking ? 'disabled-label' : '' }}" for="payment-espece">
                                 <img src="{{ asset('images/especes.png') }}" alt="Espèce" class="payment-logo">
                                 <input type="radio" id="payment-espece" name="payment_method" value="espece"
-                                    {{ $hasUnpaidBooking ? 'disabled' : '' }}>
+                                    {{ $hasUnpaidBooking ? 'disabled' : '' }} required>
                                 Paiement en espèce
                             </label>
 

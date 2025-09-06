@@ -176,8 +176,52 @@
 </section>
 
 {{-- Section Témoignages --}}
-
 <section class="testimonials">
+    <h2 class="section-title">Ce que nos clients disent</h2>
+    <p class="section-description">Écoutez les expériences de ceux qui ont choisi Résidences Nehemie.</p>
+
+    <div class="properties-grid">
+        @forelse($reviews as $review)
+        <div class="testimonial-card">
+            <div class="flex items-center mb-4">
+                {{-- Photo user (si tu as un champ avatar dans users, sinon placeholder) --}}
+                <img src="{{ $review->user->avatar ?? 'https://placehold.co/60x60' }}"
+                    alt="Photo de {{ $review->user->name }}"
+                    class="rounded-full mr-4 w-14 h-14 object-cover">
+
+                <!-- <div>
+                    <h3 class="text-lg font-semibold text-gray-800">{{ $review->user->name }}</h3>
+                    <p class="text-sm text-gray-600">
+                        A séjourné à <strong>{{ $review->residence->nom }}</strong>
+                    </p>
+                </div> -->
+            </div>
+
+            {{-- Notes étoilées --}}
+            <div class="flex items-center mb-2">
+                @for($i = 1; $i <= 5; $i++)
+                    @if($i <=$review->note)
+                    <i class="fas fa-star text-yellow-400"></i>
+                    @else
+                    <i class="far fa-star text-gray-300"></i>
+                    @endif
+                    @endfor
+                    <span class="ml-2 text-sm text-gray-600">({{ $review->note }}/5)</span>
+            </div>
+
+            {{-- Commentaire --}}
+            <p class="text-gray-700">"{{ $review->commentaire }}"</p>
+
+            {{-- Date --}}
+            <small class="text-gray-500">Posté le {{ $review->created_at->format('d/m/Y') }}</small>
+        </div>
+        @empty
+        <p class="text-gray-600 col-span-full text-center">Aucun avis client pour le moment.</p>
+        @endforelse
+    </div>
+</section>
+
+<!-- <section class="testimonials">
     <h2 class="section-title">Ce que nos clients disent</h2>
     <p class="section-description">Écoutez les expériences de ceux qui ont choisi Résidences Nehemie.</p>
     <div class="properties-grid">
@@ -212,7 +256,7 @@
             <p class="text-gray-700">"En tant qu'investisseur, la diversité et la rentabilité des propriétés proposées par Résidences Nehemie sont inégalées. Un partenaire de confiance."</p>
         </div>
     </div>
-</section>
+</section> -->
 <!-- Maps -->
 <div class="location-map-section" style="text-align: center;" id="Maps">
     <!-- <h3>Retrouvez-nous</h3> -->

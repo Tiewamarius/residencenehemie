@@ -214,4 +214,8 @@ class AdminController extends Controller
         $user->delete();
         return back();
     }
+
+
+    // validation de review
+
 }

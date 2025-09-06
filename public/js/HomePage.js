@@ -472,7 +472,6 @@ const featuresData = {
         text: "Vous bénéficierez d'un cadre de vie où le silence et la quiétude sont rois, propice au repos, à la concentration et au bien-être général. C'est l'endroit parfait pour se ressourcer après une journée active."
     }
 };
-const featureKeys = Object.keys(featuresData); // Nouvelle liste des clés de fonctionnalités
 
 function updateFeatureDisplay(featureKey, imageDisplay, imageSection) {
     const data = featuresData[featureKey];
@@ -534,47 +533,6 @@ function resetAutoSlide() {
     setTimeout(startAutoSlide, slideDuration);
 }
 
-
-// --- Nouvelle logique de glissement (swiping) pour les mobiles ---
-let touchStartX = 0;
-let touchEndX = 0;
-
-featureDisplayArea.addEventListener('touchstart', (e) => {
-    // Si l'écran est petit (mobile), on gère le glissement
-    if (window.innerWidth <= 991) {
-        touchStartX = e.changedTouches[0].screenX;
-        clearInterval(autoSlideInterval); // Arrête le diaporama lors du toucher
-    }
-});
-
-featureDisplayArea.addEventListener('touchend', (e) => {
-    if (window.innerWidth <= 991) {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-        resetAutoSlide(); // Redémarre le diaporama après le glissement
-    }
-});
-
-function handleSwipe() {
-    const swipeThreshold = 50; // Nombre de pixels pour détecter un glissement
-    if (touchEndX < touchStartX - swipeThreshold) {
-        // Glissement vers la gauche (passe à l'élément suivant)
-        currentFeatureIndex = (currentFeatureIndex + 1) % featureKeys.length;
-    }
-
-    if (touchEndX > touchStartX + swipeThreshold) {
-        // Glissement vers la droite (passe à l'élément précédent)
-        currentFeatureIndex = (currentFeatureIndex - 1 + featureKeys.length) % featureKeys.length;
-    }
-
-    // Met à jour l'affichage en se basant sur le nouvel index
-    const newFeatureKey = featureKeys[currentFeatureIndex];
-    // Récupère les informations d'images à partir des boutons
-    const newButton = buttons[currentFeatureIndex];
-    const imageDisplay = newButton ? newButton.dataset.imageDisplay : null;
-    const imageSection = newButton ? newButton.dataset.imageSection : null;
-    updateFeatureDisplay(newFeatureKey, imageDisplay, imageSection);
-}
 // Initialise le diaporama automatique au chargement de la page
 window.addEventListener('DOMContentLoaded', () => {
     const initialActiveButton = document.querySelector('.feature-button.active');
@@ -749,7 +707,7 @@ function setupWishlistListeners() {
             }
         });
     });
-}
+} 
 
 // Lancer la configuration des écouteurs au chargement initial
 setupWishlistListeners();

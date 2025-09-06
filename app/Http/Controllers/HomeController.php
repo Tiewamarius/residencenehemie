@@ -5,15 +5,23 @@ namespace App\Http\Controllers;
 use App\Models\Residence;
 use Illuminate\Http\Request;
 
+use App\Models\Review;
+
 class HomeController extends Controller
 {
     public function HomePage()
     {
-        $residences = Residence::with(['images', 'types'])->get();
+        $residences = Residence::with(['images', 'types', 'reviews.user'])->get();
 
-    return view('Pages/HomePage', compact('residences'));
+        $reviews = Review::with('user', 'residence')
+            ->where('statut', 'pending') // on affiche que les avis validés
+            ->latest()
+            ->take(6) // tu limites le nombre affiché
+            ->get();
+
+        return view('welcomes', compact('residences', 'reviews'));
     }
-    
+
     /**
      * Affiche les détails d'une résidence spécifique.
      */

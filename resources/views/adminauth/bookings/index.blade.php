@@ -3,8 +3,6 @@
 
 <div class="w-full px-6 py-6 mx-auto">
 
-  <!-- ====== Filtres ====== -->
-  <!-- Bouton filtre mobile -->
   <button id="mobile-filter-toggle" class="mobile-filter-btn hidden">
     Filtre
   </button>
@@ -12,214 +10,43 @@
     <div class="filter-header">
       <h6>Réservations</h6>
       <div class="filter-actions">
-        <a href="#"><i class="fas fa-download"></i> Télécharger</a>
+        <!-- <a href="#"><i class="fas fa-download"></i> Télécharger</a> -->
         <a href="#"><i class="fas fa-print"></i> Imprimer </a>
       </div>
     </div>
 
-    <form action="{{ url('admin/bookings') }}" method="GET" class="filter-form">
-      <!-- Date de -->
+    <form id="filter-form" action="{{ url('admin/bookings') }}" method="GET" class="filter-form">
       <div class="filter-group">
-        <label>Date de</label>
-        <select name="date_type">
-          <option value="arrivee">Arrivée</option>
-          <option value="depart">Départ</option>
+        <label>Nom du client ou N° Réser.</label>
+        <input type="search" name="search" placeholder="Chercher...">
+      </div>
+      <div class="filter-group">
+        <label>Statut</label>
+        <select name="statut">
+          <option value="all">Filtre</option>
+          <option value="Confirmé">Confirmé</option>
+          <option value="Encours">En cours</option>
+          <option value="Annulé">Annulé</option>
+          <option value="Terminé">Terminé</option>
+
         </select>
       </div>
-
-      <!-- Du -->
       <div class="filter-group">
         <label>Du</label>
-        <input type="date" name="date_start">
+        <input type="date" name="date_arrivee">
       </div>
-
-      <!-- Au -->
       <div class="filter-group">
         <label>Au</label>
-        <input type="date" name="date_end">
-      </div>
-
-      <!-- Boutons -->
-      <div class="filter-buttons">
-        <button type="button" id="toggle-filters">Plus de filtres</button>
-        <button type="submit" class="btn-primary " style="background-color:#ed5257;">Voir</button>
+        <input type="date" name="date_depart">
       </div>
     </form>
-
-    <!-- Section filtres avancés -->
-    <div id="advanced-filters" class="advanced-filters hidden">
-      <!-- Statut réservation -->
-      <div class="filter-block">
-        <h6>Statut de la réservation</h6>
-        <label><input type="checkbox" name="statut[]" value="ok"> Confirmé</label>
-        <label><input type="checkbox" name="statut[]" value="annulee"> Annulée</label>
-        <label><input type="checkbox" name="statut[]" value="no_show"> En attente</label>
-        <label><input type="checkbox" name="statut[]" value="pro"> Carte professionnelle</label>
-      </div>
-
-      <!-- Communications clients -->
-      <div class="filter-block">
-        <h6>Communications clients</h6>
-        <label><input type="checkbox" name="com[]" value="pending"> Demande client en attente</label>
-        <label><input type="checkbox" name="com[]" value="invoice"> Facture demandée</label>
-      </div>
-
-      <!-- Carte de crédit -->
-      <div class="filter-block">
-        <h6>Carte de crédit invalide</h6>
-        <label><input type="checkbox" name="cc[]" value="update"> Mise à jour</label>
-        <label><input type="checkbox" name="cc[]" value="pending"> En attente</label>
-      </div>
-
-      <!-- Recherche -->
-      <div class="filter-block">
-        <h6>Nom du client ou numéro de réservation</h6>
-        <input type="text" name="search" placeholder="Rechercher...">
-      </div>
-    </div>
   </div>
-  <!-- ====== /Filtres ====== -->
-
-
-  <!-- table 1 -->
-  <div class="flex flex-wrap -mx-3">
-    <div class="flex-none w-full max-w-full px-3">
-      <div class="relative flex flex-col min-w-0 mb-6 break-words bg-white border-0 border-transparent border-solid shadow-soft-xl rounded-2xl bg-clip-border">
-        <div class="flex-auto px-0 pt-0 pb-2">
-          <div class="p-0 overflow-x-auto">
-            <table class="items-center w-full mb-0 align-top border-gray-200 text-slate-500">
-              <thead class="align-bottom" style="background-color: #d8cbd2ff;">
-                <tr>
-                  <th></th>
-                  <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Status</th>
-                  <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Dates</th>
-                  <th class="px-6 py-3 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">N° Reservation</th>
-                  <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Clients</th>
-                  <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Appartements</th>
-                  <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Nb. personnes</th>
-                  <th class="px-6 py-3 font-semibold capitalize align-middle bg-transparent border-b border-gray-200 border-solid shadow-none tracking-none whitespace-nowrap text-slate-400 opacity-70"></th>
-                </tr>
-              </thead>
-              <tbody>
-
-                @foreach ($bookings as $booking)
-                <tr>
-                  <td>
-                    <span class="bg-gradient-to-tl from-green-600 to-lime-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
-                      <button onclick="openDetail({{ $booking->id }})" class="text-xs font-semibold leading-tight text-slate-400"> Details </button>
-                    </span>
-                  </td>
-                  <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    @php
-                    $statusClasses = '';
-                    $statutNom = '';
-                    switch ($booking->statut) {
-                    case 'Attente':
-                    $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Attente';
-                    break;
-                    case 'Confirmé':
-                    $statusClasses = 'bg-gradient-to-tl from-green-600 to-lime-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Confirmé';
-                    break;
-                    case 'Encours':
-                    $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'En sejour';
-                    break;
-                    case 'checked_out':
-                    $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Parti';
-                    break;
-                    case 'Terminé':
-                    $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Terminé';
-                    break;
-
-                    case 'Annulé':
-                    $statusClasses = 'bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Annulé';
-                    break;
-                    default:
-                    $statusClasses = 'from-red-600 to-rose-400';
-                    $statutNom = 'Annulée';
-                    break;
-                    }
-                    @endphp
-                    <span class="{{ $statusClasses }}">
-                      {{ $statutNom }}
-                    </span>
-                  </td>
-                  <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <span class="text-xs font-semibold leading-tight text-slate-400">{{ $booking->date_arrivee->format('d/m/y') }} au {{ $booking->date_depart->format('d/m/y') }}
-                    </span>
-                  </td>
-                  </td>
-                  <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <span class="text-xs font-semibold leading-tight text-slate-400">{{ $booking->numero_reservation }}</span>
-                  </td>
-                  <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <span class="text-xs font-semibold leading-tight text-slate-400">{{ $booking->user->name ?? 'N/A' }}</span>
-                  </td>
-                  <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <span class="text-xs font-semibold leading-tight text-slate-400">{{ $booking->residence->nom ?? 'N/A' }}</span>
-                  </td>
-                  <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <p class="mb-0 text-xs font-semibold leading-tight">{{ $booking->nombre_adultes }} adultes</p>
-                    <p class="mb-0 text-xs leading-tight text-slate-400">{{ $booking->nombre_enfants }} enfants</p>
-                  </td>
-                  <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                    <!-- Bouton Edit -->
-                    <span class="bg-gradient-to-tl from-green-600 to-lime-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white">
-                      <button onclick="openEdit({{ $booking->id }})" class="text-xs font-semibold leading-tight text-slate-400"> Edit </button>
-                    </span>
-                    <form action="{{ route('admin.bookings.destroy', $booking->id) }}" method="POST" class="inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="text-xs font-semibold leading-tight text-red-500" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette réservation ?')"> Supprimer </button>
-                    </form>
-                    </span>
-                  </td>
-                </tr>
-
-                @endforeach
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- ===== Modale Détails ===== -->
-<div id="detail-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-xl w-11/12 max-w-lg p-6 relative">
-    <button class="absolute top-3 right-3 text-gray-500" onclick="closeModal('detail-modal')">&times;</button>
-    <h3 class="text-lg font-bold mb-4">Détails de la réservation</h3>
-    <div id="detail-content">
-      <!-- Contenu chargé via JS -->
-    </div>
+  <div id="bookings-table-container">
+    {{-- Le contenu de la table sera injecté ici --}}
+    @include('adminauth.bookings.bookings_table', ['bookings' => $bookings])
   </div>
 </div>
 
-<!-- Modale Détails -->
-<div id="detail-modal" class="modal">
-  <div>
-    <button class="close-btn" onclick="closeModal('detail-modal')">&times;</button>
-    <h3 class="text-lg font-bold mb-4">Détails de la réservation</h3>
-    <div id="detail-content"></div>
-  </div>
-</div>
-
-<!-- Modale Édit -->
-<div id="edit-modal" class="modal">
-  <div>
-    <button class="close-btn" onclick="closeModal('edit-modal')">&times;</button>
-    <h3 class="text-lg font-bold mb-4">Modifier la réservation</h3>
-    <div id="edit-content"></div>
-  </div>
-</div>
 
 
 <!-- ====== CSS ====== -->
@@ -437,58 +264,134 @@
 
 <!-- ====== JS ====== -->
 <script>
-  document.getElementById('toggle-filters').addEventListener('click', function() {
-    const adv = document.getElementById('advanced-filters');
-    adv.classList.toggle('hidden');
-    this.textContent = adv.classList.contains('hidden') ? 'Plus de filtres ⌄' : 'Moins de filtres ⌃';
-  });
+  // Ferme toutes les modales ouvertes
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.add('hidden');
+  }
 
+  // Gère l'affichage du menu de filtre sur mobile
   const mobileFilterBtn = document.getElementById('mobile-filter-toggle');
-  const filterBox = document.querySelector('.filter-box');
+  const filterBox = document.querySelector('.boîte-filtre');
 
   mobileFilterBtn.addEventListener('click', function() {
-    if (filterBox.style.display === 'block') {
-      filterBox.style.display = 'none';
-    } else {
-      filterBox.style.display = 'block';
+    filterBox.classList.toggle('hidden');
+  });
+
+  // Gestion du formulaire de filtre avec AJAX
+  const filterForm = document.getElementById('filter-form');
+  const tableContainer = document.getElementById('bookings-table-container');
+  let searchTimeout = null;
+
+  function fetchBookings() {
+    // Crée une chaîne de requête à partir des données du formulaire
+    const formData = new FormData(filterForm);
+    const queryString = new URLSearchParams(formData).toString();
+    const url = `{{ url('admin/bookings') }}?${queryString}`;
+
+    // Utilise l'API Fetch pour charger les données
+    fetch(url, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La requête a échoué');
+        }
+        return response.text();
+      })
+      .then(html => {
+        // Remplace le contenu de la table avec la nouvelle réponse
+        tableContainer.innerHTML = html;
+        // Met à jour l'URL sans recharger la page
+        history.pushState(null, '', url);
+      })
+      .catch(error => console.error('Erreur de chargement des réservations:', error));
+  }
+
+  // Événements pour déclencher le filtre
+  filterForm.addEventListener('change', (event) => {
+    // Déclenche le filtre pour les champs qui changent (select, date)
+    if (event.target.type !== 'search') {
+      fetchBookings();
     }
   });
 
+  filterForm.addEventListener('input', (event) => {
+    // Utilise un "debounce" pour le champ de recherche
+    if (event.target.type === 'search') {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        fetchBookings();
+      }, 500); // Délai de 500ms
+    }
+  });
 
+  // Gère la pagination avec AJAX
+  document.addEventListener('click', (event) => {
+    const paginationLink = event.target.closest('.pagination a');
+    if (paginationLink) {
+      event.preventDefault(); // Empêche le rechargement de la page
+      const url = paginationLink.href;
+      fetch(url, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.text())
+        .then(html => {
+          tableContainer.innerHTML = html;
+          history.pushState(null, '', url);
+        })
+        .catch(error => console.error('Erreur de chargement de la pagination:', error));
+    }
+  });
+
+  // Ouvre la modale de détails avec les données de la réservation
   function openDetail(id) {
-    // Ici tu peux faire une requête AJAX pour récupérer les détails si besoin
     const modal = document.getElementById('detail-modal');
     const content = document.getElementById('detail-content');
 
-    content.innerHTML = `
-    <p>Chargement des détails pour la réservation #${id}...</p>
-    <!-- Tu peux remplacer par un fetch() vers une route Laravel qui renvoie le HTML -->
-  `;
-
+    // Affiche un message de chargement
+    content.innerHTML = `<p>Chargement des détails pour la réservation #${id}...</p>`;
     modal.classList.remove('hidden');
+
+    // Récupère les détails depuis le serveur
+    fetch(`/admin/bookings/${id}/details`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('La requête a échoué');
+        }
+        return response.text();
+      })
+      .then(html => {
+        content.innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Erreur de chargement des détails:', error);
+        content.innerHTML = `<p class="text-red-500">Erreur lors du chargement des détails.</p>`;
+      });
   }
 
+  // Ouvre la modale d'édition et injecte un formulaire
   function openEdit(id) {
     const modal = document.getElementById('edit-modal');
     const content = document.getElementById('edit-content');
 
-    content.innerHTML = `
-    <form action="/admin/bookings/${id}" method="POST">
-      @csrf
-      @method('PUT')
-      <label>Nombre d'adultes:</label>
-      <input type="number" name="nombre_adultes" value="1" class="border p-2 rounded w-full mb-2">
-      <label>Nombre d'enfants:</label>
-      <input type="number" name="nombre_enfants" value="0" class="border p-2 rounded w-full mb-2">
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Enregistrer</button>
-    </form>
-  `;
+    // Ajoute un message de chargement
+    content.innerHTML = `<p>Chargement du formulaire d'édition pour la réservation #${id}...</p>`;
 
-    modal.classList.remove('hidden');
-  }
-
-  function closeModal(modalId) {
-    document.getElementById(modalId).classList.add('hidden');
+    // Récupère le formulaire d'édition via AJAX pour le rendre plus dynamique et réutilisable
+    fetch(`/admin/bookings/${id}/edit`)
+      .then(response => response.text())
+      .then(html => {
+        content.innerHTML = html;
+        modal.classList.remove('hidden');
+      })
+      .catch(error => {
+        console.error('Erreur de chargement du formulaire d\'édition:', error);
+        content.innerHTML = `<p class="text-red-500">Erreur lors du chargement du formulaire.</p>`;
+      });
   }
 </script>
 

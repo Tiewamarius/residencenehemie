@@ -30,13 +30,9 @@ class PaiementController extends Controller
         // Vérifier chevauchement de réservation en "pending"
         $hasUnpaidBooking = $booking->residence
             ->bookings()
-            ->where('statut', 'pending')
-            ->when(!is_null($booking->user_id), function ($query) use ($booking) {
-                // Si user connecté → exclure ses propres pending
-                $query->where('user_id', '!=', $booking->user_id);
-            }, function ($query) {
-                // Si user non connecté → exclure les bookings sans user_id
-                $query->whereNotNull('user_id');
+            ->where('statut', 'Attente')
+            ->whereDoesntHave('payment', function ($query) {
+                $query->where('statut', 'Paid');
             })
             ->where(function ($query) use ($booking) {
                 $query->whereBetween('date_arrivee', [$booking->date_arrivee, $booking->date_depart])
@@ -47,6 +43,25 @@ class PaiementController extends Controller
                     });
             })
             ->exists();
+        // $hasUnpaidBooking = $booking->residence
+        //     ->bookings()
+        //     ->where('statut', 'Attente')
+        //     ->when(!is_null($booking->user_id), function ($query) use ($booking) {
+        //         // Si user connecté → exclure ses propres pending
+        //         $query->where('user_id', '!=', $booking->user_id);
+        //     }, function ($query) {
+        //         // Si user non connecté → exclure les bookings sans user_id
+        //         $query->whereNotNull('user_id');
+        //     })
+        //     ->where(function ($query) use ($booking) {
+        //         $query->whereBetween('date_arrivee', [$booking->date_arrivee, $booking->date_depart])
+        //             ->orWhereBetween('date_depart', [$booking->date_arrivee, $booking->date_depart])
+        //             ->orWhere(function ($sub) use ($booking) {
+        //                 $sub->where('date_arrivee', '<=', $booking->date_arrivee)
+        //                     ->where('date_depart', '>=', $booking->date_depart);
+        //             });
+        //     })
+        //     ->exists();
 
         return view('Pages.paiement', compact('booking', 'hasUnpaidBooking'));
     }

@@ -33,8 +33,7 @@
                 </a>
             </li>
             <li>
-                <a href="/#Maps"
-                    target="_blank" class="button contactsidebar_help_btn">
+                <a href="/#Maps" class="button contactsidebar_help_btn">
                     <i class="fas fa-map-marker-alt" style="color: white;"></i> Abidjan-CI Bingerville-Fekesse
                 </a>
             </li>

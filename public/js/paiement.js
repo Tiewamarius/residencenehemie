@@ -41,6 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Masquer le warning par défaut
     const warning = document.getElementById("warning-message");
     if (warning) {
-        warning.style.display = "nonce"; // masqué au chargement
+        warning.style.display = "none"; // masqué au chargement
     }
 });

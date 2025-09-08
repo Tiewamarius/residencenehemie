@@ -92,24 +92,74 @@ class AdminController extends Controller
     /**
      * Réservations
      */
-    public function index()
-    {
-        $bookings = Booking::paginate(8);
 
+    public function index(Request $request)
+    {
+        // Start with a new query instance for all bookings
+        $query = Booking::query();
+
+        // Filter by date range if both fields are filled
+        if ($request->filled('date_arrivee') && $request->filled('date_depart')) {
+            $query->whereBetween('date_arrivee', [$request->date_arrivee, $request->date_depart]);
+        }
+
+        // Filter by reservation status if a valid status is selected
+        if ($request->filled('statut') && $request->input('statut') !== 'all') {
+            $status = $request->input('statut');
+
+            if ($status === 'Confirmé') {
+                // Group bookings by a confirmed or in-progress state
+                $query->whereIn('statut', ['Confirmé', 'Encours', 'checked_out']);
+            } else if ($status === 'Terminé') {
+                // Filter for completed bookings
+                $query->where('statut', 'Terminé');
+            } else {
+                // Filter directly for other statuses like 'Annulé' or 'Attente'
+                $query->where('statut', $status);
+            }
+        }
+
+        // Filter by client name or reservation number
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('numero_reservation', 'like', "%{$searchTerm}%")
+                    ->orWhereHas('user', function ($qUser) use ($searchTerm) {
+                        $qUser->where('name', 'like', "%{$searchTerm}%");
+                    });
+            });
+        }
+
+        // Retrieve the filtered and paginated bookings
+        $bookings = $query->paginate(10);
+
+        // If it's an AJAX request, return only the table HTML
+        if ($request->ajax()) {
+            return view('adminauth.bookings.bookings_table', compact('bookings'))->render();
+        }
+
+        // Otherwise, return the full view
         return view('adminauth.bookings.index', compact('bookings'));
     }
+
+    // public function index()
+    // {
+    //     $bookings = Booking::paginate(8);
+
+    //     return view('adminauth.bookings.index', compact('bookings'));
+    // }
 
     public function show(Booking $booking)
     {
         return view('adminauth.bookings.show', compact('booking'));
     }
 
-    public function edit(Booking $booking)
+    public function editBooking(Booking $booking)
     {
         return view('adminauth.bookings.edit', compact('booking'));
     }
 
-    public function update(Request $request, Booking $booking)
+    public function updateBooking(Request $request, Booking $booking)
     {
         $validated = $request->validate([
             'start_date' => 'required|date',

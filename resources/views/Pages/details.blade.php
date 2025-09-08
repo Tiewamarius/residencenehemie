@@ -214,12 +214,12 @@
          font-weight: 700;
      }
 
-     .status.pending {
+     .status.Attente {
          background: #fffbeb;
          color: #a16207;
      }
 
-     .status.confirmed {
+     .status.Confirmé {
          background: #f0fdf4;
          color: #166534;
      }
@@ -321,14 +321,14 @@
          </div>
          <div class="header-right">
              <span class="badge status
-        @if($reservation->statut === 'pending') pending
-        @elseif($reservation->statut === 'confirmed') confirmed
-        @elseif($reservation->statut === 'canceled') cancelled
-        @elseif($reservation->statut === 'completed') completed
+        @if($reservation->statut === 'Attente') Attente
+        @elseif($reservation->statut === 'Confirmé') Confirmé
+        @elseif($reservation->statut === 'Annulé') Annulé
+        @elseif($reservation->statut === 'Terminé') Terminé
         @endif">
                  {{ $reservation->statut }}
              </span>
-             @if($reservation->statut!== 'confirmed')
+             @if($reservation->statut!== 'Confirmé')
              <a href="{{ route('paiements.show', ['booking' => $reservation->id]) }}" class="btnPaiement">
                  Procéder au paiement
              </a>
@@ -420,7 +420,7 @@
                      <i class="fas fa-file-download"></i> Télécharger la facture
                  </a>
 
-                 @if(in_array($reservation->statut, ['pending','confirmed']))
+                 @if(in_array($reservation->statut, ['Attente','Confirmé']))
                  <form method="POST" action="{{ route('bookings.cancel', $reservation->id) }}" class="inline-form" id="cancel-form">
                      @csrf
                      @method('PATCH')
@@ -437,7 +437,7 @@
                  @endphp
 
                  {{-- Bouton pour afficher le formulaire --}}
-                 @if($canEdit && $reservation->statut === 'pending')
+                 @if($canEdit && $reservation->statut === 'Attente')
                  <button type="button" id="toggle-edit" class="btn outline">
                      <i class="fas fa-edit"></i> Modifier la réservation
                  </button>
@@ -451,10 +451,9 @@
                      <form action="{{ route('bookings.userUpdate', $reservation->id) }}" method="POST" class="space-y-4">
                          @csrf
                          @method('PUT')
-
                          <div class="details-grid">
                              <div>
-                                 <label for="date_arrivee">Nouvelle date d’arrivée</label>
+                                 <label for="date_arrivee">Nouvelle date d'arrivée</label>
                                  <input type="date" id="date_arrivee" name="date_arrivee"
                                      value="{{ old('date_arrivee', \Carbon\Carbon::parse($reservation->date_arrivee)->format('Y-m-d')) }}"
                                      min="{{ now()->format('Y-m-d') }}"
@@ -470,14 +469,14 @@
                              </div>
 
                              <div>
-                                 <label for="nombre_adultes">Nombre d’adultes</label>
+                                 <label for="nombre_adultes">Nombre d'adultes</label>
                                  <input type="number" id="nombre_adultes" name="nombre_adultes" min="1"
                                      value="{{ old('nombre_adultes', $reservation->nombre_adultes ?? 1) }}"
                                      class="w-full border rounded-lg p-2">
                              </div>
 
                              <div>
-                                 <label for="nombre_enfants">Nombre d’enfants</label>
+                                 <label for="nombre_enfants">Nombre d'enfants</label>
                                  <input type="number" id="nombre_enfants" name="nombre_enfants" min="0"
                                      value="{{ old('nombre_enfants', $reservation->nombre_enfants ?? 0) }}"
                                      class="w-full border rounded-lg p-2">
@@ -496,14 +495,14 @@
 
 
                  {{-- Recommander si annulée ou terminée --}}
-                 @if(in_array($reservation->statut, ['Annulée - Non remboursée', 'Terminée']))
+                 @if(in_array($reservation->statut, ['Annulé', 'Terminé']))
                  <a href="{{ route('residences.detailsAppart', ['residence' => $reservation->residence_id]) }}" class="btn primary">
                      <i class="fas fa-redo"></i> Voir la résidence
                  </a>
                  @endif
 
 
-                 @if($reservation->statut === 'confirmed')
+                 @if($reservation->statut === 'Confirmé')
                  <a href="{{ route('bookings.checkin', $reservation->id) }}" class="btn primary">
                      <i class="fas fa-door-open"></i> Check-in
                  </a>
@@ -532,15 +531,15 @@
                  <p>Créée</p>
                  <small>{{ \Carbon\Carbon::parse($reservation->created_at)->translatedFormat('d/m/Y H:i') }}</small>
              </div>
-             <div class="step {{ $reservation->statut === 'pending' || $reservation->statut === 'pending' ? 'done' : '' }}">
+             <div class="step {{ $reservation->statut === 'Attente' || $reservation->statut === 'Attente' ? 'done' : '' }}">
                  <span class="dot"></span>
                  <p>En attente</p>
              </div>
-             <div class="step {{ $reservation->statut === 'Annulée - Non remboursée' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
+             <div class="step {{ $reservation->statut === 'Annulé' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
                  <span class="dot"></span>
                  <p>Annulé</p>
              </div>
-             <div class="step {{ $reservation->statut === 'confirmed' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
+             <div class="step {{ $reservation->statut === 'Confirmé' || $reservation->statut === 'Terminer' ? 'done' : '' }}">
                  <span class="dot"></span>
                  <p>Confirmée</p>
              </div>

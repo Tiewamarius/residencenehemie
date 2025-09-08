@@ -77,7 +77,11 @@
                                 <img src="{{ asset('images/especes.png') }}" alt="Espèce" class="payment-logo">
                                 <input type="radio" id="payment-espece" name="payment_method" value="espece"
                                     {{ $hasUnpaidBooking ? 'disabled' : '' }} required>
+                                @if($hasUnpaidBooking)
+                                Paiement indisponible
+                                @else
                                 Paiement en espèce
+                                @endif
                             </label>
 
                             <div class="payment-details" id="espece-details">

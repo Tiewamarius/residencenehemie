@@ -131,11 +131,6 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::put('profile', [AdminController::class, 'updateProfile'])
         ->name('admin.profile.update');
 
-
-    // validationnde reviewq
-    Route::post('/reviews/{review}/approve', [AdminController::class, 'approve'])->name('reviews.approve');
-    Route::post('/reviews/{review}/decline', [AdminController::class, 'decline'])->name('reviews.decline');
-
     /**
      * Déconnexion
      */

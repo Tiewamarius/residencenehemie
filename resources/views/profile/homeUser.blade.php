@@ -39,10 +39,10 @@
         <div id="about-me" class="tab-content active">
             <div class="tab-header">
                 <h2>À propos de moi</h2>
-                <a href="#" class="btn-light">Modifier</a>
+                <a href="#" class="btn-light" style=" background-color: grey;">Completer profile</a>
             </div>
 
-            <div class="profils">
+            <div class=" profils">
                 @auth
                 <div class="profile-info">
                     <img src="{{ auth()->user()->profile_picture ?? 'Non renseigné' }}" alt="Profile Picture" class="profile-photo">
@@ -65,7 +65,7 @@
                     <h4>Complétez votre profil</h4>
                     <p>Votre profil joue un rôle important dans chaque réservation.</p>
                 </div>
-                <button class="btn-primary">Commencer</button>
+                <!-- <button class="btn-primary">Commencer</button> -->
             </div>
 
             {{-- Commentaires --}}
@@ -116,75 +116,30 @@
         {{-- Onglet Réservations --}}
         <div id="reservations" class="tab-content">
             <h2>Réservations précédentes</h2>
+
             {{-- Filtres --}}
             <div class="filters">
-                <input type="text" id="search-input" placeholder="Rechercher par numéro de réservation...">
+                <input type="search" id="search-input" placeholder="Rechercher par numéro de réservation...">
                 <select id="status-filter">
                     <option value="all">Tous les statuts</option>
-                    <option value="pending">En attente</option>
-                    <option value="confirmed">Confirmée</option>
-                    <option value="cancelled">Annulée</option>
-                    <option value="completed">Terminée</option>
+                    <option value="Attente">En attente</option>
+                    <option value="Confirmé">Confirmée</option>
+                    <option value="Annulé">Annulée</option>
+                    <option value="Terminé">Terminée</option>
                 </select>
             </div>
 
-            {{-- Tableau --}}
-            <div class="table-wrapper">
-                <table id="reservations-table">
-                    <thead>
-                        <tr>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                            <th>Numéro</th>
-                            <th>Résidence</th>
-                            <th>Date arrivée</th>
-                            <th>Date départ</th>
-                            <th>Prix total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!empty($reservations) && $reservations->count() > 0)
-                        @foreach ($reservations as $reservation)
-                        <tr>
-                            <td>
-                                <span class="status {{ $reservation->statut }}">
-                                    {{ $reservation->statut }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{{ route('bookings.details', $reservation->id) }}" class="link-btn">
-                                    détails
-                                </a>
-                            </td>
-                            <td>{{ $reservation->numero_reservation }}</td>
-                            <td>{{ $reservation->residence->nom }}</td>
-                            <td>{{ \Carbon\Carbon::parse($reservation->date_arrivee)->format('d/m/Y') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($reservation->date_depart)->format('d/m/Y') }}</td>
-                            <td>{{ number_format($reservation->total_price, 0, ',', ' ') }} FCFA</td>
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr>
-                            <td colspan="7" class="empty-message">Aucune réservation trouvée pour le moment.</td>
-                        </tr>
-                        @endif
-                    </tbody>
-                </table>
+            {{-- Conteneur qui sera mis à jour par AJAX --}}
+            <div id="reservations-container">
+                @include('profile.reservations_table', ['reservations' => $reservations])
             </div>
-
-            {{-- Pagination --}}
-            @if (!empty($reservations) && $reservations instanceof \Illuminate\Pagination\LengthAwarePaginator)
-            <div class="pagination">
-                {{ $reservations->links() }}
-            </div>
-            @endif
         </div>
 
         {{-- Onglet Review --}}
         <div id="connections" class="tab-content">
             <h2>Mes avis</h2>
-            @if($reservations->where('statut', 'pending')->count() > 0)
-            @foreach($reservations->where('statut', 'pending') as $booking)
+            @if($reservations->where('statut', 'completed')->count() > 0)
+            @foreach($reservations->where('statut', 'completed') as $booking)
             @if(!$booking->review()->where('user_id', auth()->id())->exists())
             <div class="review-form mb-4 p-3 border rounded">
                 <h4>Laisser un avis pour la résidence : {{ $booking->residence->nom }}</h4>

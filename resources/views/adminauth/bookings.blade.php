@@ -58,11 +58,11 @@
                                     $statusClasses = '';
                                     $statutNom = '';
                                     switch ($booking->statut) {
-                                    case 'pending':
+                                    case 'Attente':
                                     $statusClasses = 'from-orange-600 to-orange-400';
                                     $statutNom = 'En attente';
                                     break;
-                                    case 'confirmed':
+                                    case 'Confirmé':
                                     $statusClasses = 'from-green-600 to-lime-400';
                                     $statutNom = 'Confirmée';
                                     break;
@@ -74,12 +74,12 @@
                                     $statusClasses = 'from-slate-600 to-slate-300';
                                     $statutNom = 'Parti';
                                     break;
-                                    case 'completed':
+                                    case 'Terminé':
                                     $statusClasses = 'from-blue-600 to-cyan-400';
                                     $statutNom = 'Terminée';
                                     break;
 
-                                    case 'canceled':
+                                    case 'Annulé':
                                     $statusClasses = 'from-blue-600 to-red-400';
                                     $statutNom = 'Annulé';
                                     break;
@@ -106,6 +106,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $bookings->links() }}
                 </div>
             </div>
         </div>

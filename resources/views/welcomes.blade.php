@@ -189,12 +189,12 @@
                     alt="Photo de {{ $review->user->name }}"
                     class="rounded-full mr-4 w-14 h-14 object-cover">
 
-                <!-- <div>
+                <div>
                     <h3 class="text-lg font-semibold text-gray-800">{{ $review->user->name }}</h3>
-                    <p class="text-sm text-gray-600">
+                    <!-- <p class="text-sm text-gray-600">
                         A séjourné à <strong>{{ $review->residence->nom }}</strong>
-                    </p>
-                </div> -->
+                    </p> -->
+                </div>
             </div>
 
             {{-- Notes étoilées --}}

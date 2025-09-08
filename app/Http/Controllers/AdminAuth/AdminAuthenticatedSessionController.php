@@ -28,7 +28,7 @@ class AdminAuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('adminauth.homes', absolute: false));
+        return redirect()->intended(url('admin.homes'));
     }
 
     /**

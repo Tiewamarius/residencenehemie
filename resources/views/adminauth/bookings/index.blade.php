@@ -114,28 +114,28 @@
                     $statusClasses = '';
                     $statutNom = '';
                     switch ($booking->statut) {
-                    case 'pending':
+                    case 'Attente':
                     $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'En attente';
+                    $statutNom = 'Attente';
                     break;
-                    case 'confirmed':
+                    case 'Confirmé':
                     $statusClasses = 'bg-gradient-to-tl from-green-600 to-lime-400 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Confirmée';
+                    $statutNom = 'Confirmé';
                     break;
-                    case 'checked_in':
+                    case 'Encours':
                     $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Arrivé';
+                    $statutNom = 'En sejour';
                     break;
                     case 'checked_out':
                     $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
                     $statutNom = 'Parti';
                     break;
-                    case 'completed':
+                    case 'Terminé':
                     $statusClasses = 'bg-gradient-to-tl from-blue-600 to-blue-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
-                    $statutNom = 'Terminée';
+                    $statutNom = 'Terminé';
                     break;
 
-                    case 'canceled':
+                    case 'Annulé':
                     $statusClasses = 'bg-gradient-to-tl from-slate-600 to-slate-300 px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white';
                     $statutNom = 'Annulé';
                     break;

@@ -74,7 +74,7 @@
             <i class="cursor-pointer fa fa-bell"></i>
           </a>
 
-          <form method="POST" action="{{ route('logout') }}">
+          <form method="POST" action="{{ route('admin.logout') }}">
             @csrf
             <button type="submit"
               class="block px-3 py-2 text-sm font-semibold text-red-500 transition-all hover:text-red-700">

@@ -14,7 +14,7 @@ class HomeController extends Controller
         $residences = Residence::with(['images', 'types', 'reviews.user'])->get();
 
         $reviews = Review::with('user', 'residence')
-            ->where('statut', 'pending') // on affiche que les avis validés
+            ->where('statut', 'approuved') // on affiche que les avis validés
             ->latest()
             ->take(6) // tu limites le nombre affiché
             ->get();

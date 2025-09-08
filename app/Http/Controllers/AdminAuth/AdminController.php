@@ -4,16 +4,40 @@ namespace App\Http\Controllers\AdminAuth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Residence;
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\Admin;
-use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 { // Tableau de bord
     public function homes()
     {
-        return view('adminauth.dashboard');
+        // Compter le nombre total de réservations
+        $totalBookings = Booking::count();
+
+        // Compter les réservations annulées
+        $cancelledBookings = Booking::where('statut', 'Annulé')->count();
+
+        // Compter les réservations confirmées
+        $confirmedBookings = Booking::where('statut', 'Confirmé')->count();
+
+        // Compter les réservations terminées
+        $completedBookings = Booking::where('statut', 'Terminé')->count();
+
+        // Compter les réservations en cours
+        $pendingBookings = Booking::where('statut', 'Attente')->count();
+
+        // Vous pouvez ajuster les noms de statut ('cancelled', 'confirmed', etc.) pour qu'ils correspondent à ceux que vous utilisez dans votre base de données.
+
+        // Retourner la vue avec toutes les données
+        return view('adminauth.dashboard', [
+            'totalBookings' => $totalBookings,
+            'cancelledBookings' => $cancelledBookings,
+            'confirmedBookings' => $confirmedBookings,
+            'completedBookings' => $completedBookings,
+            'pendingBookings' => $pendingBookings,
+        ]);
     }
 
     /**
@@ -70,7 +94,8 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::all();
+        $bookings = Booking::paginate(8);
+
         return view('adminauth.bookings.index', compact('bookings'));
     }
 
@@ -103,13 +128,13 @@ class AdminController extends Controller
 
     public function approveBooking(Booking $booking)
     {
-        $booking->update(['status' => 'approved']);
+        $booking->update(['statut' => 'approved']);
         return redirect()->route('adminauth.bookings.index')->with('success', 'Réservation approuvée');
     }
 
     public function rejectBooking(Booking $booking)
     {
-        $booking->update(['status' => 'rejected']);
+        $booking->update(['statut' => 'rejected']);
         return redirect()->route('adminauth.bookings.index')->with('success', 'Réservation rejetée');
     }
 
@@ -214,8 +239,4 @@ class AdminController extends Controller
         $user->delete();
         return back();
     }
-
-
-    // validation de review
-
 }

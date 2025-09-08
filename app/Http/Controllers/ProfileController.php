@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
+
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Review;
 use App\Models\Residence;
@@ -17,19 +19,39 @@ class ProfileController extends Controller
     /**
      * Affiche la page d'accueil de l'utilisateur avec ses réservations.
      */
-    public function homeUser(Request $request): View
+    public function homeUser(Request $request): View | JsonResponse
     {
-        // Récupérer l'utilisateur connecté
         $user = $request->user();
 
-        // Vérifier si l'utilisateur est authentifié et charger ses réservations
-        // Si la relation n'existe pas ou qu'il n'y a pas de réservations,
-        // on retourne une collection vide pour éviter les erreurs.
-        $reservations = $user ? $user->bookings : collect();
+        // 1. Start the query on the user's bookings.
+        $query = $user->bookings()->latest();
 
+        // 2. Apply search and status filters.
+        if ($request->filled('statut') && $request->input('statut') !== 'all') {
+            $query->where('statut', $request->input('statut'));
+        }
+
+        // This is the line to correct.
+        if ($request->filled('search')) { // Check if the 'search' input is filled
+            $searchTerm = $request->input('search');
+            $query->where('numero_reservation', 'like', "%{$searchTerm}%");
+        }
+
+        // 3. Get the paginated results.
+        $reservations = $query->paginate(5);
+
+        // 4. Handle AJAX vs. standard HTTP requests.
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('profile.reservations_table', compact('reservations'))->render(),
+                'pagination' => (string) $reservations->withQueryString()->links(),
+            ]);
+        }
+
+        // 5. Return the full view for a standard request.
         return view('profile.homeUser', [
             'user' => $user,
-            'reservations' => $reservations, // Passer les réservations (ou la collection vide) à la vue
+            'reservations' => $reservations,
         ]);
     }
 

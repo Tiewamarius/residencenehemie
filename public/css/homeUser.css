@@ -161,13 +161,17 @@ td, th {
     background: #fef3c7;
     color: #92400e;
 }
-.status.confirmed {
+.status.Confirmé {
     background: #d1fae5;
     color: #065f46;
 }
 .status.cancelled {
     background: #fee2e2;
     color: #991b1b;
+}
+.status.Encours {
+    background: #3365fa5f;
+    color: #fee2e2;
 }
 
 /* === Divers === */
@@ -216,7 +220,7 @@ td, th {
 }
 
 /* Couleurs par statut */
-.status.pending {
+.status.Attente {
     background: #fef3c7; /* jaune clair */
     color: #92400e;      /* texte brun foncé */
     border: 1px solid #fcd34d;
@@ -235,7 +239,7 @@ td, th {
     background: #1e40af;
 }
 
-.status.confirmed {
+.status.confirmé {
     background: #d1fae5; /* vert clair */
     color: #065f46;      /* texte vert foncé */
     border: 1px solid #10b981;
@@ -246,16 +250,16 @@ td, th {
     border: 1px solid #0bef31;
 }
 
-.status.cancelled {
+.status.Annulé {
     background: #fee2e2; /* rouge clair */
     color: #991b1b;      /* texte rouge foncé */
     border: 1px solid #f87171;
 }
 
-.status.completed {
-    background: #e0e7ff; /* bleu clair */
-    color: #1e3a8a;      /* texte bleu foncé */
-    border: 1px solid #6366f1;
+.status.Terminé {
+    background: #25e33e72; /* bleu clair */
+    color: #ffffff;      /* texte bleu foncé */
+    border: 1px solid #12f167;
 }
 
 
@@ -376,3 +380,5 @@ td, th {
         width: 100%;
     }
 }
+
+

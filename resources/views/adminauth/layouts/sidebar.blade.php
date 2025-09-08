@@ -96,7 +96,7 @@
       </li>
 
       {{-- Rapports --}}
-      <li class="mt-0.5 w-full">
+      <!-- <li class="mt-0.5 w-full">
         <a href="{{ route('admin.reports.index') }}"
           class="py-2.7 my-0 mx-4 flex items-center whitespace-nowrap px-4 transition-colors rounded-lg
            {{ request()->routeIs('admin.reports.*') 
@@ -108,7 +108,7 @@
           </div>
           <span class="ml-1">Rapports</span>
         </a>
-      </li>
+      </li> -->
 
       {{-- Utilisateurs --}}
       <li class="mt-0.5 w-full">

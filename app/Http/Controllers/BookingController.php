@@ -72,7 +72,7 @@ class BookingController extends Controller
                 'date_depart'       => $validatedData['date_depart'],
                 'nombre_adultes'    => $validatedData['nombre_adultes'],
                 'nombre_enfants'    => $validatedData['nombre_enfants'] ?? 0,
-                'statut'            => 'pending',
+                'statut'            => 'Attente',
                 'total_price'       => $totalPrice,
                 'numero_reservation' => $reservationNumber,
                 'details_client'    => json_encode($detailsClient),
@@ -144,7 +144,7 @@ class BookingController extends Controller
                 'date_depart' => $validatedData['date_depart'],
                 'nombre_adultes' => $validatedData['nombre_adultes'],
                 'nombre_enfants' => $validatedData['nombre_enfants'] ?? 0,
-                'statut' => 'pending',
+                'statut' => 'Attente',
                 'total_price' => $totalPrice,
                 'numero_reservation' => $reservationNumber,
                 'details_client' => json_encode($detailsClient),
@@ -244,13 +244,13 @@ class BookingController extends Controller
 
         if ($daysBefore > 7) {
             $refund = $reservation->total_price;
-            $newStatus = 'Annulée - Remboursée';
+            $newStatus = 'Annulée';
         } elseif ($daysBefore > 2) {
             $refund = $reservation->total_price * 0.5;
-            $newStatus = 'Annulée - Remboursée partiellement';
+            $newStatus = 'Annulée';
         } else {
             $refund = 0;
-            $newStatus = 'Annulée - Non remboursée';
+            $newStatus = 'Annulée';
         }
 
 

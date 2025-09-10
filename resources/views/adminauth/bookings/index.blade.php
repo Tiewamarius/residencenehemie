@@ -3,14 +3,13 @@
 
 <div class="w-full px-6 py-6 mx-auto">
 
-  <button id="mobile-filter-toggle" class="mobile-filter-btn hidden">
+  <button id="mobile-filter-toggle" class="mobile-filter-btn">
     Filtre
   </button>
   <div class="filter-box">
     <div class="filter-header">
       <h6>Réservations</h6>
       <div class="filter-actions">
-        <!-- <a href="#"><i class="fas fa-download"></i> Télécharger</a> -->
         <a href="#"><i class="fas fa-print"></i> Imprimer </a>
       </div>
     </div>
@@ -49,7 +48,6 @@
 
 
 
-<!-- ====== CSS ====== -->
 <style>
   /* Bouton mobile */
   .mobile-filter-btn {
@@ -59,7 +57,7 @@
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    background: #007bff;
+    background: #f75a75ff;
     color: #fff;
     cursor: pointer;
     margin-bottom: 10px;
@@ -77,6 +75,8 @@
       /* affiche le bouton filtre */
     }
   }
+
+  /* ... Le reste du CSS reste inchangé ... */
 
   .filter-box {
     background: #fff;
@@ -262,7 +262,6 @@
   }
 </style>
 
-<!-- ====== JS ====== -->
 <script>
   // Ferme toutes les modales ouvertes
   function closeModal(modalId) {
@@ -271,9 +270,11 @@
 
   // Gère l'affichage du menu de filtre sur mobile
   const mobileFilterBtn = document.getElementById('mobile-filter-toggle');
-  const filterBox = document.querySelector('.boîte-filtre');
+  const filterBox = document.querySelector('.filter-box');
 
   mobileFilterBtn.addEventListener('click', function() {
+    // La classe 'hidden' gère la visibilité.
+    // L'ajout/retrait de cette classe fait apparaître/disparaître le formulaire.
     filterBox.classList.toggle('hidden');
   });
 

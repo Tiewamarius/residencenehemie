@@ -170,10 +170,10 @@ class AdminController extends Controller
         return redirect()->route('adminauth.bookings.index')->with('success', 'Réservation mise à jour');
     }
 
-    public function destroy(Booking $booking)
+    public function destroyBooking(Booking $booking)
     {
         $booking->delete();
-        return redirect()->route('adminauth.bookings.index')->with('success', 'Réservation supprimée');
+        return back()->with('success', 'Réservation supprimée');
     }
 
     public function approveBooking(Booking $booking)
@@ -249,7 +249,7 @@ class AdminController extends Controller
     public function profile()
     {
         $admin = auth('admin')->user();
-        return view('adminauth.profile', compact('admin'));
+        return view('adminauth.profile.profile', compact('admin'));
     }
 
     public function updateProfile(Request $request)

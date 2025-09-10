@@ -43,7 +43,7 @@
                                 </div>
 
                             </div>
-                            <a href="{{ url()->previous() }}" data-mdb-button-init data-mdb-ripple-init class="btn btn-lg mb-1" style="background-color: red;">
+                            <a href="{{ route('admin.bookings.index') }}" data-mdb-button-init data-mdb-ripple-init class="btn btn-lg mb-1" style="background-color: red;">
                                 Annuler
                             </a>
 

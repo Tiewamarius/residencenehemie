@@ -1268,12 +1268,12 @@ h6 {
   min-height: 1.5rem;
 }
 
-.min-h-75 {
-  min-height: 18.75rem;
+.min-h-45 {
+  min-height: 10.75rem;
 }
 
-.min-h-75-screen {
-  min-height: 75vh;
+.min-h-45-screen {
+  min-height: 45vh;
 }
 
 .min-h-85-screen {

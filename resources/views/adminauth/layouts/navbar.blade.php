@@ -42,15 +42,9 @@
 
         <!-- notifications -->
         <li class="relative flex items-center pr-2">
-          <p class="hidden transform-dropdown-show"></p>
-          <a href="javascript:;" class="block p-0 text-sm transition-all ease-nav-brand text-slate-500" dropdown-trigger aria-expanded="false">
-            <i class="cursor-pointer fa fa-bell"></i>
-          </a>
-
           <form method="POST" action="{{ route('admin.logout') }}">
             @csrf
-            <button type="submit"
-              class="block px-3 py-2 text-sm font-semibold text-red-500 transition-all hover:text-red-700">
+            <button type="submit" class="block px-3 py-2 text-sm font-semibold text-red-500 transition-all hover:text-red-700">
               <i class="fa fa-sign-out-alt sm:mr-1"></i>
               <span class="hidden sm:inline">Logout</span>
             </button>
@@ -160,6 +154,7 @@
     </div>
   </div>
 </nav>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const trigger = document.getElementById('sidenav-trigger');

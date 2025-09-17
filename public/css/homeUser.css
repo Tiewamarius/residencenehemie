@@ -39,7 +39,7 @@
 }
 .profile-nav-item.active {
     background: #eef2ff;
-    color: #4338ca;
+    color: #ed5257;
     font-weight: 600;
 }
 
@@ -67,8 +67,8 @@
     align-items: center;
 }
 .profile-photo {
-    width: 8rem;
-    height: 8rem;
+    width: 6rem;
+    height: 6rem;
     border-radius: 50%;
     object-fit: cover;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -96,11 +96,11 @@
     padding: 1rem 1.5rem;
 }
 .profile-reminder h4 {
-    color: #9d174d;
+    color: #ed5257;
     font-weight: 600;
 }
 .profile-reminder p {
-    color: #be185d;
+    color: #ed5257;
     font-size: .9rem;
 }
 
@@ -181,7 +181,7 @@ td, th {
     padding: 2rem 0;
 }
 .btn-primary {
-    background: #db2777;
+    background: #ed5257;
     color: white;
     padding: .75rem 1.5rem;
     border-radius: .75rem;
@@ -189,7 +189,7 @@ td, th {
     transition: .3s;
 }
 .btn-primary:hover {
-    background: #be185d;
+    background: #ed5257;
 }
 .btn-light {
     background: #f3f4f6;
@@ -202,7 +202,7 @@ td, th {
     background: #e5e7eb;
 }
 .link {
-    color: #4338ca;
+    color: #ed5257;
     font-weight: 500;
 }
 .link:hover {
@@ -226,7 +226,7 @@ td, th {
     border: 1px solid #fcd34d;
 }
 .link-btn {
-    background: #2563eb;
+    background: #ed5257;
     color: white;
     padding: 0.35rem 0.9rem;
     border-radius: 0.5rem;
@@ -236,7 +236,7 @@ td, th {
 }
 
 .link-btn:hover {
-    background: #1e40af;
+    background: #ef3c42;
 }
 
 .status.confirmé {
@@ -277,11 +277,11 @@ td, th {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 .review-form textarea:focus {
-    border-color: #db2777;
+    border-color: #ed5257;
     box-shadow: 0 0 0 2px rgba(219, 39, 119, 0.2);
 }
 .review-form button {
-    background: #db2777;
+    background: #ed5257;
     color: #fff;
     border: none;
     padding: 0.75rem 1.5rem;

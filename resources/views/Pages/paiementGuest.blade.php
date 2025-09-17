@@ -16,28 +16,28 @@
 
                 <section class="payment-method-section">
                     <h2>1. Choisissez un mode de paiement</h2>
-                    <form id="payment-form" action="{{ route('paiements.finaliser') }}" method="POST">
+                    <form id="payment-form" action="{{ route('paiements.finaliser') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
                         <input type="hidden" name="total_price" value="{{ $booking->total_price }}">
 
                         <!-- Carte (indisponible) -->
-                        <div class="payment-option disabled-option" data-message="🚫 Paiement par carte indisponible.">
+                        <!-- <div class="payment-option disabled-option" data-message="🚫 Paiement par carte indisponible.">
                             <label class="payment-label">
                                 <img src="{{ asset('images/mastercard-hd-png.png') }}" alt="Carte" height="350px" class="payment-logo">
                                 <input type="radio" name="payment_method" value="carte" disabled>
                                 Carte bancaire
                             </label>
-                        </div>
+                        </div> -->
 
                         <!-- PayPal (indisponible) -->
-                        <div class="payment-option disabled-option" data-message="🚫 Paiement via PayPal indisponible.">
+                        <!-- <div class="payment-option disabled-option" data-message="🚫 Paiement via PayPal indisponible.">
                             <label class="payment-label">
                                 <img src="{{ asset('images/paypal.jpg') }}" alt="PayPal" class="payment-logo">
                                 <input type="radio" name="payment_method" value="paypal" disabled>
                                 PayPal
                             </label>
-                        </div>
+                        </div> -->
 
                         <!-- Mobile Money -->
                         <div class="payment-option disabled-option">
@@ -56,7 +56,7 @@
                         </div>
 
                         <!-- Wave -->
-                        <div class="payment-option disabled-option">
+                        <div class="payment-option disabled-option"> <!-- disabled-option -->
                             <label class="payment-label" for="payment-wave">
                                 <img src="{{ asset('images/WAVE-M.jpg') }}" alt="Wave" class="payment-logo">
                                 <input type="radio" id="payment-wave" name="payment_method" value="wave">
@@ -74,35 +74,91 @@
                         <!-- Espèce -->
                         <div class="payment-option">
                             <label class="payment-label {{ $hasUnpaidBooking ? 'disabled-label' : '' }}" for="payment-espece">
-                                <img src="{{ asset('images/especes.png') }}" alt="Espèce" class="payment-logo">
                                 <input type="radio" id="payment-espece" name="payment_method" value="espece"
                                     {{ $hasUnpaidBooking ? 'disabled' : '' }} required>
+                                @if($hasUnpaidBooking)
+                                Paiement en espèce (Indisponible)
+                                @else
                                 Paiement en espèce
+                                @endif
                             </label>
 
                             <div class="payment-details" id="espece-details">
-                                <p>Un agent vous contactera pour organiser le paiement en espèce.</p>
-
                                 @if($hasUnpaidBooking)
-                                <p class="warning-message" id="warning-message">
+                                <p>
                                     ⚠️ Ce mode de paiement est bloqué car une réservation en attente d’espèces existe déjà pour cet appartement.
                                 </p>
+                                @else
+                                <p>Un agent vous contactera pour organiser le paiement en espèce.</p>
                                 @endif
                             </div>
                         </div>
-
+                        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
                         <div class="price-details">
                             @guest
                             <h3>Vos coordonnées</h3>
-                            <div class="form-group">
-                                <input type="text" id=" " name="name" placeholder="Nom " required>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <!-- <label class="form-label" for="formControlLgExpk8">Pièce ID</label> -->
+                                        <input type="text" class="form-control" name="id_card" placeholder="ID Card ou PassPort" required />
+                                    </div>
+                                    {{-- Ceci est le bloc qui affiche l'erreur --}}
+                                    @error('id_card')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                                <div class="col-6">
+                                    <div data-mdb-input-init class="form-outline">
+                                        <!-- <label class="form-label" for="formControlLgcvv8"></label> -->
+                                        <input type="file" class="form-control" name="card_picture" placeholder="Faculatif" />
+                                    </div>
+                                    {{-- Ceci est le bloc qui affiche l'erreur --}}
+                                    @error('card_picture')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
                             </div>
                             <div class="form-group">
-                                <input type="tel" id=" " name="phone_number" placeholder=" Numero" required>
+                                <input type="text" id=" " name="name" placeholder="Nom & Prenoms " required>
                             </div>
+                            {{-- Ceci est le bloc qui affiche l'erreur --}}
+                            @error('name')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                            <div class="form-group">
+                                <input type="tel" id=" " name="phone_number" placeholder=" Contact" required>
+                            </div>
+                            {{-- Ceci est le bloc qui affiche l'erreur --}}
+                            @error('phone_number')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                             <div class="form-group">
                                 <input type="email" id=" " name="email" placeholder="Email" required>
                             </div>
+                            {{-- Ceci est le bloc qui affiche l'erreur --}}
+                            @error('email')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                            @enderror
                             @endguest
                             <button type="submit" class="button login-continue-btn">RESERVER</button>
 

@@ -8,6 +8,7 @@
         <div class="message bot-message">Bonjour ! Comment puis-je vous aider aujourd'hui ?</div>
     </div>
     <div class="chat_input_area">
+        <button><i class="fas fa-bars End_close" id="chat-close-btn"></i></button>
         <input type="text" id="chat_input" placeholder="Tapez votre message ici..." />
         <button id="send_chat_btn" class="button">Envoyer</button>
     </div>

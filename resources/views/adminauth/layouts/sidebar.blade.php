@@ -29,9 +29,9 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.dashboard') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-home text-sm"></i>
+            <i class="fas fa-home text-sm" style="color: #a21caf;"></i>
           </div>
-          <span class="ml-1">Dashboard</span>
+          <span class=" ml-1">Dashboard</span>
         </a>
       </li>
 
@@ -44,7 +44,7 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.bookings.*') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-calendar-check text-sm"></i>
+            <i class="fas fa-calendar-check text-sm" style="color: #a21caf;"></i>
           </div>
           <span class="ml-1">Bookings</span>
         </a>
@@ -59,9 +59,9 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.residences.*') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-building text-sm"></i>
+            <i class="fas fa-building text-sm" style="color: #a21caf;"></i>
           </div>
-          <span class="ml-1">Appartements</span>
+          <span class=" ml-1">Appartements</span>
         </a>
       </li>
 
@@ -74,9 +74,9 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.clients.*') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-users text-sm"></i>
+            <i class="fas fa-users text-sm" style="color: #a21caf;"></i>
           </div>
-          <span class="ml-1">Clients</span>
+          <span class=" ml-1">Clients</span>
         </a>
       </li>
 
@@ -89,7 +89,7 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.payments.*') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-credit-card text-sm"></i>
+            <i class="fas fa-credit-card text-sm" style="color: #a21caf;"></i>
           </div>
           <span class="ml-1">Paiements</span>
         </a>
@@ -119,7 +119,7 @@
               : 'text-slate-700' }}">
           <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg xl:p-2.5
                {{ request()->routeIs('admin.users.*') ? 'bg-white text-pink-500' : 'bg-white text-slate-800' }}">
-            <i class="fas fa-user-cog text-sm"></i>
+            <i class="fas fa-user-cog text-sm" style="color: #a21caf;"></i>
           </div>
           <span class="ml-1">Utilisateurs</span>
         </a>
@@ -138,14 +138,12 @@
       sidenav-card>
       <div
         class="mb-7.5 absolute h-full w-full rounded-2xl bg-cover bg-center"
-        style="
-              background-image: url('./assets/img/curved-images/white-curved.jpeg');
+        style=" background-image: url('./assets/img/curved-images/white-curved.jpeg');
             "></div>
       <div class="relative z-20 flex-auto w-full p-4 text-left text-white">
         <div
           class="flex items-center justify-center w-8 h-8 mb-4 text-center bg-white bg-center rounded-lg icon shadow-soft-2xl">
-          <i
-            class="top-0 z-10 text-lg leading-none text-transparent ni ni-diamond bg-gradient-to-tl from-slate-600 to-slate-300 bg-clip-text opacity-80"
+          <i class="top-0 z-10 text-lg leading-none text-transparent ni ni-diamond bg-gradient-to-tl from-slate-600 to-slate-300 bg-clip-text opacity-80"
             sidenav-card-icon></i>
         </div>
         <div class="transition-all duration-200 ease-nav-brand">

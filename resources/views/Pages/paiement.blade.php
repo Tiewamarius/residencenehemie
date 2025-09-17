@@ -22,25 +22,25 @@
                         <input type="hidden" name="total_price" value="{{ $booking->total_price }}">
 
                         <!-- Carte (indisponible) -->
-                        <div class="payment-option disabled-option" data-message="🚫 Paiement par carte indisponible.">
+                        <!-- <div class="payment-option disabled-option" data-message="🚫 Paiement par carte indisponible.">
                             <label class="payment-label">
                                 <img src="{{ asset('images/mastercard-hd-png.png') }}" alt="Carte" height="350px" class="payment-logo">
                                 <input type="radio" name="payment_method" value="carte" disabled>
                                 Carte bancaire
                             </label>
-                        </div>
+                        </div> -->
 
                         <!-- PayPal (indisponible) -->
-                        <div class="payment-option disabled-option" data-message="🚫 Paiement via PayPal indisponible.">
+                        <!-- <div class="payment-option disabled-option" data-message="🚫 Paiement via PayPal indisponible.">
                             <label class="payment-label">
                                 <img src="{{ asset('images/paypal.jpg') }}" alt="PayPal" class="payment-logo">
                                 <input type="radio" name="payment_method" value="paypal" disabled>
                                 PayPal
                             </label>
-                        </div>
+                        </div> -->
 
                         <!-- Mobile Money -->
-                        <div class="payment-option disabled-option">
+                        <div class="payment-option"> <!-- disabled-option -->
                             <label class="payment-label" for="payment-mm">
                                 <img src="{{ asset('images/orange-Money.jpg') }}" alt="Mobile Money" class="payment-logo">
                                 <input type="radio" id="payment-mm" name="payment_method" value="mobile_money">
@@ -56,7 +56,7 @@
                         </div>
 
                         <!-- Wave -->
-                        <div class="payment-option disabled-option">
+                        <div class="payment-option"> <!-- disabled-option -->
                             <label class="payment-label" for="payment-wave">
                                 <img src="{{ asset('images/WAVE-M.jpg') }}" alt="Wave" class="payment-logo">
                                 <input type="radio" id="payment-wave" name="payment_method" value="wave">

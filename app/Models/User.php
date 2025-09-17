@@ -29,8 +29,10 @@ class User extends Authenticatable
         'role',
         'profile_picture',
         'phone_number',
-        'address',   // NOUVEAU
+        'address',
         'description',
+        'id_card',
+        'card_picture',
     ];
 
     /**

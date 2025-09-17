@@ -86,7 +86,7 @@ class BookingController extends Controller
                     ->send(new ConfirmationEmail($booking, 'new'));
 
                 // Notification au manager
-                Mail::to(config('mail.manager_address', 'support@odedis.com'))
+                Mail::to(config('mail.manager_addresses'))
                     ->send(new ReservationNotification($booking, 'new'));
             } catch (\Exception $mailException) {
                 Log::error("Erreur envoi email réservation: " . $mailException->getMessage());
@@ -237,20 +237,20 @@ class BookingController extends Controller
         $checkinDate = \Carbon\Carbon::parse($reservation->date_debut);
 
         $refund = 0;
-        $newStatus = 'Annulée';
+        $newStatus = 'Annulé';
 
         // Politique d’annulation
         $daysBefore = $now->diffInDays($checkinDate, false);
 
         if ($daysBefore > 7) {
             $refund = $reservation->total_price;
-            $newStatus = 'Annulée';
+            $newStatus = 'Annulé';
         } elseif ($daysBefore > 2) {
             $refund = $reservation->total_price * 0.5;
-            $newStatus = 'Annulée';
+            $newStatus = 'Annulé';
         } else {
             $refund = 0;
-            $newStatus = 'Annulée';
+            $newStatus = 'Annulé';
         }
 
 
@@ -491,7 +491,7 @@ class BookingController extends Controller
             Mail::to($booking->user->email)->send(new ReservationNotification($booking, 'cancel'));
 
             // Email au manager
-            Mail::to(config('mail.manager_address', 'info@odedis.com'))
+            Mail::to('support@odedis.com')
                 ->send(new ReservationNotification($booking, 'cancel'));
         } catch (\Exception $e) {
             Log::error("Erreur envoi mail annulation: " . $e->getMessage());

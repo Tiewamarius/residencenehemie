@@ -87,11 +87,11 @@
             <div class="info">
                 <p><span class="highlight">Client :</span> {{ $booking->user->name }} ({{ $booking->user->email }})</p>
                 <p><span class="highlight">Résidence :</span> {{ $booking->residence->nom }}</p>
-                <p><span class="highlight">Type :</span> {{ $booking->type->nom }}</p>
+                <p><span class="highlight">N° :</span> {{ $booking->numero_reservation }}</p>
                 <p><span class="highlight">Arrivée :</span> {{ \Carbon\Carbon::parse($booking->date_arrivee)->format('d/m/Y') }}</p>
                 <p><span class="highlight">Départ :</span> {{ \Carbon\Carbon::parse($booking->date_depart)->format('d/m/Y') }}</p>
                 <p><span class="highlight">Prix total :</span> {{ number_format($booking->total_price, 0, ',', ' ') }} CFA</p>
-                <p><span class="highlight">Statut :</span> {{ $booking->statut }}</p>
+
             </div>
 
             @if($type === 'new')

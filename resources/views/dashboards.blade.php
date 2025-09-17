@@ -176,44 +176,46 @@
 </section>
 
 {{-- Section Témoignages --}}
-
 <section class="testimonials">
     <h2 class="section-title">Ce que nos clients disent</h2>
     <p class="section-description">Écoutez les expériences de ceux qui ont choisi Résidences Nehemie.</p>
+
     <div class="properties-grid">
+        @forelse($reviews as $review)
         <div class="testimonial-card">
             <div class="flex items-center mb-4">
-                <img src="images/couz.jpg" alt="Photo de profil de Jane Doe" class="rounded-full mr-4">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Dimitri Medvedev</h3>
-                    <p class="text-sm text-gray-600">Client fidèle</p>
-                </div>
+                <img src="{{ asset('storage/' . $review->user->profile_picture)?? 'https://placehold.co/60x60' }}"
+                    alt="Photo de {{ $review->user->name }}"
+                    class="rounded-full mr-4 w-14 h-14 object-cover">
+
+                <h3 class="text-lg font-semibold text-gray-800">{{ $review->user->name }}</h3>
             </div>
-            <p class="text-gray-700">"Résidences Nehemie a dépassé toutes mes attentes. La qualité des appartements et le service client sont exceptionnels. Je recommande vivement !"</p>
-        </div>
-        <div class="testimonial-card">
-            <div class="flex items-center mb-4">
-                <img src="https://placehold.co/60x60/FF385C/FFFFFF?text=SM" alt="Photo de profil de Samuel Martin" class="rounded-full mr-4">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Marius Thibaut</h3>
-                    <p class="text-sm text-gray-600">Nouveau locataire</p>
-                </div>
+
+            {{-- Notes étoilées --}}
+            <div class="flex items-center mb-2">
+                @for($i = 1; $i <= 5; $i++)
+                    @if($i <=$review->note)
+                    <i class="fas fa-star text-yellow-400"></i>
+                    @else
+                    <i class="far fa-star text-gray-300"></i>
+                    @endif
+                    @endfor
+                    <span class="ml-2 text-sm text-gray-600">({{ $review->note }}/5)</span>
             </div>
-            <p class="text-gray-700">"J'ai trouvé l'appartement de mes rêves en un rien de temps. Le processus a été simple et l'équipe très réactive. Un grand merci !"</p>
+
+            {{-- Commentaire --}}
+            <p class="text-gray-700">"{{ $review->commentaire }}"</p>
+
+            {{-- Date --}}
+            <small class="text-gray-500">Posté le {{ $review->created_at->format('d/m/Y') }}</small>
         </div>
-        <div class="testimonial-card">
-            <div class="flex items-center mb-4">
-                <img src="images/bg.jpg" alt="Photo de profil d'Emma Leroy" class="rounded-full mr-4">
-                <div>
-                    <h3 class="text-lg font-semibold text-gray-800">Victor Schoelcher</h3>
-                    <p class="text-sm text-gray-600">Investisseur</p>
-                </div>
-            </div>
-            <p class="text-gray-700">"En tant qu'investisseur, la diversité et la rentabilité des propriétés proposées par Résidences Nehemie sont inégalées. Un partenaire de confiance."</p>
-        </div>
+        @empty
+        <p class="text-gray-600 col-span-full text-center">Aucun avis client pour le moment.</p>
+        @endforelse
     </div>
 </section>
-<!-- Maps -->
+
+
 <div class="location-map-section" style="text-align: center;" id="Maps">
     <!-- <h3>Retrouvez-nous</h3> -->
     <p>{{ $residence->quartier ?? 'Quartier' }}, {{ $residence->ville ?? 'Ville' }}, {{ $residence->pays ?? 'Pays' }}</p>

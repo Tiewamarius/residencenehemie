@@ -12,6 +12,8 @@ use App\Mail\GuestAccountCreated;
 // use Illuminate\Support\Facades\Notification; // Pour l'envoi de notifications (SMS)
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Mail\ConfirmationEmail;
+use App\Mail\ReservationNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -27,7 +29,7 @@ class PaiementController extends Controller
     {
         $booking->load('residence.images', 'residence.reviews', 'type');
 
-        // Vérifier chevauchement de réservation en "pending"
+        // Vérifier chevauchement de réservation en "Attente"
         $hasUnpaidBooking = $booking->residence
             ->bookings()
             ->where('statut', 'Attente')
@@ -47,7 +49,7 @@ class PaiementController extends Controller
         //     ->bookings()
         //     ->where('statut', 'Attente')
         //     ->when(!is_null($booking->user_id), function ($query) use ($booking) {
-        //         // Si user connecté → exclure ses propres pending
+        //         // Si user connecté → exclure ses propres Attente
         //         $query->where('user_id', '!=', $booking->user_id);
         //     }, function ($query) {
         //         // Si user non connecté → exclure les bookings sans user_id
@@ -75,10 +77,10 @@ class PaiementController extends Controller
     {
         $booking->load('residence.images', 'residence.reviews', 'type');
 
-        // Vérification s'il existe une réservation pending d'un AUTRE utilisateur qui chevauche les dates
+        // Vérification s'il existe une réservation Attente d'un AUTRE utilisateur qui chevauche les dates
         $hasUnpaidBooking = $booking->residence
             ->bookings()
-            ->where('statut', 'pending')
+            ->where('statut', 'Attente')
             ->where('user_id', '!=', $booking->user_id) // 🔥 exclure le même utilisateur
             ->where(function ($query) use ($booking) {
                 $query->whereBetween('date_arrivee', [$booking->date_arrivee, $booking->date_depart])
@@ -89,6 +91,9 @@ class PaiementController extends Controller
                     });
             })
             ->exists();
+        if ($hasUnpaidBooking) {
+            session()->flash('error', 'Il existe une autre réservation en attente pour ces dates.');
+        }
 
 
         return view('Pages.paiementGuest', compact('booking', 'hasUnpaidBooking'));
@@ -105,64 +110,82 @@ class PaiementController extends Controller
             'email'          => 'required|string|email|max:255',
             'name'           => 'required|string|max:255',
             'phone_number'   => 'required|string|max:20',
+            'id_card'        => 'nullable|string|max:255',
+            // ✅ Validation pour le champ de type fichier
+            'card_picture'   => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         DB::beginTransaction();
         try {
-            // 🔒 1) Verrouiller la réservation
+            // 🔒 Step 1: Lock the booking to prevent race conditions.
             $booking = Booking::lockForUpdate()->findOrFail($data['booking_id']);
 
-            // 2) User existant ou création avec mdp aléatoire
-            $user = User::where('email', $data['email'])->first();
-            $plainPassword = null;
+            // 🎯 Step 2: Gérer la photo de la carte d'identité avant de créer l'utilisateur
+            $cardPicturePath = null;
+            if ($request->hasFile('card_picture')) {
+                $cardPicturePath = $request->file('card_picture')->store('card_pictures', 'public');
+            }
 
-            if (!$user) {
-                $plainPassword = Str::random(10);
-                $user = User::create([
+            // 🎯 Step 3: Find or create the user.
+            $user = User::firstOrCreate(
+                ['email' => $data['email']],
+                [
                     'name'         => $data['name'],
-                    'email'        => $data['email'],
                     'phone_number' => $data['phone_number'],
-                    'password'     => Hash::make($plainPassword),
-                ]);
+                    'id_card'      => $data['id_card'] ?? null,
+                    'card_picture' => $cardPicturePath, // ✅ Utilise le chemin de l'image sauvegardée
+                    'password'     => Hash::make(Str::random(10)),
+                ]
+            );
 
-
+            // If the user was just created, send the welcome email.
+            if ($user->wasRecentlyCreated) {
+                $plainPassword = Str::random(10);
+                $user->password = Hash::make($plainPassword);
+                $user->save();
                 Mail::to($user->email)->send(new GuestAccountCreated($user, $plainPassword));
             }
-            // 🚀 3) Authentifier automatiquement l'user
+
+            // 🚀 Step 4: Automatically authenticate the user.
             Auth::login($user);
-            // 3) Sécurité : empêcher l’appropriation
+
+            // 🛡️ Step 5: Security check (This is already well-implemented).
             if (!is_null($booking->user_id) && $booking->user_id !== $user->id) {
                 DB::rollBack();
                 return back()->with('error', "Cette réservation est déjà associée à un autre utilisateur.");
             }
 
-            // 4) Associer la réservation au user et définir statut
+            // ⚙️ Step 6: Associate the booking with the user and set the status.
             $booking->user_id = $user->id;
-            $booking->statut  = $data['payment_method'] === 'espece' ? 'pending' : 'confirmed';
+            $booking->statut  = ($data['payment_method'] === 'espece') ? 'Attente' : 'Confirmé';
             $booking->save();
 
-            // 5) Éviter les doublons
-            if (Payment::where('booking_id', $booking->id)->exists()) {
-                DB::commit();
-                return redirect()->route('bookings.details', $booking)
-                    ->with('success', 'Paiement déjà initié pour cette réservation.');
-            }
-
-            // 6) Créer le paiement
+            // 💰 Step 7: Create the payment record.
             Payment::create([
                 'booking_id'       => $booking->id,
                 'transaction_id'   => 'TRANS-' . now()->timestamp,
                 'montant'          => $data['total_price'],
                 'methode_paiement' => $data['payment_method'],
-                'statut'           => $data['payment_method'] === 'espece' ? 'unpaid' : 'paid',
+                'statut'           => ($data['payment_method'] === 'espece') ? 'unpaid' : 'paid',
                 'date_paiement'    => now(),
             ]);
 
+            try {
+                // Notification au client
+                // Mail::to($booking->user->email)
+                //     ->send(new ConfirmationEmail($booking, 'new'));
+
+                // Notification au manager
+                Mail::to(config('mail.manager_addresses'))
+                    ->send(new ReservationNotification($booking, 'new'));
+            } catch (\Exception $mailException) {
+                Log::error("Erreur envoi email réservation: " . $mailException->getMessage());
+            }
             DB::commit();
 
-            $msg = $data['payment_method'] === 'espece'
-                ? 'Votre réservation est en attente. Un agent vous contactera.'
-                : 'Paiement confirmé et réservation validée !';
+            $msg = ($data['payment_method'] === 'espece') ?
+                'Votre réservation est en attente. Un agent vous contactera.' :
+                'Paiement confirmé et réservation validée !';
 
             return redirect()->route('bookings.details', $booking)->with('success', $msg);
         } catch (\Throwable $e) {
@@ -207,12 +230,12 @@ class PaiementController extends Controller
             }
 
             // 4. Déterminer le statut de la réservation et du paiement en fonction de la méthode
-            $bookingStatus = 'confirmed';
+            $bookingStatus = 'Confirmé';
             $paymentStatus = 'paid';
 
             if ($validatedData['payment_method'] === 'espece') {
-                $bookingStatus = 'pending';
-                $paymentStatus = 'Unpaid';
+                $bookingStatus = 'Attente';
+                $paymentStatus = 'unpaid';
             }
 
             // 5. Simuler le processus de paiement (à remplacer par une API de paiement réelle)

@@ -21,7 +21,7 @@ class AuthenticatedSessionController extends Controller
     {
 
         $residences = Residence::with(['images', 'types'])->get();
-        $reviews = Review::with('user', 'residence')
+        $reviews = review::with('user', 'residence')
             ->where('statut', 'pending') // on affiche que les avis validés
             ->latest()
             ->take(6) // tu limites le nombre affiché
@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboards', absolute: false));
+        return redirect(url('/'));
     }
 
     /**

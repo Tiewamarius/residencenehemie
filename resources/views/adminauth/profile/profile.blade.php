@@ -176,188 +176,352 @@
 </div>
 <div class="w-full p-6 mx-auto">
     <div class="flex flex-wrap -mx-3">
-        <div class="w-full max-w-full px-3 lg-max:mt-6 xl:w-4/12">
-            <div
-                class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
-                <div class="p-4 pb-0 mb-0 bg-white border-b-0 rounded-t-2xl">
-                    <div class="flex flex-wrap -mx-3">
-                        <div
-                            class="flex items-center w-full max-w-full px-3 shrink-0 md:w-8/12 md:flex-none">
-                            <h6 class="mb-0">Profile Information</h6>
-                        </div>
-                        <div
-                            class="w-full max-w-full px-3 text-right shrink-0 md:w-4/12 md:flex-none">
-                            <a
-                                href="javascript:;"
-                                data-target="tooltip_trigger"
-                                data-placement="top">
-                                <i
-                                    class="leading-normal fas fa-user-edit text-sm text-slate-400"></i>
-                            </a>
-                            <div
-                                data-target="tooltip"
-                                class="hidden px-2 py-1 text-center text-white bg-black rounded-lg text-sm"
-                                role="tooltip">
-                                Edit Profile
+
+        <div class="row">
+            <div class="col-4">
+                <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
+                    <div class="p-4 pb-0 mb-0 bg-white border-b-0 rounded-t-2xl">
+                        <h6 class="mb-0">Conversations</h6>
+                    </div>
+                    <div class="flex-auto p-4">
+                        <ul class="flex flex-col pl-0 mb-0 rounded-lg">
+                            <li
+                                class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 rounded-t-lg text-inherit">
                                 <div
-                                    class="invisible absolute h-2 w-2 bg-inherit before:visible before:absolute before:h-2 before:w-2 before:rotate-45 before:bg-inherit before:content-['']"
-                                    data-popper-arrow></div>
-                            </div>
-                        </div>
+                                    class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
+                                    <img
+                                        src="../assets/img/kal-visuals-square.jpg"
+                                        alt="kal"
+                                        class="w-full shadow-soft-2xl rounded-xl" />
+                                </div>
+                                <div class="flex flex-col items-start justify-center">
+                                    <h6 class="mb-0 leading-normal text-sm">Sophie B.</h6>
+                                    <p class="mb-0 leading-tight text-xs">
+                                        Hi! I need more information..
+                                    </p>
+                                </div>
+                                <a
+                                    class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
+                                    href="javascript:;">Reply</a>
+                            </li>
+                            <li
+                                class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
+                                    <img
+                                        src="../assets/img/marie.jpg"
+                                        alt="kal"
+                                        class="w-full shadow-soft-2xl rounded-xl" />
+                                </div>
+                                <div class="flex flex-col items-start justify-center">
+                                    <h6 class="mb-0 leading-normal text-sm">Anne Marie</h6>
+                                    <p class="mb-0 leading-tight text-xs">
+                                        Awesome work, can you..
+                                    </p>
+                                </div>
+                                <a
+                                    class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
+                                    href="javascript:;">Reply</a>
+                            </li>
+                            <li
+                                class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
+                                    <img
+                                        src="../assets/img/ivana-square.jpg"
+                                        alt="kal"
+                                        class="w-full shadow-soft-2xl rounded-xl" />
+                                </div>
+                                <div class="flex flex-col items-start justify-center">
+                                    <h6 class="mb-0 leading-normal text-sm">Ivanna</h6>
+                                    <p class="mb-0 leading-tight text-xs">
+                                        About files I can..
+                                    </p>
+                                </div>
+                                <a
+                                    class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
+                                    href="javascript:;">Reply</a>
+                            </li>
+                            <li
+                                class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
+                                    <img
+                                        src="../assets/img/team-4.jpg"
+                                        alt="kal"
+                                        class="w-full shadow-soft-2xl rounded-xl" />
+                                </div>
+                                <div class="flex flex-col items-start justify-center">
+                                    <h6 class="mb-0 leading-normal text-sm">Peterson</h6>
+                                    <p class="mb-0 leading-tight text-xs">
+                                        Have a great afternoon..
+                                    </p>
+                                </div>
+                                <a
+                                    class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
+                                    href="javascript:;">Reply</a>
+                            </li>
+                            <li
+                                class="relative flex items-center px-0 py-2 bg-white border-0 border-t-0 rounded-b-lg text-inherit">
+                                <div
+                                    class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
+                                    <img
+                                        src="../assets/img/team-3.jpg"
+                                        alt="kal"
+                                        class="w-full shadow-soft-2xl rounded-xl" />
+                                </div>
+                                <div class="flex flex-col items-start justify-center">
+                                    <h6 class="mb-0 leading-normal text-sm">Nick Daniel</h6>
+                                    <p class="mb-0 leading-tight text-xs">
+                                        Hi! I need more information..
+                                    </p>
+                                </div>
+                                <a
+                                    class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
+                                    href="javascript:;">Reply</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <div class="flex-auto p-4">
-                    <p class="leading-normal text-sm">
-                        Hi, I’m Alec Thompson, Decisions: If you can’t decide, the
-                        answer is no. If two equally difficult paths, choose the one
-                        more painful in the short term (pain avoidance is creating an
-                        illusion of equality).
-                    </p>
-                    <hr
-                        class="h-px my-6 bg-transparent bg-gradient-to-r from-transparent via-white to-transparent" />
-                    <ul class="flex flex-col pl-0 mb-0 rounded-lg">
-                        <li
-                            class="relative block px-4 py-2 pt-0 pl-0 leading-normal bg-white border-0 rounded-t-lg text-sm text-inherit">
-                            <strong class="text-slate-700">Full Name:</strong> &nbsp;
-                            Alec M. Thompson
-                        </li>
-                        <li
-                            class="relative block px-4 py-2 pl-0 leading-normal bg-white border-0 border-t-0 text-sm text-inherit">
-                            <strong class="text-slate-700">Mobile:</strong> &nbsp; (44)
-                            123 1234 123
-                        </li>
-                        <li
-                            class="relative block px-4 py-2 pl-0 leading-normal bg-white border-0 border-t-0 text-sm text-inherit">
-                            <strong class="text-slate-700">Email:</strong> &nbsp;
-                            alecthompson@mail.com
-                        </li>
-                        <li
-                            class="relative block px-4 py-2 pl-0 leading-normal bg-white border-0 border-t-0 text-sm text-inherit">
-                            <strong class="text-slate-700">Location:</strong> &nbsp; USA
-                        </li>
-                        <li
-                            class="relative block px-4 py-2 pb-0 pl-0 bg-white border-0 border-t-0 rounded-b-lg text-inherit">
-                            <strong class="leading-normal text-sm text-slate-700">Social:</strong>
-                            &nbsp;
-                            <a
-                                class="inline-block py-0 pl-1 pr-2 mb-0 font-bold text-center text-blue-800 align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-none"
-                                href="javascript:;">
-                                <i class="fab fa-facebook fa-lg"></i>
-                            </a>
-                            <a
-                                class="inline-block py-0 pl-1 pr-2 mb-0 font-bold text-center align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-none text-sky-600"
-                                href="javascript:;">
-                                <i class="fab fa-twitter fa-lg"></i>
-                            </a>
-                            <a
-                                class="inline-block py-0 pl-1 pr-2 mb-0 font-bold text-center align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in bg-none text-sky-900"
-                                href="javascript:;">
-                                <i class="fab fa-instagram fa-lg"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
             </div>
-        </div>
-        <div class="w-full max-w-full px-3 lg-max:mt-6 xl:w-4/12">
-            <div class="relative flex flex-col h-full min-w-0 break-words bg-white border-0 shadow-soft-xl rounded-2xl bg-clip-border">
-                <div class="p-4 pb-0 mb-0 bg-white border-b-0 rounded-t-2xl">
-                    <h6 class="mb-0">Conversations</h6>
-                </div>
-                <div class="flex-auto p-4">
-                    <ul class="flex flex-col pl-0 mb-0 rounded-lg">
-                        <li class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 rounded-t-lg text-inherit">
-                            <div class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
-                                <img src="../assets/img/kal-visuals-square.jpg"
-                                    alt="kal" class="w-full shadow-soft-2xl rounded-xl" />
+            <div class="col-6">
+                <div x-data="{ height:0,
+    conversationElement:document.getElementById('conversation'),
+    markAsRead:null
+}"
+                    x-init="
+        height= conversationElement.scrollHeight;
+        $nextTick(()=>conversationElement.scrollTop= height);
+
+
+        Echo.private('users.{{Auth()->User()->id}}')
+        .notification((notification)=>{
+            if(notification['type']== 'App\\Notifications\\MessageRead' && notification['conversation_id']== {{$this->selectedConversation->id}})
+            {
+
+                markAsRead=true;
+            }
+        });
+ "
+
+                    @scroll-bottom.window="
+ $nextTick(()=>
+ conversationElement.scrollTop= conversationElement.scrollHeight
+ );
+ "
+
+                    class="w-full overflow-hidden">
+
+                    <div class="border-b flex flex-col overflow-y-scroll grow h-full">
+
+
+                        {{-- header --}}
+                        <header class="w-full sticky inset-x-0 flex pb-[5px] pt-[5px] top-0 z-10 bg-white border-b ">
+
+                            <div class="flex w-full items-center px-2 lg:px-4 gap-2 md:gap-5">
+
+                                <a class="shrink-0 lg:hidden" href="#">
+
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
+                                    </svg>
+
+
+                                </a>
+
+
+                                {{-- avatar --}}
+
+
+                                <div class="shrink-0">
+                                    <x-avatar class="h-9 w-9 lg:w-11 lg:h-11" />
+                                </div>
+
+
+                                <h6 class="font-bold truncate"> {{$selectedConversation->getReceiver()->email}} </h6>
+
+
                             </div>
-                            <div class="flex flex-col items-start justify-center">
-                                <h6 class="mb-0 leading-normal text-sm">Sophie B.</h6>
-                                <p class="mb-0 leading-tight text-xs">
-                                    Hi! I need more information..
-                                </p>
-                            </div>
-                            <a
-                                class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
-                                href="javascript:;">Reply</a>
-                        </li>
-                        <li
-                            class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
+
+
+                        </header>
+
+
+                        {{-- body --}}
+                        <main
+                            @scroll="
+      scropTop = $el.scrollTop;
+
+      if(scropTop <= 0){
+
+        window.livewire.emit('loadMore');
+
+      }
+     
+     " @update-chat-height.window="
+
+         newHeight= $el.scrollHeight;
+
+         oldHeight= height;
+         $el.scrollTop= newHeight- oldHeight;
+
+         height=newHeight;
+     
+     " id="conversation" class="flex flex-col gap-3 p-2.5 overflow-y-auto  flex-grow overscroll-contain overflow-x-hidden w-full my-auto">
+
+                            @if ($loadedMessages)
+
+                            @php
+                            $previousMessage= null;
+                            @endphp
+
+
+                            @foreach ($loadedMessages as $key=> $message)
+
+                            {{-- keep track of the previous message --}}
+
+                            @if ($key>0)
+
+                            @php
+                            $previousMessage= $loadedMessages->get($key-1)
+                            @endphp
+
+                            @endif
+
+
                             <div
-                                class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
-                                <img
-                                    src="../assets/img/marie.jpg"
-                                    alt="kal"
-                                    class="w-full shadow-soft-2xl rounded-xl" />
+                                wire:key="{{time().$key}}"
+                                @class([ 'max-w-[85%] md:max-w-[78%] flex w-auto gap-2 relative mt-2' , 'ml-auto'=>$message->sender_id=== auth()->id(),
+                                ]) >
+
+                                {{-- avatar --}}
+
+                                <div @class([ 'shrink-0' , 'invisible'=>$previousMessage?->sender_id==$message->sender_id,
+                                    'hidden'=>$message->sender_id === auth()->id()
+                                    ])>
+
+                                    <x-avatar />
+                                </div>
+                                {{-- messsage body --}}
+
+                                <div @class(['flex flex-wrap text-[15px] rounded-xl p-2.5 flex flex-col text-black bg-[#f6f6f8fb]', 'rounded-bl-none border  border-gray-200/40 '=>!($message->sender_id=== auth()->id()),
+                                    'rounded-br-none bg-blue-500/80 text-white'=>$message->sender_id=== auth()->id()
+                                    ])>
+
+
+
+                                    <p class="whitespace-normal truncate text-sm md:text-base tracking-wide lg:tracking-normal">
+                                        {{$message->body}}
+                                    </p>
+
+
+                                    <div class="ml-auto flex gap-2">
+
+                                        <p @class([ 'text-xs ' , 'text-gray-500'=>!($message->sender_id=== auth()->id()),
+                                            'text-white'=>$message->sender_id=== auth()->id(),
+
+                                            ]) >
+
+
+                                            {{$message->created_at->format('g:i a')}}
+
+                                        </p>
+
+
+                                        {{-- message status , only show if message belongs auth --}}
+
+                                        @if ($message->sender_id=== auth()->id())
+
+                                        <div x-data="{markAsRead:@json($message->isRead())}">
+
+                                            {{-- double ticks --}}
+
+                                            <span x-cloak x-show="markAsRead" @class('text-gray-200')>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2-all" viewBox="0 0 16 16">
+                                                    <path d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0l7-7zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0z" />
+                                                    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708z" />
+                                                </svg>
+                                            </span>
+
+                                            {{-- single ticks --}}
+                                            <span x-show="!markAsRead" @class('text-gray-200')>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+                                                </svg>
+                                            </span>
+
+
+                                        </div>
+                                        @endif
+
+
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
+
                             </div>
-                            <div class="flex flex-col items-start justify-center">
-                                <h6 class="mb-0 leading-normal text-sm">Anne Marie</h6>
-                                <p class="mb-0 leading-tight text-xs">
-                                    Awesome work, can you..
-                                </p>
+
+                            @endforeach
+                            @endif
+
+                        </main>
+
+
+
+                        {{-- send message  --}}
+
+                        <footer class="shrink-0 z-10 bg-white inset-x-0">
+
+                            <div class=" p-2 border-t">
+
+                                <form
+                                    x-data="{body:@entangle('body').defer}"
+                                    @submit.prevent="$wire.sendMessage"
+                                    method="POST" autocapitalize="off">
+                                    @csrf
+
+                                    <input type="hidden" autocomplete="false" style="display:none">
+
+                                    <div class="grid grid-cols-12">
+                                        <input
+                                            x-model="body"
+                                            type="text"
+                                            autocomplete="off"
+                                            autofocus
+                                            placeholder="write your message here"
+                                            maxlength="1700"
+                                            class="col-span-10 bg-gray-100 border-0 outline-0 focus:border-0 focus:ring-0 hover:ring-0 rounded-lg  focus:outline-none">
+
+                                        <button x-bind:disabled="!body.trim()" class="col-span-2" type='submit'>Send</button>
+
+                                    </div>
+
+                                </form>
+
+                                @error('body')
+
+                                <p> {{$message}} </p>
+
+                                @enderror
+
                             </div>
-                            <a
-                                class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
-                                href="javascript:;">Reply</a>
-                        </li>
-                        <li
-                            class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
-                            <div
-                                class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
-                                <img
-                                    src="../assets/img/ivana-square.jpg"
-                                    alt="kal"
-                                    class="w-full shadow-soft-2xl rounded-xl" />
-                            </div>
-                            <div class="flex flex-col items-start justify-center">
-                                <h6 class="mb-0 leading-normal text-sm">Ivanna</h6>
-                                <p class="mb-0 leading-tight text-xs">
-                                    About files I can..
-                                </p>
-                            </div>
-                            <a
-                                class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
-                                href="javascript:;">Reply</a>
-                        </li>
-                        <li
-                            class="relative flex items-center px-0 py-2 mb-2 bg-white border-0 border-t-0 text-inherit">
-                            <div
-                                class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
-                                <img
-                                    src="../assets/img/team-4.jpg"
-                                    alt="kal"
-                                    class="w-full shadow-soft-2xl rounded-xl" />
-                            </div>
-                            <div class="flex flex-col items-start justify-center">
-                                <h6 class="mb-0 leading-normal text-sm">Peterson</h6>
-                                <p class="mb-0 leading-tight text-xs">
-                                    Have a great afternoon..
-                                </p>
-                            </div>
-                            <a
-                                class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
-                                href="javascript:;">Reply</a>
-                        </li>
-                        <li
-                            class="relative flex items-center px-0 py-2 bg-white border-0 border-t-0 rounded-b-lg text-inherit">
-                            <div
-                                class="inline-flex items-center justify-center w-12 h-12 mr-4 text-white transition-all duration-200 text-base ease-soft-in-out rounded-xl">
-                                <img
-                                    src="../assets/img/team-3.jpg"
-                                    alt="kal"
-                                    class="w-full shadow-soft-2xl rounded-xl" />
-                            </div>
-                            <div class="flex flex-col items-start justify-center">
-                                <h6 class="mb-0 leading-normal text-sm">Nick Daniel</h6>
-                                <p class="mb-0 leading-tight text-xs">
-                                    Hi! I need more information..
-                                </p>
-                            </div>
-                            <a
-                                class="inline-block py-3 pl-0 pr-4 mb-0 ml-auto font-bold text-center uppercase align-middle transition-all bg-transparent border-0 rounded-lg shadow-none cursor-pointer leading-pro text-xs ease-soft-in hover:scale-102 hover:active:scale-102 active:opacity-85 text-fuchsia-500 hover:text-fuchsia-800 hover:shadow-none active:scale-100"
-                                href="javascript:;">Reply</a>
-                        </li>
-                    </ul>
+
+
+
+
+
+                        </footer>
+
+                    </div>
+
                 </div>
             </div>
         </div>

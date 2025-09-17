@@ -56,6 +56,8 @@
             list-style-type: none;
         }
     </style>
+
+    @livewireStyles
 </head>
 
 <body>
@@ -88,7 +90,11 @@
     @yield('content')
 
     {{-- Inclure la Modale de l'Assistant de Discussion --}}
-    @include('layouts.chat_assistant_modal')
+
+    @livewire('chat-user')
+
+    {{-- Inclure la Modale de livewire l'Assistant de Discussion --}}
+
 
     {{-- Inclure la Nouvelle Sidebar de Contact (à droite) --}}
     @include('layouts.contact_sidebar')
@@ -107,6 +113,8 @@
 
     @yield('scripts_extra') {{-- Pour des scripts JS supplémentaires spécifiques à une page --}}
 
+
+    @livewireScripts
 </body>
 
 </html>

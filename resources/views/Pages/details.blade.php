@@ -393,7 +393,7 @@
                                  × {{ \Carbon\Carbon::parse($reservation->date_arrivee)->diffInDays($reservation->date_depart) }} nuit(s)
                              </td>
                              <td class="text-right">
-                                 {{ number_format(($reservation->total_price ?? 0) - ($reservation->frais_service ?? 10000), 0, ',', ' ') }} FCFA
+                                 {{ number_format(($reservation->total_price ?? 0) - (0), 0, ',', ' ') }} FCFA
                              </td>
                          </tr>
                          <tr>

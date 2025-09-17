@@ -17,7 +17,12 @@
     --border-radius-medium: 10px;
     --border-radius-large: 16px;
 }
-
+#appartements{
+  /* Ajoute une marge en haut de l'élément lors du défilement.
+     Ajustez la valeur (par exemple 100px) en fonction de la hauteur
+     de votre barre de navigation fixe. */
+  scroll-margin-top: 90px;
+}
 /* --- Base et Réinitialisations --- */
 * {
     margin: 0;
@@ -503,7 +508,7 @@ button {
     position: fixed;
     bottom: 100px;
     right: 20px;
-    min-width: 267px;
+    min-width: 380px;
     height: 450px;
     background-color: var(--white);
     border-radius: var(--border-radius-medium);
@@ -919,6 +924,7 @@ button {
     font-size: 1.1em;
 }
 .contact-link { /* Style pour les liens cliquables */
+        width: 100%;
         display: flex;
         align-items: center;
         padding: 0.75rem 1rem;
@@ -930,6 +936,7 @@ button {
     }
 
     .contact-link:hover {
+        width: 100%;
         background-color: #e9e9e9;
         transform: translateX(5px); /* Petit effet de glissement */
     }
@@ -1055,6 +1062,7 @@ button {
     .header {
         height: 70px; /* Hauteur réduite pour le header */
     }
+
 
     .sidebar {
         width: 250px; /* Sidebar plus étroite */
@@ -1752,11 +1760,22 @@ button {
 
 /* Section "Témoignages" */
 .testimonials {
-    background-color: var(--background-light); /* Fond clair pour les témoignages */
-    padding: 30px 15px;
+        background-color: var(--background-light);
+    padding: 60px 24px;
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
+
+}
+
+/* Grille pour les cartes de témoignage */
+.testimonials .properties-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes de taille égale */
+    gap: 20px; /* Espace entre les cartes */
+    overflow-x: auto; /* Permet le défilement horizontal */
+    -webkit-overflow-scrolling: touch; /* Défilement plus fluide sur les appareils iOS */
+    scroll-snap-type: x mandatory; /* Snap-points pour un défilement plus fluide */
 }
 
 /* Carte de témoignage */
@@ -1768,21 +1787,27 @@ button {
     text-align: left;
     display: flex;
     flex-direction: column;
-}
+    scroll-snap-align: start; /* Alignement des cartes sur le défilement */
+    min-width: 300px; /* Empêche les cartes d'être trop étroites sur mobile */
 
+}
 /* Conteneur Flexbox pour l'image et le nom dans la carte de témoignage */
 .testimonial-card .flex {
     align-items: center;
     margin-bottom: 15px;
 }
 
-/* Image de profil dans la carte de témoignage */
-.testimonial-card img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Cercle */
-    object-fit: cover;
-    margin-right: 15px;
+
+
+/* Paragraphe de texte du témoignage */
+.testimonial-card p {
+    color: var(--text-color-dark);
+    line-height: 1.6;
+}
+
+/* Texte de petite taille dans la carte de témoignage */
+.testimonial-card .text-sm {
+    color: var(--text-color-medium);
 }
 
 /* Paragraphe de texte du témoignage */
@@ -1849,7 +1874,7 @@ button {
 /* Section "Témoignages" */
 .testimonials {
     background-color: var(--background-light); /* Fond clair pour les témoignages */
-    padding: 60px 24px;
+    padding: 50px 20px;
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
@@ -1866,11 +1891,7 @@ button {
     flex-direction: column;
 }
 
-/* Conteneur Flexbox pour l'image et le nom dans la carte de témoignage */
-.testimonial-card .flex {
-    align-items: center;
-    margin-bottom: 15px;
-}
+
 
 /* Image de profil dans la carte de témoignage */
 .testimonial-card img {

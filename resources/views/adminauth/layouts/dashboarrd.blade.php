@@ -14,6 +14,8 @@
   <link
     href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700"
     rel="stylesheet" />
+
+  @livewireStyles
   <!-- Font Awesome Icons -->
   <script
     src="https://kit.fontawesome.com/42d5adcbca.js"
@@ -2132,6 +2134,9 @@
       </div>
     </div>
   </div>
+
+
+  @livewireScripts
 </body>
 <!-- plugin for charts  -->
 <script src="../assets/js/plugins/chartjs.min.js" async></script>

@@ -45,7 +45,7 @@
             <div class=" profils">
                 @auth
                 <div class="profile-info">
-                    <img src="{{ auth()->user()->profile_picture ?? 'Non renseigné' }}" alt="Profile Picture" class="profile-photo">
+                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="profile-photo">
                     <div class="profile-text">
                         <h3>{{ auth()->user()->name }}</h3>
                         <p class="role">{{ auth()->user()->role ?? 'Utilisateur' }}</p>
@@ -82,6 +82,14 @@
                 <form method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
+
+
+
+                    <label class="form-label">N° Pièce ID</label>
+                    <input type="text" name="id_card" value="{{ old('id_card', $user->id_card) }}" placeholder="Card Number" />
+
+                    <label class="form-label">Pièce ID .jpg, .jpeg,(facultatif)</label>
+                    <input type="file" name="card_picture" />
 
                     <label>Nom</label>
                     <input type="text" name="name" value="{{ old('name', $user->name) }}">
@@ -138,8 +146,8 @@
         {{-- Onglet Review --}}
         <div id="connections" class="tab-content">
             <h2>Mes avis</h2>
-            @if($reservations->where('statut', 'completed')->count() > 0)
-            @foreach($reservations->where('statut', 'completed') as $booking)
+            @if($reservations->where('statut', 'Terminé')->count() > 0)
+            @foreach($reservations->where('statut', 'Terminé') as $booking)
             @if(!$booking->review()->where('user_id', auth()->id())->exists())
             <div class="review-form mb-4 p-3 border rounded">
                 <h4>Laisser un avis pour la résidence : {{ $booking->residence->nom }}</h4>

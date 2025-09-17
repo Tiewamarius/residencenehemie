@@ -15,6 +15,18 @@ return [
     */
 
     'default' => env('MAIL_MAILER', 'log'),
+    /*
+    |--------------------------------------------------------------------------
+    | Adresses des managers
+    |--------------------------------------------------------------------------
+    |
+    | Cette section définit les adresses e-mail des managers. Ces adresses
+    | peuvent être configurées via la variable d'environnement MANAGER_EMAILS
+    | et seront utilisées pour les notifications importantes.
+    |
+    */
+    'manager_addresses' => explode(',', env('MANAGER_EMAILS', 'support@odedis.com')),
+
 
     /*
     |--------------------------------------------------------------------------

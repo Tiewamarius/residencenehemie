@@ -28,7 +28,7 @@
                 </a>
             </li>
             <li>
-                <a href="https://www.facebook.com/share/19SgiSv38u/?mibextid=wwXIfr" target="_blank" class="contact-link">
+                <a href="https://m.me/residence néhémie" target="_blank" class="contact-link">
                     <i class="fab fa-facebook-messenger"></i> Facebook Messenger
                 </a>
             </li>

@@ -16,12 +16,12 @@ return new class extends Migration
 
             // Clés étrangères vers la table 'users' pour l'expéditeur et le destinataire
             $table->foreignId('sender_id')
-                  ->constrained('users')
-                  ->onDelete('cascade'); // Si l'expéditeur est supprimé, ses messages envoyés le sont aussi
+                ->constrained('users')
+                ->onDelete('cascade'); // Si l'expéditeur est supprimé, ses messages envoyés le sont aussi
 
             $table->foreignId('receiver_id')
-                  ->constrained('users')
-                  ->onDelete('cascade'); // Si le destinataire est supprimé, ses messages reçus le sont aussi
+                ->constrained('users')
+                ->onDelete('cascade'); // Si le destinataire est supprimé, ses messages reçus le sont aussi
 
             $table->string('subject')->nullable(); // Sujet du message
             $table->text('content'); // Contenu du message

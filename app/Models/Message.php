@@ -10,6 +10,7 @@ class Message extends Model
     use HasFactory;
 
     protected $fillable = [
+        'conversation_id',
         'sender_id', // ID de l'expéditeur
         'receiver_id', // ID du destinataire
         'subject',

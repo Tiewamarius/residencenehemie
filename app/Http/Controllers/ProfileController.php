@@ -11,6 +11,7 @@ use App\Models\Review;
 use App\Models\Residence;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -68,24 +69,36 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-
         $data = $request->validated();
 
-        // Upload image
+        // Gestion de l'image de la carte d'identité
+        if ($request->hasFile('card_picture')) {
+            if ($user->card_picture) {
+                Storage::disk('public')->delete($user->card_picture);
+            }
+            // Utiliser une variable unique pour le chemin de la carte
+            $cardPath = $request->file('card_picture')->store('card', 'public');
+            $data['card_picture'] = $cardPath;
+        }
+
+        // Gestion de l'image de profil
         if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('profiles', 'public');
-            $data['profile_picture'] = $path;
+            if ($user->profile_picture) {
+                Storage::disk('public')->delete($user->profile_picture);
+            }
+            // Utiliser une variable unique pour le chemin du profil
+            $profilePath = $request->file('profile_picture')->store('profiles', 'public');
+            $data['profile_picture'] = $profilePath;
         }
 
         // Si mot de passe rempli → on hash
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         } else {
-            unset($data['password']); // éviter d'écraser avec null
+            unset($data['password']);
         }
 
         $user->fill($data);
